@@ -2,7 +2,9 @@
 
 #include "HOFWorldGameMode.h"
 #include "Engine/World.h"
-#include"Runtime/Engine/Public/TimerManager.h"
+#include "HOFPlayerController.h"
+#include "Runtime/Engine/Public/TimerManager.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 AHOFWorldGameMode::AHOFWorldGameMode()
 {
@@ -44,7 +46,7 @@ void AHOFWorldGameMode::OnTimerTick()
 		PlayerData->EatFood();
 
 		UE_LOG(LogClass, Warning, TEXT("Alive? %s"), PlayerData->IsAlive() ? TEXT("Alive") : TEXT("Dead"));
-
+		UE_LOG(LogClass, Warning, TEXT("Count %d"), Counter);
 		GameInstance->SetPlayerData(PlayerData);
 		GetWorld()->ServerTravel(FString("/Game/Maps/HOFBattleLevel"));
 		GetWorldTimerManager().ClearTimer(countDownHandle);

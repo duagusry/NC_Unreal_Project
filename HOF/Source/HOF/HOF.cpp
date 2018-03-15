@@ -3,4 +3,5 @@
 #include "HOF.h"
 #include "Modules/ModuleManager.h"
 
+DEFINE_LOG_CATEGORY(HOFGamePlay);
 IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, HOF, "HOF" );
