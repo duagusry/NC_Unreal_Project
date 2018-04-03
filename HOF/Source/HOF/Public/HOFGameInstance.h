@@ -27,6 +27,8 @@ public :
 	void SetPlayerData(TUniquePtr<FPlayerData>& playerData) { PlayerData = std::move(playerData); }
 	void SetGamePlayState(EGameplayState::Type state) { GamePlayState = state; }
 
+	void SwitchToBattle(FString levelDir);
+
 private : 
 	TUniquePtr<FPlayerData> PlayerData;
 	EGameplayState::Type GamePlayState;

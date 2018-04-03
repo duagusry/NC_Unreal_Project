@@ -2,13 +2,17 @@
 
 #include "HOFWorldGameMode.h"
 #include "Engine/World.h"
-#include "HOFPlayerController.h"
+#include "HOFWorldPlayerController.h"
+#include "HOFSpectatorPawn.h"
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 AHOFWorldGameMode::AHOFWorldGameMode()
 {
 	UE_LOG(LogClass, Warning, TEXT("WorldGameMode Start"));
+	PlayerControllerClass = AHOFWorldPlayerController::StaticClass();
+	SpectatorClass = AHOFSpectatorPawn::StaticClass();
+	DefaultPawnClass = AHOFSpectatorPawn::StaticClass();
 }
 
 void AHOFWorldGameMode::BeginPlay()
@@ -38,7 +42,7 @@ void AHOFWorldGameMode::InitGameState()
 
 void AHOFWorldGameMode::OnTimerTick()
 {
-	--Counter;
+	//--Counter;
 
 	//타이머 만료시 BattleLevel 오픈
 	if (Counter < 1)
