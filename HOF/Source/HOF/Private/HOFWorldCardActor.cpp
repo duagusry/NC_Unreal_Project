@@ -11,9 +11,18 @@ AHOFWorldCardActor::AHOFWorldCardActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	x = 0;
-	y = 7;
+	m_X = 0;
+	m_Y = 7;
 
+}
+
+void AHOFWorldCardActor::Init(int32 id, int32 x, int32 y)
+{
+	m_X = x;
+	m_Y = y;
+	m_CardEvent = g_CardEvent->GetCardEventFromId(id);
+	if (!m_CardEvent.GetID())
+		return;
 }
 
 // Called when the game starts or when spawned
@@ -32,7 +41,7 @@ void AHOFWorldCardActor::Tick(float DeltaTime)
 
 void AHOFWorldCardActor::OnInputTap_Implementation()
 {
-	UE_LOG(LogClass, Warning, TEXT("Card selected -> x : %d, y : %d"), x, y);
+	UE_LOG(LogClass, Warning, TEXT("Card selected -> x : %d, y : %d"), m_X, m_Y);
 
 	BattleEvent();
 }

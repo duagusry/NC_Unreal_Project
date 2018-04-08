@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "HOFInputInterface.h"
+#include "HOFCardEvent.h"
 #include "GameFramework/Actor.h"
 #include "HOFWorldCardActor.generated.h"
 
@@ -16,6 +17,8 @@ class HOF_API AHOFWorldCardActor : public AActor,
 public:	
 	// Sets default values for this actor's properties
 	AHOFWorldCardActor();
+
+	void Init(int32 id, int32 x, int32 y);
 
 protected:
 	// Called when the game starts or when spawned
@@ -39,9 +42,10 @@ public:
 	void BattleEvent(/* TMap<int, int>& spawnList, int mapNumber */);
 
 private : 
-	int32 x;
-	int32 y;
-	//이벤트를 어떻게 할까
-	//별도의 CardEvent 클래스 혹은 protobuf 메시지로 정의해놓고 리소스에서 그 데이터 구성해서 들고 있도록.
+	//WorldBoardActor상의 좌표
+	int32 m_X;
+	int32 m_Y;
+
+	HOFCardEvent m_CardEvent;
 	
 };

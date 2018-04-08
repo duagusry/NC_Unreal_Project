@@ -5,7 +5,11 @@
 #include "HOFWorldPlayerController.h"
 #include "HOFSpectatorPawn.h"
 #include "Runtime/Engine/Public/TimerManager.h"
+#include "HOFWorldCardActor.h"
+#include "Paths.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+
+#include "HOFCardEvent.h"
 
 AHOFWorldGameMode::AHOFWorldGameMode()
 {
@@ -28,6 +32,19 @@ void AHOFWorldGameMode::BeginPlay()
 	PlayerData = GameInstance->GetPlayerData();
 
 	GameInstance->SetGamePlayState(EGameplayState::World);
+
+	//리소스 로딩
+	g_CardEvent->Parse(FPaths::GameDir() + L"Resource/CardEvent.xml");
+	
+	//테스트용 스폰.
+	//나오는지는 확인 안해봤고 데이터 들어있는지만 확인.
+	FActorSpawnParameters SpawnInfo;
+	FRotator myRot(0.0f, 0.0f, 0.0f);
+	FVector myLoc(0.0f, 0.0f, 100.0f);
+	
+	AHOFWorldCardActor* a = GetWorld()->SpawnActor<AHOFWorldCardActor>(AHOFWorldCardActor::StaticClass(), myLoc, myRot, SpawnInfo);
+	a->Init(1, 2, 3);
+	
 }
 
 void AHOFWorldGameMode::Tick(float DeltaSeconds)

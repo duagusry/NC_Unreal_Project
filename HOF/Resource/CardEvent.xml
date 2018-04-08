@@ -1,0 +1,44 @@
+<!--
+Element CardEvent : 각각의 CardEvent마다 하나씩.
+	Attribute id : CardEvent의 고유한 ID
+Element Dialog : 해당 CardEvent의 텍스트 이벤트 목록
+Element Text : 일반 텍스트
+Element SelectionText : 선택 가능한 분기형 텍스트
+	Attribute result : 각각 분기의 결과 번호. <Result>와 연결	
+Element Result : 해당 CardEvent의 결과 리스트
+Element Event : 각각의 결과
+	Attribute id : 각 Event의 고유 ID
+	Attribute reward : 결과로 주어지는 보상(패널티). 주로 PlayerData의 변동. <Reward>와 연결
+	Attribute event : 결과로 다른 CardEvent와 연결.
+	Attribute transfer : 결과로 배틀모드로 전환. 파라미터 추가 필요함.
+	Attribute Gambit : 결과로 갬빗 이벤트 발생. 파라미터 추가 필요함.
+Element Reward : 해당 CardEvent의 보상 리스트.
+Element Event : 각각 보상의 목록
+	Attribute id : 해당 Reward의 고유 ID
+-->
+
+
+
+<CardEventList>
+
+	<!--dummy 1-->
+	<CardEvent id="1">
+		<Dialog>
+			<Text>1 + 1 ?</Text>
+			<SelectionText result="1">1. 귀요미</SelectionText>
+			<SelectionText result="2">2. 창문</SelectionText>
+			<SelectionText result="3">3. 중노동</SelectionText>
+		</Dialog>
+		<Result>
+			<Event id="1" reward="1"/>
+			<Event id="2" event="2"/>
+			<Event id="3" transfer="true"/>
+		</Result>
+		<Reward>
+			<Event id="1">	
+				<Item id="11" amount="1"/>
+				<Food amount="3"/>
+			</Event>
+		</Reward>
+	</CardEvent>
+</CardEventList>
