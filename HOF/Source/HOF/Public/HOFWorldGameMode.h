@@ -7,6 +7,7 @@
 #include "PlayerData.h"
 #include "GameData.h"
 #include "HOFGameInstance.h"
+#include "WorldBoardActor.h"
 #include "HOFWorldGameMode.generated.h"
 
 /**
@@ -30,6 +31,7 @@ public :
 private : 
 	TUniquePtr<FPlayerData> PlayerData;
 	UHOFGameInstance* GameInstance;
+	AHOFWorldBoardActor* WorldBoard;
 	
 	UPROPERTY(EditAnywhere)
 	int32 Counter;

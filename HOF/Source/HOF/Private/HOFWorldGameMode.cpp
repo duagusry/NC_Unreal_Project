@@ -7,6 +7,7 @@
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "HOFWorldCardActor.h"
 #include "Paths.h"
+#include "WorldBoardActor.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 #include "HOFCardEvent.h"
@@ -34,16 +35,20 @@ void AHOFWorldGameMode::BeginPlay()
 	GameInstance->SetGamePlayState(EGameplayState::World);
 
 	//리소스 로딩
-	g_CardEvent->Parse(FPaths::GameDir() + L"Resource/CardEvent.xml");
+	g_CardEvent->Parse(FPaths::ProjectDir() + L"Resource/CardEvent.xml");
 	
-	//테스트용 스폰.
-	//나오는지는 확인 안해봤고 데이터 들어있는지만 확인.
 	FActorSpawnParameters SpawnInfo;
 	FRotator myRot(0.0f, 0.0f, 0.0f);
-	FVector myLoc(0.0f, 0.0f, 100.0f);
-	
-	AHOFWorldCardActor* a = GetWorld()->SpawnActor<AHOFWorldCardActor>(AHOFWorldCardActor::StaticClass(), myLoc, myRot, SpawnInfo);
-	a->Init(1, 2, 3);
+	FVector myLoc(0.0f, 0.0f, 0.0f);
+
+	WorldBoard = GetWorld()->SpawnActor<AHOFWorldBoardActor>(AHOFWorldBoardActor::StaticClass(), myLoc, myRot, SpawnInfo);
+	for (int i = 0; i < WORLD_SLOT_WIDTH; i++)
+	{
+		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
+		{
+			WorldBoard->CreateCardAt(1, i, j);
+		}
+	}
 	
 }
 

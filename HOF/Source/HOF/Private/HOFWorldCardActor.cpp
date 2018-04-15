@@ -10,10 +10,6 @@ AHOFWorldCardActor::AHOFWorldCardActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	m_X = 0;
-	m_Y = 7;
-
 }
 
 void AHOFWorldCardActor::Init(int32 id, int32 x, int32 y)
@@ -43,7 +39,7 @@ void AHOFWorldCardActor::OnInputTap_Implementation()
 {
 	UE_LOG(LogClass, Warning, TEXT("Card selected -> x : %d, y : %d"), m_X, m_Y);
 
-	BattleEvent();
+	//BattleEvent();
 }
 
 void AHOFWorldCardActor::BattleEvent(/* TMap<int, int>& spawnList, int mapNumber*/ )

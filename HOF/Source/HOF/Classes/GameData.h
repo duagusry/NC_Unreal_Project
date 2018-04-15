@@ -35,6 +35,20 @@ namespace EGameKey
 
 }
 
+namespace SizeInGame
+{
+	static const short WORLD_SLOT_WIDTH = 8;
+	static const short WORLD_SLOT_HEIGHT = 8;
+
+	static const float WORLD_WIDTH = 1600.0f;
+	static const float WORLD_HEIGHT = 2400.0f;
+
+	static const float CARD_WIDTH = 160.0f;
+	static const float CARD_HEIGHT = 240.0f;
+
+	static const float BOARD_BASE_LOC_X = 0.0f;
+	static const float BOARD_BASE_LOC_Y = 0.0f;
+}
 
 USTRUCT()
 struct FGameData

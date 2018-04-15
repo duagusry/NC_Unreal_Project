@@ -47,5 +47,4 @@ private :
 	int32 m_Y;
 
 	HOFCardEvent m_CardEvent;
-	
 };
