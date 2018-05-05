@@ -29,7 +29,6 @@ public :
 	
 
 private : 
-	TUniquePtr<FPlayerData> PlayerData;
 	UHOFGameInstance* GameInstance;
 	AHOFWorldBoardActor* WorldBoard;
 	

@@ -48,6 +48,17 @@ namespace SizeInGame
 
 	static const float BOARD_BASE_LOC_X = 0.0f;
 	static const float BOARD_BASE_LOC_Y = 0.0f;
+
+	static const float WIDGET_POSITION_X = 200.0f;
+	static const float WIDGET_POSITION_Y = 70.0f;
+
+	static const float WIDGET_SIZE_X = 1200.0f;
+	static const float WIDGET_SIZE_Y = 50.0f;
+}
+
+namespace NumberInGame
+{
+	static const int MAX_SELECTION_COUNT = 4;
 }
 
 USTRUCT()

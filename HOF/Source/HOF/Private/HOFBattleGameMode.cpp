@@ -28,10 +28,7 @@ void AHOFBattleGameMode::BeginPlay()
 
 	Counter = 3;
 	GetWorldTimerManager().SetTimer(countDownHandle, this, &AHOFBattleGameMode::OnTimerTick, 1.0f, true);
-
-	//PlayerData 이전받음
-	PlayerData = GameInstance->GetPlayerData();
-
+	
 	GameInstance->SetGamePlayState(EGameplayState::Battle);
 
 	PlayerControllerClass = AHOFPlayerController::StaticClass();
@@ -54,11 +51,10 @@ void AHOFBattleGameMode::OnTimerTick()
 	//타이머 만료시 WorldLevel 오픈
 	if (Counter < 1)
 	{
-		PlayerData->EatFood();
+		g_PlayerData->EatFood();
 
-		UE_LOG(LogClass, Warning, TEXT("Alive? %s"), PlayerData->IsAlive() ? TEXT("Alive") : TEXT("Dead"));
+		UE_LOG(LogClass, Warning, TEXT("Alive? %s"), g_PlayerData->IsAlive() ? TEXT("Alive") : TEXT("Dead"));
 		
-		GameInstance->SetPlayerData(PlayerData);
 		GetWorld()->ServerTravel(FString("/Game/Maps/HOFWorldLevel"));
 		GetWorldTimerManager().ClearTimer(countDownHandle);
 	}

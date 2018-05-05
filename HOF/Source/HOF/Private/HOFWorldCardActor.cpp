@@ -3,6 +3,7 @@
 #include "HOFWorldCardActor.h"
 #include "Engine/World.h"
 #include "HOFGameInstance.h"
+#include "HOFWorldPlayerController.h"
 
 
 // Sets default values
@@ -38,8 +39,13 @@ void AHOFWorldCardActor::Tick(float DeltaTime)
 void AHOFWorldCardActor::OnInputTap_Implementation()
 {
 	UE_LOG(LogClass, Warning, TEXT("Card selected -> x : %d, y : %d"), m_X, m_Y);
-
+	TextEvent();
 	//BattleEvent();
+}
+
+void AHOFWorldCardActor::TextEvent()
+{
+	Cast<AHOFWorldPlayerController>(GetWorld()->GetFirstPlayerController())->ShowEventWidget(m_CardEvent.GetID());
 }
 
 void AHOFWorldCardActor::BattleEvent(/* TMap<int, int>& spawnList, int mapNumber*/ )

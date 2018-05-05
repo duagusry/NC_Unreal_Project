@@ -25,9 +25,9 @@ Element Event : 각각 보상의 목록
 	<CardEvent id="1">
 		<Dialog>
 			<Text>1 + 1 ?</Text>
-			<SelectionText result="1">1. 귀요미</SelectionText>
-			<SelectionText result="2">2. 창문</SelectionText>
-			<SelectionText result="3">3. 중노동</SelectionText>
+			<SelectionText result="1">1. 1111</SelectionText>
+			<SelectionText result="2">2. 2222</SelectionText>
+			<SelectionText result="3">3. 3333</SelectionText>
 		</Dialog>
 		<Result>
 			<Event id="1" reward="1"/>
@@ -38,6 +38,29 @@ Element Event : 각각 보상의 목록
 			<Event id="1">	
 				<Item id="11" amount="1"/>
 				<Food amount="3"/>
+			</Event>
+		</Reward>
+	</CardEvent>
+	
+	<!--dummy 2-->
+	<CardEvent id="2">
+		<Dialog>
+			<Text>2 + 2 ?</Text>
+			<SelectionText result="1">1. 4444</SelectionText>
+			<SelectionText result="2">2. 5555</SelectionText>
+		</Dialog>
+		<Result>
+			<Event id="1" reward="1"/>
+			<Event id="2" reward="2"/>
+		</Result>
+		<Reward>
+			<Event id="1">	
+				<Item id="11" amount="1"/>
+				<Food amount="3"/>
+			</Event>
+			<Event id="2">
+				<Gold amount="1000"/>
+				<CurrentHealth amount="-30"/>
 			</Event>
 		</Reward>
 	</CardEvent>

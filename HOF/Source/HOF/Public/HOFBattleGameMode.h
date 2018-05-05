@@ -27,8 +27,6 @@ public :
 	void OnTimerTick();
 
 private : 
-
-	TUniquePtr<FPlayerData> PlayerData;
 	UHOFGameInstance* GameInstance;
 
 	//PlayerController도 여기 있어야할것같음.

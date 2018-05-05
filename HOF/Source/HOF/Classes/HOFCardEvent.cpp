@@ -50,12 +50,11 @@ const HOFCardEvent CardEventResource::GetCardEventFromId(int32 id)
 }
 
 HOFCardEvent::HOFCardEvent(const HOFCardEvent& other)
-{
-	m_Id = other.m_Id;
-	m_Dialog = other.m_Dialog;
-	m_Result = other.m_Result;
-	m_Reward = other.m_Reward;
-}
+	: m_Id(other.m_Id), 
+	m_Dialog(other.m_Dialog), 
+	m_Result(other.m_Result), 
+	m_Reward(other.m_Reward)
+{ }
 
 void CardEventDialog::Parse(const FXmlNode * Node)
 {

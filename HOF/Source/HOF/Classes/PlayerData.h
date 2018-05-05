@@ -1,7 +1,5 @@
 #pragma once
 
-#include "PlayerData.generated.h"
-
 //버프, 이벤트 등으로 인한 변동치 데이터
 struct VariationData
 {
@@ -15,70 +13,44 @@ struct VariationData
 	//LostData(-수치) : 금 손실량, 식량 손실(소비)량, 데미지, ...
 };
 
-USTRUCT()
-struct FPlayerData
+class PlayerData
 {
-	GENERATED_BODY()
-
 public : 
-	FPlayerData()
+	static PlayerData* GetInstance()
 	{
-		Food = 10;
-		Gold = 30;
-		MaxHealth = 100;
-		CurrentHealth = 100;
-		Alive = true;
+		if (!PlayerDataInstance)
+			PlayerDataInstance = new PlayerData();
 
-		//Health 관련된 부분은 lock 필요할듯. (전투상황)
+		return PlayerDataInstance;
 	}
 
-	void EatFood()
-	{
-		//식량이 모자라면 데미지를 받음
-		if (Food < Var.FoodConsumption)
-		{
-			Food = 0;
-			GetDamage(Var.DamageByFood);
-			
-			return;
-		}
+	void EatFood();
 
-		Food -= Var.FoodConsumption;
-		UE_LOG(LogClass, Warning, TEXT("Food Consumed, Current Food : %d"), Food);
+	void Heal(int32 heal);
 
-		Heal(Var.HealByFood);
-	}
+	void GetDamage(int damage);
 
-	void Heal(int32 heal)
-	{
-		int32 TempHealth = CurrentHealth;
+	void Die();
 
-		CurrentHealth += heal;
-		if (CurrentHealth > MaxHealth)
-			CurrentHealth = MaxHealth;
-		UE_LOG(LogClass, Warning, TEXT("Healed, %d -> %d / %d(max)"), TempHealth, CurrentHealth, MaxHealth);
-	}
+	bool IsAlive() { return Alive; }
 
-	void GetDamage(int damage)
-	{
-		int32 TempHealth = CurrentHealth;
-
-		CurrentHealth -= damage;
-		if (CurrentHealth <= 0)
-			CurrentHealth = 0;
-		UE_LOG(LogClass, Warning, TEXT("GetDamage, %d -> %d / %d(max)"), TempHealth, CurrentHealth, MaxHealth);
-
+	void GainFood(int32 amount) { Food += amount; }
+	void LoseFood(int32 amount) { Food = Food < amount ? 0 : Food - amount; }
+	void GainGold(int32 amount) { Gold += amount; }
+	void LoseGold(int32 amount) { Gold = Gold < amount ? 0 : Gold - amount; }
+	void GainMaxHealth(int32 amount) { MaxHealth += amount; }
+	void LoseMaxHealth(int32 amount) { MaxHealth = MaxHealth < amount ? 0 : MaxHealth - amount; }
+	void GainCurrentHealth(int32 amount) { CurrentHealth = CurrentHealth + amount > MaxHealth ? MaxHealth : CurrentHealth + amount; }
+	void LoseCurrentHealth(int32 amount)
+	{ 
+		CurrentHealth = CurrentHealth < amount ? 0 : CurrentHealth - amount; 
+		
 		if (CurrentHealth <= 0)
 			Die();
 	}
 
-	void Die()
-	{
-		Alive = false;
-		UE_LOG(LogClass, Warning, TEXT("YOU DIED"));
-	}
-
-	bool IsAlive() { return Alive; }
+private : 
+	PlayerData();
 
 private : 
 	int32 Food;
@@ -89,4 +61,7 @@ private :
 
 	VariationData Var;
 
+	static PlayerData* PlayerDataInstance;
 };
+
+#define g_PlayerData PlayerData::GetInstance()

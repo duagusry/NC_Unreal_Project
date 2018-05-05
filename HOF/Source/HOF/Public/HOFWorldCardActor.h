@@ -39,6 +39,8 @@ public:
 		etc... : 추가적으로 이벤트성의 설정이 들어갈 수 있을 듯. ex.) 시간제한, 보스전 여부, 기타 이벤트
 
 	*/
+	void TextEvent();
+
 	void BattleEvent(/* TMap<int, int>& spawnList, int mapNumber */);
 
 private : 

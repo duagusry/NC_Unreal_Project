@@ -18,6 +18,8 @@ class HOF_API AHOFWorldPlayerController : public APlayerController
 public : 
 	AHOFWorldPlayerController();
 
+	void ShowEventWidget(int32 id);
+
 protected : 
 	//실제 인풋을 처리하는 부분
 	virtual void ProcessPlayerInput(const float DeltaTime, const bool bGamePaused) override;
@@ -35,5 +37,17 @@ protected :
 
 	/** currently selected actor */
 	TWeakObjectPtr<AActor> SelectedActor;
+	
+	//위젯은 삭제나 파괴가 불가능함.
+	//따라서 위젯을 여러개 만들어놓으면 메모리에 큰 영향을 줄 수 있음.
+	//위젯은 가급적 하나 만든걸 재사용하는게 좋음
 
+	// The class that will be used for the players Inventory UI
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Player, HUD and UI")
+	TSubclassOf<class UHOFTextWidget> BP_EventWidget;
+
+	// The instance of the players Inventory UI Widget
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Player, HUD and UI")
+	class UHOFTextWidget* EventWidget;
+	
 };

@@ -6,7 +6,7 @@
 UHOFGameInstance::UHOFGameInstance()
 {
 	//플레이어 데이터 최초 생성, 초기화
-	PlayerData = MakeUnique<FPlayerData>();
+	g_PlayerData;
 }
 
 void UHOFGameInstance::Init()
@@ -19,6 +19,5 @@ void UHOFGameInstance::Init()
 void UHOFGameInstance::SwitchToBattle(FString levelDir)
 {
 	UE_LOG(LogClass, Warning, TEXT("Switch to BattleMode"));
-	SetPlayerData(PlayerData);
-	GetWorld()->ServerTravel(FString("/Game/Maps/HOFBattleLevel"));
+	GetWorld()->ServerTravel(levelDir);
 }

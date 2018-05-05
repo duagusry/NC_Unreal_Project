@@ -39,7 +39,6 @@ class CardEventResult
 public : 
 	void Parse(const FXmlNode* Node);
 
-private : 
 	TArray<FResult> m_Results;
 };
 
@@ -73,7 +72,6 @@ class CardEventReward
 public : 
 	void Parse(const FXmlNode* Node);
 
-private : 
 	TArray<FReward> m_Rewards;
 };
 
@@ -90,6 +88,10 @@ public:
 	void SetReward(CardEventReward& reward) { m_Reward = reward; }
 	
 	int32 GetID() { return m_Id; }
+	CardEventDialog& GetDialog() { return m_Dialog; }
+	int32 GetSelectionResult(int32 id) { return m_Dialog.m_SelectionTexts[id - 1].Result; }
+	FResult& GetEventResult(int32 id) { return m_Result.m_Results[id - 1]; }
+	FReward& GetEventReward(int32 id) { return m_Reward.m_Rewards[id - 1]; }
 
 private : 
 	int32 m_Id;

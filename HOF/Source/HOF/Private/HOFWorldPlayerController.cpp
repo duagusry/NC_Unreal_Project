@@ -3,6 +3,7 @@
 #include "HOFWorldPlayerController.h"
 #include "HOFInputInterface.h"
 #include "HOFWorldInput.h"
+#include "HOFTextWidget.h"
 
 AHOFWorldPlayerController::AHOFWorldPlayerController()
 {
@@ -11,6 +12,31 @@ AHOFWorldPlayerController::AHOFWorldPlayerController()
 	bHidden = false;
 	//WorldMode에서는 마우스 커서가 보임
 	bShowMouseCursor = true;
+	
+	//Initialize Widget
+	BP_EventWidget = nullptr;
+	
+	static ConstructorHelpers::FObjectFinder<UBlueprint> WorldEventWidgetBluePrint(TEXT("Blueprint'/Game/Blueprints/BP_EventWidget'"));
+
+	if (WorldEventWidgetBluePrint.Object)
+	{
+		BP_EventWidget = CastChecked<UClass>(WorldEventWidgetBluePrint.Object->GeneratedClass);
+	}
+	
+}
+
+void AHOFWorldPlayerController::ShowEventWidget(int32 id)
+{
+	
+	EventWidget = CreateWidget<UHOFTextWidget>(this, BP_EventWidget); // Create Widget
+	if (!EventWidget)
+		return;
+
+	EventWidget->Init(id);
+
+	EventWidget->AddToViewport(); // Add it to the viewport so the Construct() method in the UUserWidget:: is run.
+	EventWidget->SetVisibility(ESlateVisibility::Visible); // Set it to hidden so its not open on spawn.
+	
 }
 
 void AHOFWorldPlayerController::ProcessPlayerInput(const float DeltaTime, const bool bGamePaused)
