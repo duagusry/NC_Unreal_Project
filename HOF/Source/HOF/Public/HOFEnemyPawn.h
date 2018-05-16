@@ -6,6 +6,9 @@
 #include "GameFramework/Pawn.h"
 #include "HOFEnemyPawn.generated.h"
 
+class UBlackboardData;
+class UBehaviorTree;
+
 UCLASS()
 class HOF_API AHOFEnemyPawn : public APawn
 {
@@ -43,6 +46,10 @@ public:
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Stat")
 		float CurrentHP;
+
+	UPROPERTY(EditAnywhere, Category = Behavior)
+		UBehaviorTree* behaviorTreeAsset;
+
 
 private:
 	float CurrentLeftRightVal;
