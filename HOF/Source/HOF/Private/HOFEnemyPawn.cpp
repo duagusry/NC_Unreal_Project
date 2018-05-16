@@ -7,6 +7,8 @@
 #include "Runtime/Engine/Classes/Components/ArrowComponent.h"
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
 #include "Runtime/Engine/Classes/GameFramework/FloatingPawnMovement.h"
+#include "HOFEnemyController.h"
+#include "BehaviorTree/BehaviorTree.h"
 
 // Sets default values
 AHOFEnemyPawn::AHOFEnemyPawn()
@@ -27,6 +29,9 @@ AHOFEnemyPawn::AHOFEnemyPawn()
 
 	FloatPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawn"));
 
+	FName BTPath = TEXT("BehaviorTree'/Game/AI/EnemyBT.EnemyBT'"); 
+	behaviorTreeAsset = Cast<UBehaviorTree>(StaticLoadObject(UBehaviorTree::StaticClass(), NULL, *BTPath.ToString()));
+	AIControllerClass = AHOFEnemyController::StaticClass();
 }
 
 // Called when the game starts or when spawned

@@ -12,6 +12,7 @@
 				"Engine",
 				"HOF",
 				"UMG"
+				"AIModule"
 			]
 		}
 	]
