@@ -18,6 +18,7 @@ AHOFWorldBoardActor::AHOFWorldBoardActor()
 
 AHOFWorldBoardActor::~AHOFWorldBoardActor()
 {
+	//게임이 플레이됐다가 종료될 때 한번, 에디터 꺼질 때 한번..
 	ResetWorldSlot();
 }
 
@@ -54,12 +55,17 @@ FVector AHOFWorldBoardActor::GetCardLocationOn(int x, int y)
 
 void AHOFWorldBoardActor::ResetWorldSlot()
 {
+	//TSharedPtr로 변경 고려해야 할 듯..
+
 	for (int i = 0; i < WORLD_SLOT_WIDTH; i++)
 	{
 		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
 		{
-			m_WorldSlot[i][j]->Destroy();
-			m_AdjacentList[i][j].Empty();
+			if (m_WorldSlot[i][j])
+				m_WorldSlot[i][j]->Destroy();
+
+			if (m_AdjacentList[i][j].Num())
+				m_AdjacentList[i][j].Empty();
 		}
 	}
 }
