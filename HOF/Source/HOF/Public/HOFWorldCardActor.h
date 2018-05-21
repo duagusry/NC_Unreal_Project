@@ -43,10 +43,19 @@ public:
 
 	void BattleEvent(/* TMap<int, int>& spawnList, int mapNumber */);
 
+	void SetAdjacency(bool isAdjacent);
+
+public : 
+	//WorldPawn과 인접해있는지 여부
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Default)
+	bool IsAdjacentToPawn;
+
 private : 
 	//WorldBoardActor상의 좌표
 	int32 m_X;
 	int32 m_Y;
+
+	
 
 	HOFCardEvent m_CardEvent;
 };

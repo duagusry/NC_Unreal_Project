@@ -18,6 +18,15 @@ AHOFWorldGameMode::AHOFWorldGameMode()
 	PlayerControllerClass = AHOFWorldPlayerController::StaticClass();
 	SpectatorClass = AHOFSpectatorPawn::StaticClass();
 	DefaultPawnClass = AHOFSpectatorPawn::StaticClass();
+	
+	BP_WorldPawn = nullptr;
+
+	static ConstructorHelpers::FObjectFinder<UBlueprint> WorldPawnBluePrint(TEXT("Blueprint'/Game/Blueprints/BP_WorldPawn'"));
+
+	if (WorldPawnBluePrint.Object)
+	{
+		BP_WorldPawn = CastChecked<UClass>(WorldPawnBluePrint.Object->GeneratedClass);
+	}
 }
 
 void AHOFWorldGameMode::BeginPlay()
@@ -46,7 +55,14 @@ void AHOFWorldGameMode::BeginPlay()
 			WorldBoard->CreateCardAt(1, i, j);
 		}
 	}
+	WorldBoard->InitAdjacentList();
 	
+	FVector PawnInitialLocaiton = WorldBoard->GetCardLocationOn(0, 0);
+
+	WorldPawn = GetWorld()->SpawnActor<AHOFWorldPawn>(BP_WorldPawn, PawnInitialLocaiton, myRot, SpawnInfo);
+	WorldPawn->SetPosition(0, 0);
+	WorldBoard->UpdateAdjacentList(0, 0, 0, 0);
+
 }
 
 void AHOFWorldGameMode::Tick(float DeltaSeconds)
@@ -73,6 +89,15 @@ void AHOFWorldGameMode::OnTimerTick()
 		GetWorld()->ServerTravel(FString("/Game/Maps/HOFBattleLevel"));
 		GetWorldTimerManager().ClearTimer(countDownHandle);
 	}
+}
+
+void AHOFWorldGameMode::MovePawnTo(int32 x, int32 y)
+{
+	BaseStructs::Position oldPosition = g_PlayerData->GetWorldPawnPosition();
+	WorldBoard->UpdateAdjacentList(oldPosition.x, oldPosition.y, x, y);
+
+	WorldPawn->SetPosition(x, y);
+	WorldPawn->SetLocation(WorldBoard->GetCardLocationOn(x, y));
 }
 
 

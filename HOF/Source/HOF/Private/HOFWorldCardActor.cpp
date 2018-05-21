@@ -3,6 +3,8 @@
 #include "HOFWorldCardActor.h"
 #include "Engine/World.h"
 #include "HOFGameInstance.h"
+#include "GameFramework/Actor.h"
+#include "HOFWorldGameMode.h"
 #include "HOFWorldPlayerController.h"
 
 
@@ -17,6 +19,7 @@ void AHOFWorldCardActor::Init(int32 id, int32 x, int32 y)
 {
 	m_X = x;
 	m_Y = y;
+	IsAdjacentToPawn = false;
 	m_CardEvent = g_CardEvent->GetCardEventFromId(id);
 	if (!m_CardEvent.GetID())
 		return;
@@ -38,9 +41,15 @@ void AHOFWorldCardActor::Tick(float DeltaTime)
 
 void AHOFWorldCardActor::OnInputTap_Implementation()
 {
-	UE_LOG(LogClass, Warning, TEXT("Card selected -> x : %d, y : %d"), m_X, m_Y);
-	TextEvent();
-	//BattleEvent();
+	if (IsAdjacentToPawn)
+	{
+		UE_LOG(LogClass, Warning, TEXT("Card selected -> x : %d, y : %d"), m_X, m_Y);
+
+		Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode())->MovePawnTo(m_X, m_Y);
+
+		//TextEvent();
+		//BattleEvent();
+	}
 }
 
 void AHOFWorldCardActor::TextEvent()
@@ -54,5 +63,10 @@ void AHOFWorldCardActor::BattleEvent(/* TMap<int, int>& spawnList, int mapNumber
 	//GameInstance에 다 넣어놓고 쓸수도 있을거같은데 그건 좀..
 
 	Cast<UHOFGameInstance>(GetGameInstance())->SwitchToBattle(FString("/Game/Maps/HOFBattleLevel"));
+}
+
+void AHOFWorldCardActor::SetAdjacency(bool isAdjacent)
+{
+	IsAdjacentToPawn = isAdjacent;
 }
 

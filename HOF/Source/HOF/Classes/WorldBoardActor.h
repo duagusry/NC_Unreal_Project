@@ -14,12 +14,19 @@ class AHOFWorldBoardActor : public AActor
 
 public : 
 	AHOFWorldBoardActor();
+	~AHOFWorldBoardActor();
 
 	void CreateCardAt(int id, int xi, int yi);
 
 	AHOFWorldCardActor& GetCardOn(int x, int y);
 
+	FVector GetCardLocationOn(int x, int y);
+
 	void ResetWorldSlot();
+
+	void InitAdjacentList();
+	
+	void UpdateAdjacentList(int32 old_x, int32 old_y, int32 new_x, int32 new_y);
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -27,4 +34,7 @@ public:
 
 private : 
 	AHOFWorldCardActor* m_WorldSlot[WORLD_SLOT_WIDTH][WORLD_SLOT_WIDTH];
+
+	//분명히 인접 리스트를 관리하는 우아한 방법이 있을 것 같은데 모르겠음
+	TArray<AHOFWorldCardActor*> m_AdjacentList[WORLD_SLOT_WIDTH][WORLD_SLOT_WIDTH];
 };

@@ -8,6 +8,7 @@
 #include "GameData.h"
 #include "HOFGameInstance.h"
 #include "WorldBoardActor.h"
+#include "HOFWorldPawn.h"
 #include "HOFWorldGameMode.generated.h"
 
 /**
@@ -27,10 +28,17 @@ public :
 
 	void OnTimerTick();
 	
+	void MovePawnTo(int32 x, int32 y);
+
+public : 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<AHOFWorldPawn> BP_WorldPawn;
+
 
 private : 
 	UHOFGameInstance* GameInstance;
 	AHOFWorldBoardActor* WorldBoard;
+	AHOFWorldPawn* WorldPawn;
 	
 	UPROPERTY(EditAnywhere)
 	int32 Counter;

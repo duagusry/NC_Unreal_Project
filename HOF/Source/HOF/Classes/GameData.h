@@ -61,6 +61,15 @@ namespace NumberInGame
 	static const int MAX_SELECTION_COUNT = 4;
 }
 
+namespace BaseStructs
+{
+	struct Position
+	{
+		int32 x;
+		int32 y;
+	};
+}
+
 USTRUCT()
 struct FGameData
 {

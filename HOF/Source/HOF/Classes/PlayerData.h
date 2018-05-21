@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GameData.h"
+
 //버프, 이벤트 등으로 인한 변동치 데이터
 struct VariationData
 {
@@ -49,6 +51,13 @@ public :
 			Die();
 	}
 
+	BaseStructs::Position GetWorldPawnPosition() const { return WorldPawnPosition; }
+	void SetWorldPawnPosition(int32 x, int32 y)
+	{
+		WorldPawnPosition.x = x;
+		WorldPawnPosition.y = y;
+	}
+
 private : 
 	PlayerData();
 
@@ -60,6 +69,7 @@ private :
 	bool Alive;
 
 	VariationData Var;
+	BaseStructs::Position WorldPawnPosition;
 
 	static PlayerData* PlayerDataInstance;
 };

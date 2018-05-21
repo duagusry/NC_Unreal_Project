@@ -16,6 +16,11 @@ AHOFWorldBoardActor::AHOFWorldBoardActor()
 	}
 }
 
+AHOFWorldBoardActor::~AHOFWorldBoardActor()
+{
+	ResetWorldSlot();
+}
+
 void AHOFWorldBoardActor::CreateCardAt(int id, int xi, int yi)
 {
 	float realSlotSizeY = WORLD_WIDTH / WORLD_SLOT_WIDTH;
@@ -31,7 +36,7 @@ void AHOFWorldBoardActor::CreateCardAt(int id, int xi, int yi)
 	UWorld* world = GetWorld();
 	if (world && BP_WorldCardActor)
 	{
-		AHOFWorldCardActor* newCard = world->SpawnActor<AHOFWorldCardActor>(BP_WorldCardActor, myLoc, myRot, SpawnInfo);
+		AHOFWorldCardActor* newCard(world->SpawnActor<AHOFWorldCardActor>(BP_WorldCardActor, myLoc, myRot, SpawnInfo));
 		newCard->Init(id, xi, yi);
 		m_WorldSlot[xi][yi] = newCard;
 	}
@@ -42,6 +47,11 @@ AHOFWorldCardActor & AHOFWorldBoardActor::GetCardOn(int x, int y)
 	return *m_WorldSlot[x][y];
 }
 
+FVector AHOFWorldBoardActor::GetCardLocationOn(int x, int y)
+{
+	return m_WorldSlot[x][y]->GetActorLocation();
+}
+
 void AHOFWorldBoardActor::ResetWorldSlot()
 {
 	for (int i = 0; i < WORLD_SLOT_WIDTH; i++)
@@ -49,6 +59,39 @@ void AHOFWorldBoardActor::ResetWorldSlot()
 		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
 		{
 			m_WorldSlot[i][j]->Destroy();
+			m_AdjacentList[i][j].Empty();
 		}
+	}
+}
+
+void AHOFWorldBoardActor::InitAdjacentList()
+{
+	//The Love..
+	for (int i = 0; i < WORLD_SLOT_WIDTH; i++)
+	{
+		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
+		{
+			if (i - 1 >= 0)
+				m_AdjacentList[i][j].Add(m_WorldSlot[i - 1][j]);
+			if (i + 1 < WORLD_SLOT_WIDTH)
+				m_AdjacentList[i][j].Add(m_WorldSlot[i + 1][j]);
+			if (j - 1 >= 0)
+				m_AdjacentList[i][j].Add(m_WorldSlot[i][j - 1]);
+			if (j + 1 < WORLD_SLOT_HEIGHT)
+				m_AdjacentList[i][j].Add(m_WorldSlot[i][j + 1]);
+		}
+	}
+}
+
+void AHOFWorldBoardActor::UpdateAdjacentList(int32 old_x, int32 old_y, int32 new_x, int32 new_y)
+{
+	for (auto card : m_AdjacentList[old_x][old_y])
+	{
+		card->SetAdjacency(false);
+	}
+
+	for (auto card : m_AdjacentList[new_x][new_y])
+	{
+		card->SetAdjacency(true);
 	}
 }
