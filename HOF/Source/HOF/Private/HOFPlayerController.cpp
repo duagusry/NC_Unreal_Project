@@ -50,6 +50,8 @@ void AHOFPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Jump", IE_Released, this, &AHOFPlayerController::JumpIfNotInput);
 	InputComponent->BindAction("Attack", IE_Pressed, this, &AHOFPlayerController::Attack);
 	InputComponent->BindAction("Attack", IE_Released, this, &AHOFPlayerController::NotAttack);
+
+	
 }
 
 void AHOFPlayerController::MoveForward(float NewInputVal)
