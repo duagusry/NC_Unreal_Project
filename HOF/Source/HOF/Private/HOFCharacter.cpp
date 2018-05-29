@@ -5,6 +5,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 AHOFCharacter::AHOFCharacter()
@@ -45,5 +46,15 @@ void AHOFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AHOFCharacter::PossessedBy(AController * NewController)
+{
+	UClass *AnimInstanceClass = AnimAssetClass.TryLoadClass<UAnimInstance>();
+	if (AnimInstanceClass)
+	{
+		UE_LOG(LogClass, Warning, TEXT("Loading Character Anim Asset.. "));
+		GetMesh()->SetAnimInstanceClass(AnimInstanceClass);
+	}
 }
 

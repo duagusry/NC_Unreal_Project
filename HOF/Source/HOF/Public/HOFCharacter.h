@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "HOFCharacter.generated.h"
 
-UCLASS()
+UCLASS(config=Game)
 class HOF_API AHOFCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -25,6 +25,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void PossessedBy(class AController *NewController) override;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Collision")
 		class UCapsuleComponent* Capsule;
@@ -53,6 +54,9 @@ public:
 	UPROPERTY(config)
 		TArray<FStringAssetReference>CharacterAssets;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "State")
 		bool isAttacking;
+
+	UPROPERTY(config)
+		FStringClassReference AnimAssetClass;
 };
