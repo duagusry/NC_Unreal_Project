@@ -3,9 +3,15 @@
 #include "HOFPlayerState.h"
 
 
-void AHOFPlayerState::SetState(HOFCharacterState newState)
+AHOFPlayerState::AHOFPlayerState()
 {
-	if (newState == HOFCharacterState::BATTLE)
+	CurrentHP = MaxHP = 100.0f;
+	CurrentStatePawn = EHOFCharacterState::PEACE;
+}
+
+void AHOFPlayerState::SetState(EHOFCharacterState newState)
+{
+	if (newState == EHOFCharacterState::BATTLE)
 		bIsBattleInAction = true;
 	else
 		bIsBattleInAction = false;

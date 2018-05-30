@@ -57,6 +57,7 @@ private:
 
 	UFUNCTION()
 		void NotAttack();
-	
-	
+
+	UFUNCTION()
+		void SetStateToBattle();
 };

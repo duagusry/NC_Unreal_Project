@@ -3,9 +3,11 @@
 #include "HOFPlayerController.h"
 #include "HOF.h"
 #include "HOFCharacter.h"
+#include "HOFPlayerState.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h"
+
 
 AHOFPlayerController::AHOFPlayerController()
 {
@@ -113,7 +115,20 @@ void AHOFPlayerController::JumpIfNotInput()
 
 void AHOFPlayerController::Attack()
 {
+	SetStateToBattle();
 	character->isAttacking = true;
+}
+
+void AHOFPlayerController::SetStateToBattle()
+{
+	AHOFPlayerState *playerState = Cast<AHOFPlayerState>(PlayerState);
+	if (playerState)
+	{
+		if (playerState->bIsBattleInAction)
+			return;
+
+		playerState->SetState(EHOFCharacterState::BATTLE);
+	}
 }
 
 void AHOFPlayerController::NotAttack()

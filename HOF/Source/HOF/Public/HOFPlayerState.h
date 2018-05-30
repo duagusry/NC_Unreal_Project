@@ -11,7 +11,7 @@
  */
 
 UENUM(BlueprintType)
-enum HOFCharacterState
+enum EHOFCharacterState
 {
 	PEACE UMETA(DisplayName = "PEADE"),
 	BATTLE UMETA(DisplayName = "BATTLE"),
@@ -23,6 +23,8 @@ class HOF_API AHOFPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 public:
+	AHOFPlayerState();
+
 	UPROPERTY()
 		int32 CharacterType;
 
@@ -33,10 +35,10 @@ public:
 		float CurrentHP;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		TEnumAsByte<HOFCharacterState> CurrentStatePawn;
+		TEnumAsByte<EHOFCharacterState> CurrentStatePawn;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Battle")
 	uint32 bIsBattleInAction:1;
 
-	void SetState(HOFCharacterState newState);
+	void SetState(EHOFCharacterState newState);
 };

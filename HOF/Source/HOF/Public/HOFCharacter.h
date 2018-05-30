@@ -19,13 +19,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void PossessedBy(class AController *NewController) override;
+	virtual float TakeDamage(float Damage, const struct FDamageEvent &DamageEvent, class AController* EventInstigator, class AActor*DamageCauser) override;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Collision")
 		class UCapsuleComponent* Capsule;
@@ -59,4 +60,12 @@ public:
 
 	UPROPERTY(config)
 		FStringClassReference AnimAssetClass;
+
+	UFUNCTION(BlueprintCallable, Category = "Damage")
+		void AttackHit();
+
+private:
+	TSharedPtr<FCollisionObjectQueryParams> GetTraceObject(const TArray<ECollisionChannel>& channels);
+	TSharedPtr<FCollisionQueryParams> GetTraceParams();
+	void GiveDamage(const FHitResult & HitResult);
 };

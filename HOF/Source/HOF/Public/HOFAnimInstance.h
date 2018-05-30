@@ -24,5 +24,11 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-		TEnumAsByte<HOFCharacterState> CurrentStateAnim;
+		TEnumAsByte<EHOFCharacterState> CurrentStateAnim;
+
+	UFUNCTION()
+		void AnimNotify_AttackHit(UAnimNotify *Notify);
+
+	UFUNCTION()
+		void AnimNotify_AttackEnd(UAnimNotify *Notify);
 };
