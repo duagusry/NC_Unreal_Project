@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "HOFEnemyPawn.h"
+#include "HOF.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "HOFGameInstance.h"
 #include "Runtime/Engine/Classes/Components/CapsuleComponent.h"
@@ -29,29 +30,80 @@ AHOFEnemyPawn::AHOFEnemyPawn()
 
 	FloatPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawn"));
 
+	PawnSenses = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSenses"));
+	PawnSenses->SightRadius = 1000.0f;
+	PawnSenses->bOnlySensePlayers = true;
+	PawnSenses->bHearNoises = false;
+	PawnSenses->OnSeePawn.AddDynamic(this, &AHOFEnemyPawn::OnSeePlayer);
+
 	FName BTPath = TEXT("BehaviorTree'/Game/AI/EnemyBT.EnemyBT'"); 
 	behaviorTreeAsset = Cast<UBehaviorTree>(StaticLoadObject(UBehaviorTree::StaticClass(), NULL, *BTPath.ToString()));
 	AIControllerClass = AHOFEnemyController::StaticClass();
+
+	EnemyState = CreateDefaultSubobject<AHOFPlayerState>(TEXT("EnemyPlayerState"));
+	MaxHP = CurrentHP = 100.0f;
+	isDead = false;
 }
 
 // Called when the game starts or when spawned
 void AHOFEnemyPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
-}
 
-// Called every frame
-void AHOFEnemyPawn::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
+	//PlayerState = CreateDefaultSubobject<AHOFPlayerState>(TEXT("EnemyPlayerState"));
 }
 
 // Called to bind functionality to input
 void AHOFEnemyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
+float AHOFEnemyPawn::TakeDamage(float Damage, const FDamageEvent &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
+{
+	const float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+	if (CurrentHP <= 0.f)
+		return 0.f;
+
+	if (ActualDamage > 0.f)
+	{
+		CurrentHP = FMath::Clamp(CurrentHP - ActualDamage, 0.0f, MaxHP);
+		AB_LOG(Warning, TEXT("HP:%f"), CurrentHP);
+
+		if (CurrentHP <= 0)
+			SetCurrentState(EHOFCharacterState::DEAD);//isDead = true;
+	}
+	return ActualDamage;
+}
+
+bool AHOFEnemyPawn::IsRunning()
+{
+	if(FloatPawnMovement->Velocity.Size() > 0)
+		return true;
+	else
+		return false;
+}
+
+bool AHOFEnemyPawn::IsDead()
+{
+	return isDead;
+}
+
+void AHOFEnemyPawn::SetCurrentState(EHOFCharacterState newState)
+{
+	if (EnemyState->GetState() != EHOFCharacterState::DEAD)
+	{
+		Cast<AHOFEnemyController>(GetController())->SetStateInBlackBoard(newState);
+		EnemyState->SetState(newState);
+	}
+}
+
+void AHOFEnemyPawn::OnSeePlayer(APawn * InPawn)
+{
+	//if (EnemyState->GetState() == EHOFCharacterState::PEACE)
+	//{
+		SetCurrentState(EHOFCharacterState::CHASE);
+		Instigator = InPawn;
+	//}
+}

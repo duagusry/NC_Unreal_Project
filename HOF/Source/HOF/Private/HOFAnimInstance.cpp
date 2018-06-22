@@ -2,7 +2,6 @@
 
 #include "HOFAnimInstance.h"
 #include "HOFCharacter.h"
-#include "HOFPlayerState.h"
 
 UHOFAnimInstance::UHOFAnimInstance()
 {

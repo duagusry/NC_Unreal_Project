@@ -13,7 +13,8 @@
 UENUM(BlueprintType)
 enum EHOFCharacterState
 {
-	PEACE UMETA(DisplayName = "PEADE"),
+	PEACE UMETA(DisplayName = "PEACE"),
+	CHASE UMETA(DisplayName = "CHASE"),
 	BATTLE UMETA(DisplayName = "BATTLE"),
 	DEAD UMETA(DisplayName = "DEAD"),
 };
@@ -24,9 +25,6 @@ class HOF_API AHOFPlayerState : public APlayerState
 	GENERATED_BODY()
 public:
 	AHOFPlayerState();
-
-	UPROPERTY()
-		int32 CharacterType;
 
 	UPROPERTY()
 		float MaxHP;
@@ -41,4 +39,5 @@ public:
 	uint32 bIsBattleInAction:1;
 
 	void SetState(EHOFCharacterState newState);
+	EHOFCharacterState GetState();
 };

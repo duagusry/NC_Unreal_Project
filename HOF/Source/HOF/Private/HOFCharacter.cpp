@@ -97,21 +97,13 @@ void AHOFCharacter::AttackHit()
 		GiveDamage(HitResult);
 }
 
-TSharedPtr<FCollisionObjectQueryParams> AHOFCharacter::GetTraceObject(const TArray<ECollisionChannel> &channels)
-{
-	auto TraceObject = MakeShared<FCollisionObjectQueryParams>();
-	for(auto channel : channels)
-		TraceObject->AddObjectTypesToQuery(channel);
-	return TraceObject;
-}
-
 TSharedPtr<FCollisionQueryParams> AHOFCharacter::GetTraceParams()
 {
 	const FName TraceTag("MyTraceTag");
 	GetWorld()->DebugDrawTraceTag = TraceTag;
 
 	auto TraceParams = MakeShared<FCollisionQueryParams>(FName(TEXT("VictoreCore Trace")), true, this);
-	TraceParams->bTraceComplex = true;	
+	TraceParams->bTraceComplex = true;
 	TraceParams->bReturnPhysicalMaterial = false;
 	TraceParams->TraceTag = TraceTag;
 
@@ -120,10 +112,18 @@ TSharedPtr<FCollisionQueryParams> AHOFCharacter::GetTraceParams()
 	return TraceParams;
 }
 
+TSharedPtr<FCollisionObjectQueryParams> AHOFCharacter::GetTraceObject(const TArray<ECollisionChannel> &channels)
+{
+	auto TraceObject = MakeShared<FCollisionObjectQueryParams>();
+	for(auto channel : channels)
+		TraceObject->AddObjectTypesToQuery(channel);
+	return TraceObject;
+}
+
 void AHOFCharacter::GiveDamage(const FHitResult &HitResult)
 {
 	AB_LOG(Warning, TEXT("HitActor=%s"), *(HitResult.GetActor()->GetName()));
-	float BaseDamage = 15.0f;
+	float BaseDamage = 100.0f;
 
 	FPointDamageEvent PointDamageEvent(BaseDamage, HitResult, GetActorForwardVector(), UDamageType::StaticClass());
 	HitResult.GetActor()->TakeDamage(BaseDamage, PointDamageEvent, GetController(), this);

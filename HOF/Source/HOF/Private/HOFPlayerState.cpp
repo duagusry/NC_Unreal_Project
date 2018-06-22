@@ -19,4 +19,9 @@ void AHOFPlayerState::SetState(EHOFCharacterState newState)
 	CurrentStatePawn = newState;
 }
 
+EHOFCharacterState AHOFPlayerState::GetState()
+{
+	return CurrentStatePawn;
+}
+
 

@@ -6,6 +6,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "AI/Navigation/NavigationSystem.h"
+#include "HOFPlayerState.h"
 #include "HOFEnemyPawn.h"
 
 AHOFEnemyController::AHOFEnemyController(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -16,6 +17,7 @@ AHOFEnemyController::AHOFEnemyController(const class FObjectInitializer& ObjectI
 	HomeLocKey = "HomeLocation";
 	IdleTimeKey = "IdleTime";
 	TargetLocKey = "TargetLocation";
+	StateKey = "State";
 }
 
 void AHOFEnemyController::BeginPlay()
@@ -31,11 +33,7 @@ void AHOFEnemyController::Possess(APawn* InPawn)
 
 	if (pawn && pawn->behaviorTreeAsset)
 	{
-		AB_LOG(Warning, TEXT("In MyPawn"));
 		BlackboardComp->InitializeBlackboard(*(pawn->behaviorTreeAsset->BlackboardAsset));
-
-		int32 homeLocKeyID = BlackboardComp->GetKeyID("HomeLocation");
-		int32 idleTimeKeyID = BlackboardComp->GetKeyID("IdleTime");
 
 		BlackboardComp->SetValueAsVector(HomeLocKey, pawn->GetActorLocation());
 		BlackboardComp->SetValueAsFloat(IdleTimeKey, 2);
@@ -45,5 +43,10 @@ void AHOFEnemyController::Possess(APawn* InPawn)
 
 		BehaviorComp->StartTree(*(pawn->behaviorTreeAsset));
 	}
+}
+
+void AHOFEnemyController::SetStateInBlackBoard(EHOFCharacterState newState)
+{
+	BlackboardComp->SetValueAsEnum(StateKey, newState);
 }
 
