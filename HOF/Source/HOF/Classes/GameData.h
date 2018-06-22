@@ -37,8 +37,8 @@ namespace EGameKey
 
 namespace SizeInGame
 {
-	static const short WORLD_SLOT_WIDTH = 8;
-	static const short WORLD_SLOT_HEIGHT = 8;
+	static const short WORLD_SLOT_WIDTH = 3;
+	static const short WORLD_SLOT_HEIGHT = 3;
 
 	static const float WORLD_WIDTH = 1600.0f;
 	static const float WORLD_HEIGHT = 2400.0f;
@@ -59,6 +59,7 @@ namespace SizeInGame
 namespace NumberInGame
 {
 	static const int MAX_SELECTION_COUNT = 4;
+	static const int TEXT_BLOCK_START = 2;
 }
 
 namespace BaseStructs

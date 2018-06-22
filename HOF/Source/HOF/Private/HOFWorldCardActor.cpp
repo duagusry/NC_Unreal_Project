@@ -19,6 +19,7 @@ void AHOFWorldCardActor::Init(int32 id, int32 x, int32 y)
 {
 	m_X = x;
 	m_Y = y;
+	m_Opened = true;
 	IsAdjacentToPawn = false;
 	m_CardEvent = g_CardEvent->GetCardEventFromId(id);
 	if (!m_CardEvent.GetID())
@@ -41,20 +42,23 @@ void AHOFWorldCardActor::Tick(float DeltaTime)
 
 void AHOFWorldCardActor::OnInputTap_Implementation()
 {
+	if (!m_Opened)
+		return;
+
 	if (IsAdjacentToPawn)
 	{
 		UE_LOG(LogClass, Warning, TEXT("Card selected -> x : %d, y : %d"), m_X, m_Y);
 
 		Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode())->MovePawnTo(m_X, m_Y);
 
-		//TextEvent();
+		TextEvent();
 		//BattleEvent();
 	}
 }
 
 void AHOFWorldCardActor::TextEvent()
 {
-	Cast<AHOFWorldPlayerController>(GetWorld()->GetFirstPlayerController())->ShowEventWidget(m_CardEvent.GetID());
+	Cast<AHOFWorldPlayerController>(GetWorld()->GetFirstPlayerController())->ShowEventWidget(m_CardEvent.GetID(), this);
 }
 
 void AHOFWorldCardActor::BattleEvent(/* TMap<int, int>& spawnList, int mapNumber*/ )

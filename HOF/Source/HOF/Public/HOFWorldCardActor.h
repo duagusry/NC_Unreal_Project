@@ -45,6 +45,8 @@ public:
 
 	void SetAdjacency(bool isAdjacent);
 
+	void Flip() { m_Opened = true; }
+
 public : 
 	//WorldPawn과 인접해있는지 여부
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Default)
@@ -54,7 +56,7 @@ private :
 	//WorldBoardActor상의 좌표
 	int32 m_X;
 	int32 m_Y;
-
+	bool m_Opened;
 	
 
 	HOFCardEvent m_CardEvent;

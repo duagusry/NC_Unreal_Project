@@ -2,18 +2,28 @@
 #include "WorldBoardActor.h"
 #include "Engine/World.h"
 #include "HOFWorldCardActor.h"
+#include "HOFCardEvent.h"
 #include "ConstructorHelpers.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AHOFWorldBoardActor::AHOFWorldBoardActor()
 {
 	BP_WorldCardActor = nullptr;
 
 	static ConstructorHelpers::FObjectFinder<UBlueprint> WorldCardActorBluePrint(TEXT("Blueprint'/Game/Blueprints/BP_WorldCard'"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> MapInfoAsset(TEXT("DataTable'/Game/Resource/map'"));
 
 	if (WorldCardActorBluePrint.Object)
 	{
 		BP_WorldCardActor = CastChecked<UClass>(WorldCardActorBluePrint.Object->GeneratedClass);
 	}
+
+	if (MapInfoAsset.Object)
+	{
+		m_MapInfoTable = MapInfoAsset.Object;
+	}
+
+	InitMapInfo();
 }
 
 AHOFWorldBoardActor::~AHOFWorldBoardActor()
@@ -24,6 +34,17 @@ AHOFWorldBoardActor::~AHOFWorldBoardActor()
 
 void AHOFWorldBoardActor::CreateCardAt(int id, int xi, int yi)
 {
+	//-1은 공백. 이 숫자도 따로 enum으로 정의를 하던가 해야할 듯.
+	if (id == -1)
+		return;
+
+	if (id == 0)
+		id = m_EventArray[0];
+
+	m_EventArray.Remove(id);
+	
+	//숫자 안맞으면 크래시 날 듯.
+
 	float realSlotSizeY = WORLD_WIDTH / WORLD_SLOT_WIDTH;
 	float realSlotSizeX = WORLD_HEIGHT / WORLD_SLOT_HEIGHT;
 
@@ -77,13 +98,13 @@ void AHOFWorldBoardActor::InitAdjacentList()
 	{
 		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
 		{
-			if (i - 1 >= 0)
+			if (i - 1 >= 0 && m_WorldSlot[i - 1][j])
 				m_AdjacentList[i][j].Add(m_WorldSlot[i - 1][j]);
-			if (i + 1 < WORLD_SLOT_WIDTH)
+			if (i + 1 < WORLD_SLOT_WIDTH && m_WorldSlot[i + 1][j])
 				m_AdjacentList[i][j].Add(m_WorldSlot[i + 1][j]);
-			if (j - 1 >= 0)
+			if (j - 1 >= 0 && m_WorldSlot[i][j - 1])
 				m_AdjacentList[i][j].Add(m_WorldSlot[i][j - 1]);
-			if (j + 1 < WORLD_SLOT_HEIGHT)
+			if (j + 1 < WORLD_SLOT_HEIGHT && m_WorldSlot[i][j + 1])
 				m_AdjacentList[i][j].Add(m_WorldSlot[i][j + 1]);
 		}
 	}
@@ -99,5 +120,24 @@ void AHOFWorldBoardActor::UpdateAdjacentList(int32 old_x, int32 old_y, int32 new
 	for (auto card : m_AdjacentList[new_x][new_y])
 	{
 		card->SetAdjacency(true);
+	}
+}
+
+FMapInfo AHOFWorldBoardActor::GetMapInfoTable(UDataTable * dataTable, FName pName)
+{
+	m_MapEventInfo;
+	return FMapInfo();
+}
+
+void AHOFWorldBoardActor::InitMapInfo()
+{
+	g_CardEvent->AssignEventArray(m_EventArray);
+	int32 size = m_EventArray.Num();
+
+	for (int32 i = size - 1; i > 0; i--) {
+		int32 j = (FMath::Rand() * (i + 1)) % size;
+		int32 temp = m_EventArray[i];
+		m_EventArray[i] = m_EventArray[j];
+		m_EventArray[j] = temp;
 	}
 }

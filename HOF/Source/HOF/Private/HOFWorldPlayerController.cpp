@@ -25,14 +25,14 @@ AHOFWorldPlayerController::AHOFWorldPlayerController()
 	
 }
 
-void AHOFWorldPlayerController::ShowEventWidget(int32 id)
+void AHOFWorldPlayerController::ShowEventWidget(int32 id, AHOFWorldCardActor * pCard)
 {
 	
 	EventWidget = CreateWidget<UHOFTextWidget>(this, BP_EventWidget); // Create Widget
 	if (!EventWidget)
 		return;
 
-	EventWidget->Init(id);
+	EventWidget->Init(id, pCard);
 
 	EventWidget->AddToViewport(); // Add it to the viewport so the Construct() method in the UUserWidget:: is run.
 	EventWidget->SetVisibility(ESlateVisibility::Visible); // Set it to hidden so its not open on spawn.
@@ -41,7 +41,7 @@ void AHOFWorldPlayerController::ShowEventWidget(int32 id)
 
 void AHOFWorldPlayerController::ProcessPlayerInput(const float DeltaTime, const bool bGamePaused)
 {
-	if (!bGamePaused && PlayerInput && InputHandler)
+	if (CanProcessWorldInput() && !bGamePaused && PlayerInput && InputHandler)
 	{
 		//인풋의 변화를 감지
 		InputHandler->UpdateDetection(DeltaTime);
@@ -96,4 +96,15 @@ void AHOFWorldPlayerController::SetSelectedActor(AActor * NewSelectedActor, cons
 			SelectedActor = NewSelectedActor;
 		}
 	}
+}
+
+bool AHOFWorldPlayerController::CanProcessWorldInput()
+{
+	if (EventWidget)
+	{
+		if (EventWidget->IsWidgetActive())
+			return false;
+	}
+
+	return true;;
 }

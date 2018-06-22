@@ -47,12 +47,32 @@ void AHOFWorldGameMode::BeginPlay()
 	FRotator myRot(0.0f, 0.0f, 0.0f);
 	FVector myLoc(0.0f, 0.0f, 0.0f);
 
+	//맵 이벤트는 일단 하드코딩. 이후 설정으로 빼서 파싱할 예정..
+	int32 m_MapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT] = \
+		/*
+	{
+		{ 0, 1, 2, 0, -1, -1, -1, 0 },
+		{ -1, -1, 0, -1, -1, -1, -1, 0 },
+		{ -1, -1, 0, 0, -1, -1, 0, 0 },
+		{ 0, -1, 0, 0, 0, 0, 0, -1 },
+		{ 0, -1, -1, -1, -1, -1, 0, -1 },
+		{ 0, 0, 0, -1, -1, 0, 0, 0 },
+		{ 0, -1, -1, -1, 0, 0, -1, -1 },
+		{ 0, 0, 0, 0, 0, -1, -1, -1 }
+	};
+	*/
+	{
+		{ 0, 1, 2 },
+		{ -1, 0, 0 },
+		{ -1, -1, 0 }
+	};
+
 	WorldBoard = GetWorld()->SpawnActor<AHOFWorldBoardActor>(AHOFWorldBoardActor::StaticClass(), myLoc, myRot, SpawnInfo);
 	for (int i = 0; i < WORLD_SLOT_WIDTH; i++)
 	{
 		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
 		{
-			WorldBoard->CreateCardAt(1, i, j);
+			WorldBoard->CreateCardAt(m_MapEventInfo[i][j], i, j);
 		}
 	}
 	WorldBoard->InitAdjacentList();
@@ -96,8 +116,11 @@ void AHOFWorldGameMode::MovePawnTo(int32 x, int32 y)
 	BaseStructs::Position oldPosition = g_PlayerData->GetWorldPawnPosition();
 	WorldBoard->UpdateAdjacentList(oldPosition.x, oldPosition.y, x, y);
 
+	FVector targetCardLocation = WorldBoard->GetCardLocationOn(x, y);
+
 	WorldPawn->SetPosition(x, y);
-	WorldPawn->SetLocation(WorldBoard->GetCardLocationOn(x, y));
+	WorldPawn->SetRotation(targetCardLocation);
+	WorldPawn->SetLocation(targetCardLocation);
 }
 
 

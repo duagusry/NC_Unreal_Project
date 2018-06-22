@@ -15,7 +15,6 @@ void CardEventResource::Parse(const FString dir)
 		HOFCardEvent newCardEvent;
 		newCardEvent.SetID(FCString::Atoi(*(eventNode->GetAttribute(FString("id")))));
 
-		CardEventDialog newDialog;
 		CardEventResult newResult;
 		CardEventReward newReward;
 
@@ -23,23 +22,30 @@ void CardEventResource::Parse(const FString dir)
 
 		for (auto itemNode : cardEventsItemNode)
 		{
-			if (itemNode->GetTag().Equals(FString("Dialog")))
+
+			if (itemNode->GetTag().Equals(FString("Title")))
 			{
+				newCardEvent.SetTitle(itemNode->GetContent());
+			}
+			else if (itemNode->GetTag().Equals(FString("Dialog")))
+			{
+				CardEventDialog newDialog;
+
 				newDialog.Parse(itemNode);
-				newCardEvent.SetDialog(newDialog);
+				newCardEvent.AddDialog(newDialog);
 			}
 			else if (itemNode->GetTag().Equals(FString("Result")))
 			{
 				newResult.Parse(itemNode);
-				newCardEvent.SetResult(newResult);
 			}
 			else if (itemNode->GetTag().Equals(FString("Reward")))
 			{
 				newReward.Parse(itemNode);
-				newCardEvent.SetReward(newReward);
 			}
 		}
 
+		newCardEvent.SetResult(newResult);
+		newCardEvent.SetReward(newReward);
 		m_Map.Add(newCardEvent.GetID(), newCardEvent);
 	}
 }
@@ -51,20 +57,29 @@ const HOFCardEvent CardEventResource::GetCardEventFromId(int32 id)
 
 HOFCardEvent::HOFCardEvent(const HOFCardEvent& other)
 	: m_Id(other.m_Id), 
-	m_Dialog(other.m_Dialog), 
+	m_Title(other.m_Title), 
 	m_Result(other.m_Result), 
 	m_Reward(other.m_Reward)
-{ }
+{
+	m_Dialogs = other.m_Dialogs;
+}
 
 void CardEventDialog::Parse(const FXmlNode * Node)
 {
 	const TArray<FXmlNode*> dialogEventList = Node->GetChildrenNodes();
 
+	m_Id = FCString::Atoi(*(Node->GetAttribute(FString("id"))));
+	m_Next = FCString::Atoi(*(Node->GetAttribute(FString("next"))));
+
 	for (auto node : dialogEventList)
 	{
 		if (node->GetTag().Equals(FString("Text")))
 		{
-			m_Texts.Add(node->GetContent());
+			FNormalText newText;
+			newText.Result = FCString::Atoi(*(node->GetAttribute(FString("result"))));
+			newText.Text = node->GetContent();
+
+			m_Text = newText;
 		}
 		else if (node->GetTag().Equals(FString("SelectionText")))
 		{
@@ -86,7 +101,7 @@ void CardEventResult::Parse(const FXmlNode * Node)
 		FResult newResult;
 		newResult.Id = FCString::Atoi(*(node->GetAttribute(FString("id"))));
 		newResult.Reward = FCString::Atoi(*(node->GetAttribute(FString("reward"))));
-		newResult.Event = FCString::Atoi(*(node->GetAttribute(FString("event"))));
+		newResult.Dialog = FCString::Atoi(*(node->GetAttribute(FString("dialog"))));
 		newResult.Transfer = node->GetAttribute(FString("transfer")).Equals(FString("true")) ? true : false;
 		newResult.Gambit = node->GetAttribute(FString("gambit")).Equals(FString("true")) ? true : false;
 

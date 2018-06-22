@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "HOFWorldInput.h"
+#include "HOFWorldCardActor.h"
 #include "HOFWorldPlayerController.generated.h"
 
 /**
@@ -18,7 +19,7 @@ class HOF_API AHOFWorldPlayerController : public APlayerController
 public : 
 	AHOFWorldPlayerController();
 
-	void ShowEventWidget(int32 id);
+	void ShowEventWidget(int32 id, AHOFWorldCardActor* pCard);
 
 protected : 
 	//실제 인풋을 처리하는 부분
@@ -30,6 +31,8 @@ protected :
 
 	AActor* GetClickedActor(const FVector2D& ScreenPoint, FVector& WorldPoint);
 	void SetSelectedActor(AActor* NewSelectedActor, const FVector& NewPosition);
+
+	bool CanProcessWorldInput();
 
 	/** Custom input handler. */
 	UPROPERTY()

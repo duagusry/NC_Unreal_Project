@@ -3,6 +3,7 @@
 #include "HOFWorldPawn.h"
 #include "WorldBoardActor.h"
 #include "PlayerData.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "HOFWorldCardActor.h"
 
 
@@ -46,5 +47,12 @@ void AHOFWorldPawn::SetPosition(int x, int y)
 void AHOFWorldPawn::SetLocation(FVector location)
 {
 	SetActorLocation(location);
+}
+
+void AHOFWorldPawn::SetRotation(FVector targetCardLocation)
+{
+	FRotator newRotation = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), targetCardLocation);
+
+	SetActorRotation(newRotation);
 }
 

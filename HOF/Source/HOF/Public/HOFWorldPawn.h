@@ -27,9 +27,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// WorldBoardActor에서의 위치 설정
 	void SetPosition(int x, int y);
 
+	// Pawn의 Location 정보 변경
 	void SetLocation(FVector location);
+
+	// 목표 CardActor의 위치 정보를 받아서 Pawn의 Rotation 정보 변경
+	void SetRotation(FVector targetCardLocation);
 
 	BaseStructs::Position m_Position;
 	
