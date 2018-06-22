@@ -4,7 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "HOFPlayerState.h"
+#include "Runtime/Engine/Classes/Animation/AnimSequence.h"
+#include "Perception/PawnSensingComponent.h"
 #include "HOFEnemyPawn.generated.h"
+
+UENUM(BlueprintType)
+enum EHOFEnemyAnimation
+{
+	ANIM_IDLE UMETA(DisplayName = "ANIM_IDLE"),
+	ANIM_RUN UMETA(DisplayName = "ANIM_RUN"),
+	ANIM_DEAD UMETA(DisplayName = "ANIM_DEAD"),
+	ANIM_ATTACK UMETA(DisplayName = "ANIM_ATTACK"),
+};
 
 class UBlackboardData;
 class UBehaviorTree;
@@ -23,11 +35,10 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	float TakeDamage(float Damage, const FDamageEvent & DamageEvent, AController * EventInstigator, AActor * DamageCauser) override;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Collision")
 		class UCapsuleComponent* Capsule;
@@ -50,8 +61,29 @@ public:
 	UPROPERTY(EditAnywhere, Category = Behavior)
 		UBehaviorTree* behaviorTreeAsset;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation)
+		TMap<TEnumAsByte<EHOFEnemyAnimation>, UAnimSequence*> AnimationMap;
+
+	//UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "")
+
+	UFUNCTION(BlueprintCallable)
+		bool IsRunning();
+
+	UFUNCTION(BlueprintCallable)
+		bool IsDead();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation)
+		AHOFPlayerState *EnemyState;
+
+	UFUNCTION(BlueprintCallable)
+		void SetCurrentState(EHOFCharacterState newState);
 
 private:
+	UPawnSensingComponent *PawnSenses;
 	float CurrentLeftRightVal;
 	float CurrentUpDownVal;
+	bool isDead;
+	
+	UFUNCTION()
+		void OnSeePlayer(APawn *InPawn);
 };

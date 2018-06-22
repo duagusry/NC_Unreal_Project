@@ -9,6 +9,9 @@
 /**
 *
 */
+
+enum EHOFCharacterState;
+
 UCLASS()
 class HOF_API AHOFEnemyController : public AAIController
 {
@@ -18,6 +21,8 @@ public:
 	AHOFEnemyController(const class FObjectInitializer& ObjectInitializer);
 
 	virtual void Possess(APawn* InPawn) override;
+
+	void SetStateInBlackBoard(EHOFCharacterState newState);
 
 protected:
 	// Called when the game starts or when spawned
@@ -34,4 +39,5 @@ private:
 	FName HomeLocKey;
 	FName TargetLocKey;
 	FName IdleTimeKey;
+	FName StateKey;
 };
