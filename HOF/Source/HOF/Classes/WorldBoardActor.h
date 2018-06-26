@@ -3,7 +3,6 @@
 #include "GameFramework/Actor.h"
 #include "GameData.h"
 #include "HOFWorldCardActor.h"
-#include "MapData.h"
 #include "WorldBoardActor.generated.h"
 
 using namespace SizeInGame;
@@ -28,9 +27,7 @@ public :
 	void InitAdjacentList();
 	
 	void UpdateAdjacentList(int32 old_x, int32 old_y, int32 new_x, int32 new_y);
-
-	FMapInfo GetMapInfoTable(UDataTable* dataTable, FName pName);
-	
+		
 	void InitMapInfo();
 
 public:
@@ -43,7 +40,6 @@ private :
 	//분명히 인접 리스트를 관리하는 우아한 방법이 있을 것 같은데 모르겠음
 	TArray<AHOFWorldCardActor*> m_AdjacentList[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT];
 
-	UDataTable* m_MapInfoTable;
 	int32 m_MapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT];
 	TArray<int32> m_EventArray;
 };

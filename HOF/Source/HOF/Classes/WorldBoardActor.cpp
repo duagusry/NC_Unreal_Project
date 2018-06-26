@@ -11,16 +11,10 @@ AHOFWorldBoardActor::AHOFWorldBoardActor()
 	BP_WorldCardActor = nullptr;
 
 	static ConstructorHelpers::FObjectFinder<UBlueprint> WorldCardActorBluePrint(TEXT("Blueprint'/Game/Blueprints/BP_WorldCard'"));
-	static ConstructorHelpers::FObjectFinder<UDataTable> MapInfoAsset(TEXT("DataTable'/Game/Resource/map'"));
 
 	if (WorldCardActorBluePrint.Object)
 	{
 		BP_WorldCardActor = CastChecked<UClass>(WorldCardActorBluePrint.Object->GeneratedClass);
-	}
-
-	if (MapInfoAsset.Object)
-	{
-		m_MapInfoTable = MapInfoAsset.Object;
 	}
 
 	InitMapInfo();
@@ -121,12 +115,6 @@ void AHOFWorldBoardActor::UpdateAdjacentList(int32 old_x, int32 old_y, int32 new
 	{
 		card->SetAdjacency(true);
 	}
-}
-
-FMapInfo AHOFWorldBoardActor::GetMapInfoTable(UDataTable * dataTable, FName pName)
-{
-	m_MapEventInfo;
-	return FMapInfo();
 }
 
 void AHOFWorldBoardActor::InitMapInfo()
