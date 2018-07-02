@@ -146,6 +146,10 @@ void CardEventReward::Parse(const FXmlNode * Node)
 			{
 				newReward.CurrentHealth = FCString::Atoi(*(node->GetAttribute(FString("amount"))));
 			}
+			else if (node->GetTag().Equals(FString("Reveal")))
+			{
+				newReward.Reveal = FCString::Atoi(*(node->GetAttribute(FString("amount"))));
+			}
 		}
 
 		m_Rewards.Add(newReward);

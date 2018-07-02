@@ -16,6 +16,8 @@ public :
 	AHOFWorldBoardActor();
 	~AHOFWorldBoardActor();
 
+	void InitWorldStatus();
+
 	void CreateCardAt(int id, int xi, int yi);
 
 	AHOFWorldCardActor& GetCardOn(int x, int y);
@@ -27,8 +29,10 @@ public :
 	void InitAdjacentList();
 	
 	void UpdateAdjacentList(int32 old_x, int32 old_y, int32 new_x, int32 new_y);
-		
+
 	void InitMapInfo();
+
+	void Reveal(int32 amount);
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -41,5 +45,6 @@ private :
 	TArray<AHOFWorldCardActor*> m_AdjacentList[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT];
 
 	int32 m_MapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT];
-	TArray<int32> m_EventArray;
+	TArray<int32> m_InitialEventArray;
+	TArray<AHOFWorldCardActor*> m_RandomizedCardArray;
 };

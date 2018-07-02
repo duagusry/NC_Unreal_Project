@@ -75,6 +75,7 @@ void AHOFWorldGameMode::BeginPlay()
 			WorldBoard->CreateCardAt(m_MapEventInfo[i][j], i, j);
 		}
 	}
+	WorldBoard->InitWorldStatus();
 	WorldBoard->InitAdjacentList();
 	
 	FVector PawnInitialLocaiton = WorldBoard->GetCardLocationOn(0, 0);
@@ -121,6 +122,11 @@ void AHOFWorldGameMode::MovePawnTo(int32 x, int32 y)
 	WorldPawn->SetPosition(x, y);
 	WorldPawn->SetRotation(targetCardLocation);
 	WorldPawn->SetLocation(targetCardLocation);
+}
+
+void AHOFWorldGameMode::HandleRevealEvent(int32 amount)
+{
+	WorldBoard->Reveal(amount);
 }
 
 

@@ -6,6 +6,7 @@
 #include "PlayerData.h"
 #include "HOFCardEvent.h"
 #include "HOFWorldPlayerController.h"
+#include "HOFWorldGameMode.h"
 
 void UHOFTextWidget::NativeConstruct()
 {
@@ -48,7 +49,6 @@ void UHOFTextWidget::OnNextClicked()
 	{
 		SetVisibility(ESlateVisibility::Hidden);
 		m_IsWidgetActive = false;
-		m_Card->Flip();
 	}
 }
 
@@ -310,6 +310,11 @@ void UHOFTextWidget::HandleReward(FReward reward)
 	else if (reward.CurrentHealth < 0)
 	{
 		g_PlayerData->LoseCurrentHealth(reward.CurrentHealth);
+	}
+
+	if (reward.Reveal > 0)
+	{
+		Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode())->HandleRevealEvent(reward.Reveal);
 	}
 }
 

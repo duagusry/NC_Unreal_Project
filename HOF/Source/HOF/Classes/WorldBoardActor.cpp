@@ -17,6 +17,7 @@ AHOFWorldBoardActor::AHOFWorldBoardActor()
 		BP_WorldCardActor = CastChecked<UClass>(WorldCardActorBluePrint.Object->GeneratedClass);
 	}
 
+
 	InitMapInfo();
 }
 
@@ -26,6 +27,20 @@ AHOFWorldBoardActor::~AHOFWorldBoardActor()
 	ResetWorldSlot();
 }
 
+void AHOFWorldBoardActor::InitWorldStatus()
+{
+	// m_RandomizedCardArray 초기화.
+	int32 size = m_RandomizedCardArray.Num();
+
+	for (int32 i = size - 1; i > 0; i--) 
+	{
+		int32 j = (FMath::Rand() * (i + 1)) % size;
+		auto temp = m_RandomizedCardArray[i];
+		m_RandomizedCardArray[i] = m_RandomizedCardArray[j];
+		m_RandomizedCardArray[j] = temp;
+	}
+}
+
 void AHOFWorldBoardActor::CreateCardAt(int id, int xi, int yi)
 {
 	//-1은 공백. 이 숫자도 따로 enum으로 정의를 하던가 해야할 듯.
@@ -33,9 +48,9 @@ void AHOFWorldBoardActor::CreateCardAt(int id, int xi, int yi)
 		return;
 
 	if (id == 0)
-		id = m_EventArray[0];
+		id = m_InitialEventArray[0];
 
-	m_EventArray.Remove(id);
+	m_InitialEventArray.Remove(id);
 	
 	//숫자 안맞으면 크래시 날 듯.
 
@@ -55,6 +70,8 @@ void AHOFWorldBoardActor::CreateCardAt(int id, int xi, int yi)
 		AHOFWorldCardActor* newCard(world->SpawnActor<AHOFWorldCardActor>(BP_WorldCardActor, myLoc, myRot, SpawnInfo));
 		newCard->Init(id, xi, yi);
 		m_WorldSlot[xi][yi] = newCard;
+
+		m_RandomizedCardArray.Add(newCard);
 	}
 }
 
@@ -117,15 +134,38 @@ void AHOFWorldBoardActor::UpdateAdjacentList(int32 old_x, int32 old_y, int32 new
 	}
 }
 
+
 void AHOFWorldBoardActor::InitMapInfo()
 {
-	g_CardEvent->AssignEventArray(m_EventArray);
-	int32 size = m_EventArray.Num();
+	g_CardEvent->AssignEventArray(m_InitialEventArray);
+	int32 size = m_InitialEventArray.Num();
 
-	for (int32 i = size - 1; i > 0; i--) {
+	for (int32 i = size - 1; i > 0; i--)
+	{
 		int32 j = (FMath::Rand() * (i + 1)) % size;
-		int32 temp = m_EventArray[i];
-		m_EventArray[i] = m_EventArray[j];
-		m_EventArray[j] = temp;
+		int32 temp = m_InitialEventArray[i];
+		m_InitialEventArray[i] = m_InitialEventArray[j];
+		m_InitialEventArray[j] = temp;
 	}
 }
+
+void AHOFWorldBoardActor::Reveal(int32 amount)
+{
+	int32 index = 0;
+	int32 size = m_RandomizedCardArray.Num();
+	AHOFWorldCardActor* targetCard;
+
+	while (amount-- > 0)
+	{
+		for (index; index < size; index++)
+		{
+			targetCard = m_RandomizedCardArray[index];
+			if (!targetCard->IsRevealed())
+			{
+				targetCard->Reveal();
+				break;
+			}
+		}
+	}
+}
+

@@ -30,6 +30,8 @@ public :
 	
 	void MovePawnTo(int32 x, int32 y);
 
+	void HandleRevealEvent(int32 amount);
+
 public : 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<AHOFWorldPawn> BP_WorldPawn;

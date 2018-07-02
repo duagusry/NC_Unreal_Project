@@ -45,7 +45,11 @@ public:
 
 	void SetAdjacency(bool isAdjacent);
 
-	void Flip() { m_Opened = true; }
+	void Reveal();
+
+	void Visit() { m_IsVisited = true; }
+
+	bool IsRevealed() { return m_Revealed; }
 
 public : 
 	//WorldPawn과 인접해있는지 여부
@@ -56,8 +60,9 @@ private :
 	//WorldBoardActor상의 좌표
 	int32 m_X;
 	int32 m_Y;
-	bool m_Opened;
+	bool m_Revealed;
+	bool m_IsVisited;
 	
-
+	FText m_Title;
 	HOFCardEvent m_CardEvent;
 };

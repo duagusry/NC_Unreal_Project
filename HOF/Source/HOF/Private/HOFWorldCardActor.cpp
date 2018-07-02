@@ -19,11 +19,14 @@ void AHOFWorldCardActor::Init(int32 id, int32 x, int32 y)
 {
 	m_X = x;
 	m_Y = y;
-	m_Opened = true;
+	m_Revealed = false;
+	m_IsVisited = false;
 	IsAdjacentToPawn = false;
 	m_CardEvent = g_CardEvent->GetCardEventFromId(id);
 	if (!m_CardEvent.GetID())
 		return;
+
+	m_Title = FText::FromString(m_CardEvent.GetTitle());
 }
 
 // Called when the game starts or when spawned
@@ -42,7 +45,7 @@ void AHOFWorldCardActor::Tick(float DeltaTime)
 
 void AHOFWorldCardActor::OnInputTap_Implementation()
 {
-	if (!m_Opened)
+	if (m_IsVisited)
 		return;
 
 	if (IsAdjacentToPawn)
@@ -51,6 +54,8 @@ void AHOFWorldCardActor::OnInputTap_Implementation()
 
 		Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode())->MovePawnTo(m_X, m_Y);
 
+		Reveal();
+		Visit();
 		TextEvent();
 		//BattleEvent();
 	}
@@ -72,5 +77,17 @@ void AHOFWorldCardActor::BattleEvent(/* TMap<int, int>& spawnList, int mapNumber
 void AHOFWorldCardActor::SetAdjacency(bool isAdjacent)
 {
 	IsAdjacentToPawn = isAdjacent;
+}
+
+void AHOFWorldCardActor::Reveal()
+{
+	m_Revealed = true;
+
+	if (m_Revealed)
+	{
+		FRotator newRotation = GetActorRotation();
+		newRotation.Roll = -180;
+		SetActorRotation(newRotation);
+	}
 }
 

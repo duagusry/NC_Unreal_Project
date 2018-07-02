@@ -31,21 +31,7 @@ public :
 	{ }
 
 	void Parse(const FXmlNode* Node);
-	/*
-	//리스트 맨 앞의 NormalText를 배정하고 NormalText가 더 남았는지 여부를 반환
-	bool AssignNormalTextEvent(int32& id, FString& str)
-	{
-		if (!m_Texts.empty())
-		{
-			id = m_Texts.front().Result;
-			str = m_Texts.front().Text;
-
-			m_Texts.pop_front();
-		}
-
-		return !m_Texts.empty();
-	}
-	*/
+	
 	int32 GetSelectionResult(int32 id) { return m_SelectionTexts[id - 1].Result; }
 
 	int32 m_Id;
@@ -107,8 +93,9 @@ struct FItem
 struct FReward
 {
 	//이건 너무 많은데?
+	// 비트플래그로 관리하는 것도 괜찮겠다.
 	FReward()
-		: Id(0), Food(0), Gold(0), MaxHealth(0), CurrentHealth(0)
+		: Id(0), Food(0), Gold(0), MaxHealth(0), CurrentHealth(0), Reveal(0)
 	{ }
 
 	int32 Id;
@@ -117,6 +104,7 @@ struct FReward
 	int32 Gold;
 	int32 MaxHealth;
 	int32 CurrentHealth;
+	int32 Reveal;
 };
 
 class CardEventReward
