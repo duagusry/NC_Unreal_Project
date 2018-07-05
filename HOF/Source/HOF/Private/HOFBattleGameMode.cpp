@@ -4,6 +4,8 @@
 #include "Engine/World.h"
 #include "HOFPlayerController.h"
 #include "Runtime/Engine/Public/TimerManager.h"
+#include "EnemyData.h"
+#include "HOFEnemyPawn.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 //생성자는 언리얼에디터 처음 켤 때 불리기때문에 여기서 무슨 짓을 하면 대부분의 다른 객체들이 생성 안된 nullptr여서 에러 날 확률이 높음.
@@ -28,10 +30,10 @@ void AHOFBattleGameMode::BeginPlay()
 
 	Counter = 3;
 	GetWorldTimerManager().SetTimer(countDownHandle, this, &AHOFBattleGameMode::OnTimerTick, 1.0f, true);
-	
 	GameInstance->SetGamePlayState(EGameplayState::Battle);
-
 	PlayerControllerClass = AHOFPlayerController::StaticClass();
+
+	InitializeEnemyPawn();
 }
 
 void AHOFBattleGameMode::Tick(float DeltaSeconds)
@@ -59,5 +61,21 @@ void AHOFBattleGameMode::OnTimerTick()
 		GetWorldTimerManager().ClearTimer(countDownHandle);
 	}
 }
+
+void AHOFBattleGameMode::InitializeEnemyPawn()
+{
+	if (GameInstance != nullptr && GameInstance->IsEnemyDataAvailable())
+	{
+		auto enemyData = GameInstance->GetEnemyData();
+		SpawnEnemyPawn(enemyData->enemySpecy, enemyData->number);
+	}
+}
+
+void AHOFBattleGameMode::SpawnEnemyPawn(UClass *specy, int number)
+{
+	for(int i = 0 ; i< number ; i++)
+		GetWorld()->SpawnActor<AHOFEnemyPawn>(specy);
+}
+
 
 

@@ -38,6 +38,7 @@ private:
 	void HandleAnotherDialog(int32 dialogId);
 	void HandleAnotherEvent(int32 eventId);
 	void HandleTransfer(/* 이것저것 파라미터 */);
+	void SetEnemyData();
 
 	UFUNCTION()
 		void OnSelection1Clicked();

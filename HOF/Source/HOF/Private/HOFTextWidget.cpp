@@ -5,6 +5,8 @@
 #include "GameData.h"
 #include "PlayerData.h"
 #include "HOFCardEvent.h"
+#include "EnemyData.h"
+#include "HOF.h"
 #include "HOFWorldPlayerController.h"
 
 void UHOFTextWidget::NativeConstruct()
@@ -174,6 +176,8 @@ void UHOFTextWidget::HandleEvent(int32 id, bool isSelection /* = true */)
 		return;
 	
 	int32 resultId = isSelection ? m_CardEvent.GetDialog(m_CurrentDialogId).GetSelectionResult(id) : id;
+	// TODO : It's better to make FResult Interface structure.
+	//        e.g. Transfer result, gambit result, and so on. 
 	FResult result = m_CardEvent.GetEventResult(resultId);
 	bool IsEventEnd = false;
 
@@ -215,8 +219,8 @@ void UHOFTextWidget::HandleEvent(int32 id, bool isSelection /* = true */)
 
 void UHOFTextWidget::SetEvent(int32 eventId)
 {
-	bool hasSelection = false;
-	
+	bool hasSelection = false; 	
+
 	UPanelWidget* RootWidget = Cast<UPanelWidget>(GetRootWidget());
 
 	//≈∏¿Ã∆≤
@@ -328,7 +332,13 @@ void UHOFTextWidget::HandleAnotherEvent(int32 eventId)
 
 void UHOFTextWidget::HandleTransfer()
 {
-	Cast<UHOFGameInstance>(GetWorld()->GetGameInstance())->SwitchToBattle(FString("/Game/Maps/HOFBattleLevel"));
+	AB_LOG_CALLONLY(Warning);
+	auto gameInstance = Cast<UHOFGameInstance>(GetWorld()->GetGameInstance());
+	auto enemyData = gameInstance->GetEnemyData();
+
+	enemyData->SetEnemyData("Logue", 3);
+	gameInstance->SwitchLevel(FString("/Game/Maps/HOFBattleLevel"));
 }
+
 
 

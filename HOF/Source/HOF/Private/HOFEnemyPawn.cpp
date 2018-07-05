@@ -31,7 +31,7 @@ AHOFEnemyPawn::AHOFEnemyPawn()
 	FloatPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawn"));
 
 	PawnSenses = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSenses"));
-	PawnSenses->SightRadius = 100.0f;
+	PawnSenses->SightRadius = 1000.0f;
 	PawnSenses->bOnlySensePlayers = true;
 	PawnSenses->bHearNoises = false;
 	PawnSenses->OnSeePawn.AddDynamic(this, &AHOFEnemyPawn::OnSeePlayer);

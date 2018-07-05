@@ -66,7 +66,7 @@ void AHOFWorldCardActor::BattleEvent(/* TMap<int, int>& spawnList, int mapNumber
 	//레벨 이동할 때 파라미터로 넘겨야되는데 방법 찾아봐야됨.
 	//GameInstance에 다 넣어놓고 쓸수도 있을거같은데 그건 좀..
 
-	Cast<UHOFGameInstance>(GetGameInstance())->SwitchToBattle(FString("/Game/Maps/HOFBattleLevel"));
+	Cast<UHOFGameInstance>(GetGameInstance())->SwitchLevel(FString("/Game/Maps/HOFBattleLevel"));
 }
 
 void AHOFWorldCardActor::SetAdjacency(bool isAdjacent)

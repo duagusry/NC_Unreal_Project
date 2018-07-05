@@ -4,13 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "PlayerData.h"
 #include "GameData.h"
 #include "HOFGameInstance.generated.h"
 
 /**
  * 
  */
+
+class PlayerData;
+class EnemyData;
+
 UCLASS()
 class HOF_API UHOFGameInstance : public UGameInstance
 {
@@ -25,8 +28,14 @@ public :
 	
 	void SetGamePlayState(EGameplayState::Type state) { GamePlayState = state; }
 
-	void SwitchToBattle(FString levelDir);
+	void SwitchLevel(FString levelPath);
+
+	TSharedPtr<PlayerData> GetPlayerData();
+	TSharedPtr<EnemyData> GetEnemyData();
+	bool IsEnemyDataAvailable();
 
 private : 
 	EGameplayState::Type GamePlayState;
+	TSharedPtr<PlayerData> playerData;
+	TSharedPtr<EnemyData> enemyData;
 };

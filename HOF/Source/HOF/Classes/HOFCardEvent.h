@@ -164,6 +164,7 @@ public :
 
 	static CardEventResource* GetInstance()
 	{
+		// TODO : Need to change it to double-checking locking in multi-thread environment.  
 		if (!CardEventResourceInstance)
 			CardEventResourceInstance = new CardEventResource();
 
@@ -187,5 +188,6 @@ private :
 	CardEventResource() { }
 	static CardEventResource* CardEventResourceInstance;
 };
+
 
 #define g_CardEvent CardEventResource::GetInstance()

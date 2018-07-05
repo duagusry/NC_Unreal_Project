@@ -27,6 +27,8 @@ public :
 	void OnTimerTick();
 
 private : 
+	void InitializeEnemyPawn();
+	void SpawnEnemyPawn(UClass *specy, int number);
 	UHOFGameInstance* GameInstance;
 
 	//PlayerController도 여기 있어야할것같음.
