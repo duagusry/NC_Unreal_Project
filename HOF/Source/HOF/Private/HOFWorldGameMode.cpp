@@ -8,6 +8,8 @@
 #include "HOFWorldCardActor.h"
 #include "Paths.h"
 #include "WorldBoardActor.h"
+#include "HOFGameState.h"
+#include "HOFPlayerState.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 #include "HOFCardEvent.h"
@@ -18,7 +20,9 @@ AHOFWorldGameMode::AHOFWorldGameMode()
 	PlayerControllerClass = AHOFWorldPlayerController::StaticClass();
 	SpectatorClass = AHOFSpectatorPawn::StaticClass();
 	DefaultPawnClass = AHOFSpectatorPawn::StaticClass();
-	
+	GameStateClass = AHOFGameState::StaticClass();
+	PlayerStateClass = AHOFPlayerState::StaticClass();
+
 	BP_WorldPawn = nullptr;
 
 	static ConstructorHelpers::FObjectFinder<UBlueprint> WorldPawnBluePrint(TEXT("Blueprint'/Game/Blueprints/BP_WorldPawn'"));
@@ -38,7 +42,8 @@ void AHOFWorldGameMode::BeginPlay()
 	Counter = 3;
 	GetWorldTimerManager().SetTimer(countDownHandle, this, &AHOFWorldGameMode::OnTimerTick, 1.0f, true);
 	
-	GameInstance->SetGamePlayState(EGameplayState::World);
+	GameInstance->SetGamePlayState(EGameplayState::World);		// 이걸 따로 유지할 필요가..?
+	GetGameState<AHOFGameState>()->SetState(EHOFGameState::GAME_WORLD);
 
 	//리소스 로딩
 	g_CardEvent->Parse(FPaths::ProjectDir() + L"Resource/CardEvent.xml");
@@ -62,9 +67,9 @@ void AHOFWorldGameMode::BeginPlay()
 	};
 	*/
 	{
-		{ 0, 1, 2 },
+		{ 1, 2, 0 },
 		{ -1, 0, 0 },
-		{ -1, -1, 0 }
+		{ -1, 0, 0 }
 	};
 
 	WorldBoard = GetWorld()->SpawnActor<AHOFWorldBoardActor>(AHOFWorldBoardActor::StaticClass(), myLoc, myRot, SpawnInfo);
@@ -83,6 +88,7 @@ void AHOFWorldGameMode::BeginPlay()
 	WorldPawn = GetWorld()->SpawnActor<AHOFWorldPawn>(BP_WorldPawn, PawnInitialLocaiton, myRot, SpawnInfo);
 	WorldPawn->SetPosition(0, 0);
 	WorldBoard->UpdateAdjacentList(0, 0, 0, 0);
+	WorldBoard->GetCardOn(0, 0).Visit();
 
 }
 
@@ -94,6 +100,13 @@ void AHOFWorldGameMode::Tick(float DeltaSeconds)
 void AHOFWorldGameMode::InitGameState()
 {
 	Super::InitGameState();
+	/*
+	AHOFGameState* const AHOFGameState = GetGameState<AHOFGameState>();
+	if (AHOFGameState)
+	{
+		AHOFGameState->GameStart();
+	}
+	*/
 }
 
 void AHOFWorldGameMode::OnTimerTick()
@@ -101,6 +114,7 @@ void AHOFWorldGameMode::OnTimerTick()
 	//--Counter;
 
 	//타이머 만료시 BattleLevel 오픈
+	/*
 	if (Counter < 1)
 	{
 		g_PlayerData->EatFood();
@@ -110,11 +124,12 @@ void AHOFWorldGameMode::OnTimerTick()
 		GetWorld()->ServerTravel(FString("/Game/Maps/HOFBattleLevel"));
 		GetWorldTimerManager().ClearTimer(countDownHandle);
 	}
+	*/
 }
 
 void AHOFWorldGameMode::MovePawnTo(int32 x, int32 y)
 {
-	BaseStructs::Position oldPosition = g_PlayerData->GetWorldPawnPosition();
+	BaseStructs::Position oldPosition = WorldPawn->GetPosition();
 	WorldBoard->UpdateAdjacentList(oldPosition.x, oldPosition.y, x, y);
 
 	FVector targetCardLocation = WorldBoard->GetCardLocationOn(x, y);

@@ -5,8 +5,7 @@
 
 UHOFGameInstance::UHOFGameInstance()
 {
-	//플레이어 데이터 최초 생성, 초기화
-	g_PlayerData;
+	
 }
 
 void UHOFGameInstance::Init()

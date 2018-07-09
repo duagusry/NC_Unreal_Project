@@ -72,7 +72,7 @@ float AHOFEnemyPawn::TakeDamage(float Damage, const FDamageEvent &DamageEvent, A
 		AB_LOG(Warning, TEXT("HP:%f"), CurrentHP);
 
 		if (CurrentHP <= 0)
-			SetCurrentState(EHOFCharacterState::DEAD);//isDead = true;
+			SetCurrentState(EHOFCharacterState::PLAYER_DEAD);//isDead = true;
 	}
 	return ActualDamage;
 }
@@ -92,7 +92,7 @@ bool AHOFEnemyPawn::IsDead()
 
 void AHOFEnemyPawn::SetCurrentState(EHOFCharacterState newState)
 {
-	if (EnemyState->GetState() != EHOFCharacterState::DEAD)
+	if (EnemyState->GetState() != EHOFCharacterState::PLAYER_DEAD)
 	{
 		Cast<AHOFEnemyController>(GetController())->SetStateInBlackBoard(newState);
 		EnemyState->SetState(newState);
@@ -103,7 +103,7 @@ void AHOFEnemyPawn::OnSeePlayer(APawn * InPawn)
 {
 	//if (EnemyState->GetState() == EHOFCharacterState::PEACE)
 	//{
-		SetCurrentState(EHOFCharacterState::CHASE);
+		SetCurrentState(EHOFCharacterState::PLAYER_CHASE);
 		Instigator = InPawn;
 	//}
 }

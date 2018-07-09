@@ -47,7 +47,7 @@ public:
 
 	void Reveal();
 
-	void Visit() { m_IsVisited = true; }
+	void Visit();
 
 	bool IsRevealed() { return m_Revealed; }
 

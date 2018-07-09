@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
-#include "PlayerData.h"
 #include "GameData.h"
 #include "HOFGameInstance.h"
 #include "HOFBattleGameMode.generated.h"

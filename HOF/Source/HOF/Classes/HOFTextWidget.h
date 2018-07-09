@@ -9,6 +9,8 @@
 #include "Blueprint/UserWidget.h"
 #include "HOFGameInstance.h"
 #include "HOFWorldCardActor.h"
+#include "HOFGameState.h"
+#include "HOFPlayerState.h"
 #include "HOFTextWidget.generated.h"
 
 using namespace SizeInGame;
@@ -23,16 +25,14 @@ class HOF_API UHOFTextWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public : 
-	virtual void NativeConstruct() override;
 
 	void Init(int32 id, AHOFWorldCardActor* pCard);
-
-	bool IsWidgetActive() { return m_IsWidgetActive; }
-
+	
 private:
 	void HandleEvent(int32 id, bool isSelection = true);
 	
 	void SetEvent(int32 eventId);
+	void CloseWidget(EHOFGameState newState);
 
 	void HandleReward(FReward reward);
 	void HandleAnotherDialog(int32 dialogId);
@@ -57,7 +57,8 @@ private:
 	HOFCardEvent m_CardEvent;
 	AHOFWorldCardActor* m_Card;
 	UHOFGameInstance* GameInstance;
+	AHOFPlayerState* PlayerState;
+	AHOFGameState* GameState;
 
 	int32 m_CurrentDialogId;
-	bool m_IsWidgetActive;
 };

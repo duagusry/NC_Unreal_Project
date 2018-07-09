@@ -78,7 +78,7 @@ float AHOFCharacter::TakeDamage(float Damage, const FDamageEvent &DamageEvent, A
 		AB_LOG(Warning, TEXT("HP:%f"), HOFPlayerState->CurrentHP);
 
 		if (HOFPlayerState->CurrentHP <= 0)
-			HOFPlayerState->SetState(EHOFCharacterState::DEAD);
+			HOFPlayerState->SetState(EHOFCharacterState::PLAYER_DEAD);
 	}
 	return ActualDamage;
 }

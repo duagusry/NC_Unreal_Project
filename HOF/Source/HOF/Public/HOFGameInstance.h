@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "PlayerData.h"
 #include "GameData.h"
 #include "HOFGameInstance.generated.h"
 

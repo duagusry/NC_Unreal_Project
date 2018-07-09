@@ -4,6 +4,8 @@
 #include "HOFInputInterface.h"
 #include "HOFWorldInput.h"
 #include "HOFTextWidget.h"
+#include "HOFPlayerState.h"
+#include "HOFGameState.h"
 
 AHOFWorldPlayerController::AHOFWorldPlayerController()
 {
@@ -12,7 +14,7 @@ AHOFWorldPlayerController::AHOFWorldPlayerController()
 	bHidden = false;
 	//WorldMode에서는 마우스 커서가 보임
 	bShowMouseCursor = true;
-	
+
 	//Initialize Widget
 	BP_EventWidget = nullptr;
 	
@@ -25,9 +27,15 @@ AHOFWorldPlayerController::AHOFWorldPlayerController()
 	
 }
 
+void AHOFWorldPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	GameState = GetWorld()->GetAuthGameMode()->GetGameState<AHOFGameState>();
+}
+
 void AHOFWorldPlayerController::ShowEventWidget(int32 id, AHOFWorldCardActor * pCard)
 {
-	
 	EventWidget = CreateWidget<UHOFTextWidget>(this, BP_EventWidget); // Create Widget
 	if (!EventWidget)
 		return;
@@ -100,11 +108,8 @@ void AHOFWorldPlayerController::SetSelectedActor(AActor * NewSelectedActor, cons
 
 bool AHOFWorldPlayerController::CanProcessWorldInput()
 {
-	if (EventWidget)
-	{
-		if (EventWidget->IsWidgetActive())
-			return false;
-	}
+	if (GameState->CurrentGameState != GAME_WORLD)
+		return false;
 
-	return true;;
+	return true;
 }

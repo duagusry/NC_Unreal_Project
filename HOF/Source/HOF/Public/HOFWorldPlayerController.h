@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "HOFWorldInput.h"
 #include "HOFWorldCardActor.h"
+#include "HOFGameState.h"
 #include "HOFWorldPlayerController.generated.h"
 
 /**
@@ -18,6 +19,8 @@ class HOF_API AHOFWorldPlayerController : public APlayerController
 	
 public : 
 	AHOFWorldPlayerController();
+
+	virtual void BeginPlay() override;
 
 	void ShowEventWidget(int32 id, AHOFWorldCardActor* pCard);
 
@@ -53,4 +56,5 @@ protected :
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Player, HUD and UI")
 	class UHOFTextWidget* EventWidget;
 	
+	AHOFGameState* GameState;
 };

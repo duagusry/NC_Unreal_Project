@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "HOFWorldGameMode.h"
 #include "HOFWorldPlayerController.h"
+#include "HOFPlayerState.h"
 
 
 // Sets default values
@@ -54,10 +55,7 @@ void AHOFWorldCardActor::OnInputTap_Implementation()
 
 		Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode())->MovePawnTo(m_X, m_Y);
 
-		Reveal();
 		Visit();
-		TextEvent();
-		//BattleEvent();
 	}
 }
 
@@ -89,5 +87,17 @@ void AHOFWorldCardActor::Reveal()
 		newRotation.Roll = -180;
 		SetActorRotation(newRotation);
 	}
+}
+
+void AHOFWorldCardActor::Visit()
+{
+	m_IsVisited = true;
+
+	auto PlayerController = Cast<AHOFWorldPlayerController>(GetWorld()->GetFirstPlayerController());
+	Cast<AHOFPlayerState>(PlayerController->PlayerState)->EatFood();
+
+	Reveal();
+	TextEvent();
+	//BattleEvent();
 }
 

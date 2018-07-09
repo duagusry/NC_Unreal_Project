@@ -127,7 +127,7 @@ void AHOFPlayerController::SetStateToBattle()
 		if (playerState->bIsBattleInAction)
 			return;
 
-		playerState->SetState(EHOFCharacterState::BATTLE);
+		playerState->SetState(EHOFCharacterState::PLAYER_BATTLE);
 	}
 }
 

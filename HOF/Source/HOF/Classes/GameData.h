@@ -60,6 +60,10 @@ namespace NumberInGame
 {
 	static const int MAX_SELECTION_COUNT = 4;
 	static const int TEXT_BLOCK_START = 2;
+
+	static const int32 FoodConsumption = 4;
+	static const int32 HealByFood = 8;
+	static const int32 DamageByFood = 40;
 }
 
 namespace BaseStructs

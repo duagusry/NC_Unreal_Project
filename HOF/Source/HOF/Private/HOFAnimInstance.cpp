@@ -42,7 +42,7 @@ void UHOFAnimInstance::AnimNotify_AttackEnd(UAnimNotify * Notify)
 	{
 		AHOFPlayerState* HOFPlayerState = Cast<AHOFPlayerState>(HOFCharacter->PlayerState);
 		if(HOFPlayerState)
-			HOFPlayerState->SetState(EHOFCharacterState::PEACE);
+			HOFPlayerState->SetState(EHOFCharacterState::PLAYER_PEACE);
 	}
 }
 

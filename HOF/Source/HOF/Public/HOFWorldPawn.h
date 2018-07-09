@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "GameData.h"
+#include "HOFWorldPlayerController.h"
 #include "HOFWorldPawn.generated.h"
 
 UCLASS()
@@ -27,6 +28,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	BaseStructs::Position GetPosition();
+
 	// WorldBoardActor에서의 위치 설정
 	void SetPosition(int x, int y);
 
@@ -37,5 +40,6 @@ public:
 	void SetRotation(FVector targetCardLocation);
 
 	BaseStructs::Position m_Position;
+	AHOFWorldPlayerController* PlayerController;
 	
 };

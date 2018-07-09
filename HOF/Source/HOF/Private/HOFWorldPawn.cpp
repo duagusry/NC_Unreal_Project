@@ -1,10 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "HOFWorldPawn.h"
+#include "Engine/World.h"
 #include "WorldBoardActor.h"
-#include "PlayerData.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "HOFWorldCardActor.h"
+#include "HOFPlayerState.h"
+#include "GameData.h"
+#include "HOFPlayerState.h"
+#include "HOFWorldGameMode.h"
+#include "HOFWorldPlayerController.h"
 
 
 // Sets default values
@@ -20,6 +25,8 @@ void AHOFWorldPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	PlayerController = Cast<AHOFWorldPlayerController>(GetWorld()->GetPlayerControllerIterator()->Get());
+	PlayerState = Cast<AHOFPlayerState>(PlayerController->PlayerState);
 }
 
 // Called every frame
@@ -36,12 +43,22 @@ void AHOFWorldPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 }
 
+BaseStructs::Position AHOFWorldPawn::GetPosition()
+{
+	return Cast<AHOFPlayerState>(PlayerState)->GetWorldPawnPosition();
+}
+
 void AHOFWorldPawn::SetPosition(int x, int y)
 {
 	m_Position.x = x;
 	m_Position.y = y;
 
-	g_PlayerData->SetWorldPawnPosition(x, y);
+	auto playerState = Cast<AHOFPlayerState>(PlayerState);
+
+	if (playerState)
+	{
+		playerState->SetWorldPawnPosition(x, y);
+	}
 }
 
 void AHOFWorldPawn::SetLocation(FVector location)

@@ -49,6 +49,7 @@ void AHOFBattleGameMode::OnTimerTick()
 	//--Counter;
 	UE_LOG(LogClass, Warning, TEXT("Count %d"), Counter);
 	//타이머 만료시 WorldLevel 오픈
+	/*
 	if (Counter < 1)
 	{
 		g_PlayerData->EatFood();
@@ -58,6 +59,7 @@ void AHOFBattleGameMode::OnTimerTick()
 		GetWorld()->ServerTravel(FString("/Game/Maps/HOFWorldLevel"));
 		GetWorldTimerManager().ClearTimer(countDownHandle);
 	}
+	*/
 }
 
 

@@ -3,15 +3,11 @@
 #include "HOFTextWidget.h"
 #include "HOFGameInstance.h"
 #include "GameData.h"
-#include "PlayerData.h"
 #include "HOFCardEvent.h"
 #include "HOFWorldPlayerController.h"
 #include "HOFWorldGameMode.h"
-
-void UHOFTextWidget::NativeConstruct()
-{
-	Super::NativeConstruct();
-}
+#include "HOFPlayerState.h"
+#include "HOFGameState.h"
 
 void UHOFTextWidget::OnSelection1Clicked()
 {
@@ -47,13 +43,15 @@ void UHOFTextWidget::OnNextClicked()
 	}
 	else
 	{
-		SetVisibility(ESlateVisibility::Hidden);
-		m_IsWidgetActive = false;
+		CloseWidget(GAME_WORLD);
 	}
 }
 
 void UHOFTextWidget::Init(int32 id, AHOFWorldCardActor * pCard)
 {
+	PlayerState = GetOwningPlayerState<AHOFPlayerState>(true);
+	GameState = GetWorld()->GetAuthGameMode()->GetGameState<AHOFGameState>();
+
 	m_CardEvent = g_CardEvent->GetCardEventFromId(id);
 	m_Card = pCard;
 	m_CurrentDialogId = 1;
@@ -87,7 +85,7 @@ void UHOFTextWidget::Init(int32 id, AHOFWorldCardActor * pCard)
 	UButton* NextButton = Cast<UButton>(Cast<UPanelWidget>(GetRootWidget())->GetChildAt(index + NumberInGame::TEXT_BLOCK_START + 1));
 	NextButton->OnClicked.AddDynamic(this, &UHOFTextWidget::OnNextClicked);
 
-	m_IsWidgetActive = true;
+	GameState->SetState(GAME_DIALOG);
 
 	//아래는 WindowForm 개발하듯이 레이아웃 다 짜서 버튼 넣고 텍스트 넣고 해보려고 했으나 불가능한 것 같음
 	//참고용으로 주석처리해서 남겨놓음
@@ -176,9 +174,7 @@ void UHOFTextWidget::HandleEvent(int32 id, bool isSelection /* = true */)
 	int32 resultId = isSelection ? m_CardEvent.GetDialog(m_CurrentDialogId).GetSelectionResult(id) : id;
 	FResult result = m_CardEvent.GetEventResult(resultId);
 	bool IsEventEnd = false;
-
-	m_CurrentDialogId = 0;
-
+	
 	if (result.Reward)
 	{
 		HandleReward(m_CardEvent.GetEventReward(result.Reward));
@@ -189,7 +185,6 @@ void UHOFTextWidget::HandleEvent(int32 id, bool isSelection /* = true */)
 	if (result.Dialog)
 	{
 		HandleAnotherDialog(result.Dialog);
-		// 근데 이런 방식이면 함수 콜스택이 너무 깊어질 것 같은 느낌이....
 	}
 
 	if (result.Transfer)
@@ -207,8 +202,7 @@ void UHOFTextWidget::HandleEvent(int32 id, bool isSelection /* = true */)
 
 	if (IsEventEnd)
 	{
-		SetVisibility(ESlateVisibility::Hidden);
-		m_IsWidgetActive = false;
+		CloseWidget(GAME_WORLD);
 	}
 
 }
@@ -268,6 +262,12 @@ void UHOFTextWidget::SetEvent(int32 eventId)
 	}
 }
 
+void UHOFTextWidget::CloseWidget(EHOFGameState newState)
+{
+	SetVisibility(ESlateVisibility::Hidden);
+	GameState->SetState(newState);
+}
+
 //코드 더러움
 void UHOFTextWidget::HandleReward(FReward reward)
 {
@@ -278,38 +278,38 @@ void UHOFTextWidget::HandleReward(FReward reward)
 
 	if (reward.Food > 0)
 	{
-		g_PlayerData->GainFood(reward.Food);
+		PlayerState->GainFood(reward.Food);
 	}
 	else if (reward.Food < 0)
 	{
-		g_PlayerData->LoseFood(reward.Food);
+		PlayerState->LoseFood(reward.Food);
 	}
 
 	if (reward.Gold > 0)
 	{
-		g_PlayerData->GainGold(reward.Gold);
+		PlayerState->GainGold(reward.Gold);
 	}
 	else if (reward.Gold < 0)
 	{
-		g_PlayerData->LoseGold(reward.Gold);
+		PlayerState->LoseGold(reward.Gold);
 	}
 
 	if (reward.MaxHealth > 0)
 	{
-		g_PlayerData->GainMaxHealth(reward.MaxHealth);
+		PlayerState->GainMaxHP(reward.MaxHealth);
 	}
 	else if (reward.MaxHealth < 0)
 	{
-		g_PlayerData->LoseMaxHealth(reward.MaxHealth);
+		PlayerState->LoseMaxHP(reward.MaxHealth);
 	}
 
 	if (reward.CurrentHealth > 0)
 	{
-		g_PlayerData->GainCurrentHealth(reward.CurrentHealth);
+		PlayerState->GainCurrentHP(reward.CurrentHealth);
 	}
 	else if (reward.CurrentHealth < 0)
 	{
-		g_PlayerData->LoseCurrentHealth(reward.CurrentHealth);
+		PlayerState->LoseCurrentHP(reward.CurrentHealth);
 	}
 
 	if (reward.Reveal > 0)

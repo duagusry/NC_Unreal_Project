@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
-#include "PlayerData.h"
 #include "GameData.h"
 #include "HOFGameInstance.h"
 #include "WorldBoardActor.h"
@@ -41,7 +40,6 @@ private :
 	UHOFGameInstance* GameInstance;
 	AHOFWorldBoardActor* WorldBoard;
 	AHOFWorldPawn* WorldPawn;
-	//int32 m_MapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT];
 	
 	UPROPERTY(EditAnywhere)
 	int32 Counter;
