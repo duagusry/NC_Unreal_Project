@@ -68,8 +68,8 @@ void AHOFWorldGameMode::BeginPlay()
 	*/
 	{
 		{ 1, 2, 0 },
-		{ -1, 0, 0 },
-		{ -1, 0, 0 }
+		{ -1, 8, 0 },
+		{ 0, 0, 0 }
 	};
 
 	WorldBoard = GetWorld()->SpawnActor<AHOFWorldBoardActor>(AHOFWorldBoardActor::StaticClass(), myLoc, myRot, SpawnInfo);

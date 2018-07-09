@@ -17,6 +17,7 @@ void CardEventResource::Parse(const FString dir)
 
 		CardEventResult newResult;
 		CardEventReward newReward;
+		CardEventBattle newBattle;
 
 		const TArray<FXmlNode*> cardEventsItemNode = eventNode->GetChildrenNodes();
 
@@ -42,10 +43,15 @@ void CardEventResource::Parse(const FString dir)
 			{
 				newReward.Parse(itemNode);
 			}
+			else if (itemNode->GetTag().Equals(FString("Battle")))
+			{
+				newBattle.Parse(itemNode);
+			}
 		}
 
 		newCardEvent.SetResult(newResult);
 		newCardEvent.SetReward(newReward);
+		newCardEvent.SetBattleInfo(newBattle);
 		m_Map.Add(newCardEvent.GetID(), newCardEvent);
 	}
 }
@@ -59,7 +65,8 @@ HOFCardEvent::HOFCardEvent(const HOFCardEvent& other)
 	: m_Id(other.m_Id), 
 	m_Title(other.m_Title), 
 	m_Result(other.m_Result), 
-	m_Reward(other.m_Reward)
+	m_Reward(other.m_Reward), 
+	m_Battle(other.m_Battle)
 {
 	m_Dialogs = other.m_Dialogs;
 }
@@ -150,8 +157,27 @@ void CardEventReward::Parse(const FXmlNode * Node)
 			{
 				newReward.Reveal = FCString::Atoi(*(node->GetAttribute(FString("amount"))));
 			}
+			else if (node->GetTag().Equals(FString("Battle")))
+			{
+				newReward.Battle = FCString::Atoi(*(node->GetAttribute(FString("id"))));
+			}
 		}
 
 		m_Rewards.Add(newReward);
+	}
+}
+
+void CardEventBattle::Parse(const FXmlNode * Node)
+{
+	const TArray<FXmlNode*> BattleEventList = Node->GetChildrenNodes();
+
+	for (auto node : BattleEventList)
+	{
+		FBattleInfo newBattle;
+		newBattle.Id = FCString::Atoi(*(node->GetAttribute(FString("id"))));
+		newBattle.Enemy = FCString::Atoi(*(node->GetAttribute(FString("enemy"))));
+		newBattle.ReturnDialog = FCString::Atoi(*(node->GetAttribute(FString("returnDialog"))));
+
+		m_BattleInfo.Add(newBattle);
 	}
 }

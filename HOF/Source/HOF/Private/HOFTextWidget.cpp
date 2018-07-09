@@ -316,6 +316,19 @@ void UHOFTextWidget::HandleReward(FReward reward)
 	{
 		Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode())->HandleRevealEvent(reward.Reveal);
 	}
+
+	if (reward.Battle > 0)
+	{
+		FBattleInfo& BattleInfo = m_CardEvent.GetEventBattle(reward.Battle);
+
+		BattleTransferParameter param;
+		param.EnemyCount = BattleInfo.Enemy;
+		param.ReturnDialog = BattleInfo.ReturnDialog;
+
+		Cast<UHOFGameInstance>(GetWorld()->GetGameInstance())->SetBattleParameter(param);
+		GameState->SetState(GAME_BATTLE);
+		HandleTransfer();
+	}
 }
 
 void UHOFTextWidget::HandleAnotherDialog(int32 dialogId)

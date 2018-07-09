@@ -10,6 +10,14 @@
 /**
  * 
  */
+
+// BattleMode로 넘어갈 때 전달할 파라미터
+struct BattleTransferParameter
+{
+	int32 EnemyCount;
+	int32 ReturnDialog;
+};
+
 UCLASS()
 class HOF_API UHOFGameInstance : public UGameInstance
 {
@@ -26,6 +34,10 @@ public :
 
 	void SwitchToBattle(FString levelDir);
 
+	void SetBattleParameter(const BattleTransferParameter& ref) { BattleParameter = ref; }
+
 private : 
 	EGameplayState::Type GamePlayState;
+
+	BattleTransferParameter BattleParameter;
 };

@@ -95,7 +95,7 @@ struct FReward
 	//이건 너무 많은데?
 	// 비트플래그로 관리하는 것도 괜찮겠다.
 	FReward()
-		: Id(0), Food(0), Gold(0), MaxHealth(0), CurrentHealth(0), Reveal(0)
+		: Id(0), Food(0), Gold(0), MaxHealth(0), CurrentHealth(0), Reveal(0), Battle(0)
 	{ }
 
 	int32 Id;
@@ -105,6 +105,7 @@ struct FReward
 	int32 MaxHealth;
 	int32 CurrentHealth;
 	int32 Reveal;
+	int32 Battle;
 };
 
 class CardEventReward
@@ -113,6 +114,25 @@ public :
 	void Parse(const FXmlNode* Node);
 
 	TArray<FReward> m_Rewards;
+};
+
+struct FBattleInfo
+{
+	FBattleInfo()
+		: Id(0), Enemy(0), ReturnDialog(0)
+	{ }
+
+	int32 Id;
+	int32 Enemy;
+	int32 ReturnDialog;
+};
+
+class CardEventBattle
+{
+public : 
+	void Parse(const FXmlNode* Node);
+
+	TArray<FBattleInfo> m_BattleInfo;
 };
 
 //각각의 CardActor들이 가지고 있는 이벤트의 종류와 그 처리를 담당하는 클래스
@@ -127,12 +147,14 @@ public:
 	void AddDialog(CardEventDialog& dialog) { m_Dialogs.Add(dialog.m_Id, dialog); }
 	void SetResult(CardEventResult& result) { m_Result = result; }
 	void SetReward(CardEventReward& reward) { m_Reward = reward; }
+	void SetBattleInfo(CardEventBattle& battle) { m_Battle = battle; }
 	
 	int32 GetID() { return m_Id; }
 	FString GetTitle() { return m_Title; }
 	CardEventDialog& GetDialog(int32 index) { return m_Dialogs[index]; }
 	FResult& GetEventResult(int32 id) { return m_Result.m_Results[id - 1]; }
 	FReward& GetEventReward(int32 id) { return m_Reward.m_Rewards[id - 1]; }
+	FBattleInfo& GetEventBattle(int32 id) { return m_Battle.m_BattleInfo[id - 1]; }
 
 	int32 GetNextDialog(int32 index) { return m_Dialogs[index].m_Next; }
 	int32 GetDialogEventResult(int32 index) { return m_Dialogs[index].m_Text.Result; }
@@ -143,6 +165,7 @@ private :
 	TMap<int32, CardEventDialog> m_Dialogs;
 	CardEventResult m_Result;
 	CardEventReward m_Reward;
+	CardEventBattle m_Battle;
 };
 
 class CardEventResource
