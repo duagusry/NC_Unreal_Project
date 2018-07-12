@@ -6,44 +6,26 @@
 
 UHOFEnemyAnimInstance::UHOFEnemyAnimInstance()
 {
-	VelocityAnim = 0.f;
+}
+
+void UHOFEnemyAnimInstance::NativeBeginPlay()
+{
+	AB_LOG(Warning, TEXT("BeginPlay in EnemyAnimInstance"))
 }
 
 void UHOFEnemyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
-	auto pawn = Cast<AHOFEnemyPawn>(TryGetPawnOwner());
 
-	if (pawn->IsRunning())
-	{
-		if (pawn->AnimationMap[EHOFEnemyAnimation::ANIM_RUN] != nullptr)
-		{
-			AB_LOG_CALLONLY(Warning);
-			PlaySlotAnimationAsDynamicMontage(pawn->AnimationMap[EHOFEnemyAnimation::ANIM_RUN], TEXT("ANIM_RUN"), 0.1f, 0.1f, 1.0f, 5);
-		}
-	}
+	if (Pawn == nullptr)
+		Pawn = Cast<AHOFEnemyPawn>(TryGetPawnOwner());
 	else
 	{
-		if (pawn->AnimationMap[EHOFEnemyAnimation::ANIM_RUN] != nullptr)
-		{
-			AB_LOG_CALLONLY(Warning);
-			PlaySlotAnimationAsDynamicMontage(pawn->AnimationMap[EHOFEnemyAnimation::ANIM_IDLE], TEXT("ANUM_IDLE"), 0.1f, 0.1f, 1.0f, 5);
-		}
+		if (Pawn->IsRunning())
+			IsRunning = true;
+
+		CurrentStateAnim = Pawn->GetEnemyState()->CurrentStatePawn;
 	}
-	//if (Pawn && Pawn->IsValidLowLevel())
-	//{
-	//	VelocityAnim = Pawn->GetVelocity().Size();
-
-	//	AHOFPlayerState* ABPlayerState = Cast<AHOFPlayerState>(Pawn->PlayerState);
-
-	//	if (ABPlayerState)
-	//	{
-	//		//AB_LOG_CALLONLY(Warning);
-	//		//CurrentStateAnim = ABPlayerState->CurrentStatePawn;
-	//		//auto currentAnimSequence = Pawn->AnimationMap[CurrentStateAnim];
-	//		//PlaySlotAnimationAsDynamicMontage(currentAnimSequence, TEXT("DefaultSlot"), 0.1f, 0.1f, 1.0f, 5);
-	//	}
-	//}
 }
 
 void UHOFEnemyAnimInstance::AnimNotify_AttackHit(UAnimNotify * Notify)
@@ -52,4 +34,12 @@ void UHOFEnemyAnimInstance::AnimNotify_AttackHit(UAnimNotify * Notify)
 
 void UHOFEnemyAnimInstance::AnimNotify_AttackEnd(UAnimNotify * Notify)
 {
+}
+
+bool UHOFEnemyAnimInstance::IsCurrentStateAnimSameAs(EHOFCharacterState state)
+{
+	if(!CurrentStateAnim)
+		return false;
+
+	return CurrentStateAnim == state;
 }

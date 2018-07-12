@@ -40,7 +40,8 @@ AHOFEnemyPawn::AHOFEnemyPawn()
 	behaviorTreeAsset = Cast<UBehaviorTree>(StaticLoadObject(UBehaviorTree::StaticClass(), NULL, *BTPath.ToString()));
 	AIControllerClass = AHOFEnemyController::StaticClass();
 
-	EnemyState = CreateDefaultSubobject<AHOFPlayerState>(TEXT("EnemyPlayerState"));
+	enemyState = CreateDefaultSubobject<AHOFPlayerState>(TEXT("EnemyPlayerState"));
+	AB_LOG(Warning, TEXT("Create EnemyState"));
 	MaxHP = CurrentHP = 100.0f;
 	isDead = false;
 }
@@ -49,8 +50,6 @@ AHOFEnemyPawn::AHOFEnemyPawn()
 void AHOFEnemyPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//PlayerState = CreateDefaultSubobject<AHOFPlayerState>(TEXT("EnemyPlayerState"));
 }
 
 // Called to bind functionality to input
@@ -90,20 +89,25 @@ bool AHOFEnemyPawn::IsDead()
 	return isDead;
 }
 
-void AHOFEnemyPawn::SetCurrentState(EHOFCharacterState newState)
+AHOFPlayerState * AHOFEnemyPawn::GetEnemyState()
 {
-	if (EnemyState->GetState() != EHOFCharacterState::DEAD)
-	{
-		Cast<AHOFEnemyController>(GetController())->SetStateInBlackBoard(newState);
-		EnemyState->SetState(newState);
-	}
+	if(!enemyState)
+		enemyState = NewObject<AHOFPlayerState>();
+
+	return enemyState;
 }
 
 void AHOFEnemyPawn::OnSeePlayer(APawn * InPawn)
 {
-	//if (EnemyState->GetState() == EHOFCharacterState::PEACE)
-	//{
-		SetCurrentState(EHOFCharacterState::CHASE);
-		Instigator = InPawn;
-	//}
+	SetCurrentState(EHOFCharacterState::CHASE);
+	Instigator = InPawn;
+}
+
+void AHOFEnemyPawn::SetCurrentState(EHOFCharacterState newState)
+{
+	if (GetEnemyState()->GetState() != EHOFCharacterState::DEAD)
+	{
+		Cast<AHOFEnemyController>(GetController())->SetStateInBlackBoard(newState);
+		GetEnemyState()->SetState(newState);
+	}
 }

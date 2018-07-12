@@ -30,22 +30,6 @@ void EnemyData::InitSpecyMap()
 		ExtractEnemyNameAndStoreWithAsset(asset);
 }
 
-void EnemyData::ExtractEnemyNameAndStoreWithAsset(UBlueprintGeneratedClass *asset)
-{
-	auto assetName = asset->GetName();
-	if (!IsValidName(assetName)) return;
-	auto enemyName = GetEnemyName(assetName);
-
-	specyMap.Add(enemyName, asset->GetDefaultObject()->GetClass());
-}
-
-bool EnemyData::IsValidName(FString name)
-{
-	if (name.StartsWith(TEXT("SKEL_"))) return false;
-
-	return true;
-}
-
 TSharedPtr<TArray<UBlueprintGeneratedClass*>> EnemyData::LoadEnemyBlueprintAssets()
 {
 	auto ObjectLibrary = UObjectLibrary::CreateLibrary(AActor::StaticClass(), true, true);
@@ -58,6 +42,25 @@ TSharedPtr<TArray<UBlueprintGeneratedClass*>> EnemyData::LoadEnemyBlueprintAsset
 
 	AB_LOG(Warning, TEXT("Found maps: %d"), blueprintAssets->Num());
 	return blueprintAssets;
+}
+
+void EnemyData::ExtractEnemyNameAndStoreWithAsset(UBlueprintGeneratedClass *asset)
+{
+	auto assetName = asset->GetName();
+	if (!IsValidName(assetName)) return;
+	auto enemyName = GetEnemyName(assetName);
+
+	UBlueprint* MyBP = Cast<UBlueprint>(asset->ClassGeneratedBy);
+	TSubclassOf<AHOFEnemyPawn> enemyPawn= CastChecked<UClass>(MyBP->GeneratedClass);
+
+	specyMap.Add(enemyName, enemyPawn);
+}
+
+bool EnemyData::IsValidName(FString name)
+{
+	if (name.StartsWith(TEXT("SKEL_"))) return false;
+
+	return true;
 }
 
 FString EnemyData::GetEnemyName(FString originalName)

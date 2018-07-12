@@ -12,6 +12,9 @@
 /**
  * 
  */
+
+class AHOFEnemyPawn;
+
 UCLASS()
 class HOF_API AHOFBattleGameMode : public AGameMode
 {
@@ -28,9 +31,9 @@ public :
 
 private : 
 	void InitializeEnemyPawn();
-	void SpawnEnemyPawn(UClass *specy, int number);
+	void SpawnEnemyPawn(TSubclassOf<AHOFEnemyPawn> specy, int number);
 	UHOFGameInstance* GameInstance;
-
+	TSubclassOf<AHOFEnemyPawn> Pawn;
 	//PlayerController도 여기 있어야할것같음.
 	
 

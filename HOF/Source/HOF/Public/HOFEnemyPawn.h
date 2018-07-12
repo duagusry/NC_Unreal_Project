@@ -65,21 +65,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation)
 		TMap<TEnumAsByte<EHOFEnemyAnimation>, UAnimSequence*> AnimationMap;
 
-	//UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "")
-
 	UFUNCTION(BlueprintCallable)
 		bool IsRunning();
 
 	UFUNCTION(BlueprintCallable)
 		bool IsDead();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation)
-		AHOFPlayerState *EnemyState;
+	UFUNCTION(BlueprintCallable)
+		AHOFPlayerState* GetEnemyState();
 
 	UFUNCTION(BlueprintCallable)
 		void SetCurrentState(EHOFCharacterState newState);
 
 private:
+	AHOFPlayerState *enemyState;
 	UPawnSensingComponent *PawnSenses;
 	float CurrentLeftRightVal;
 	float CurrentUpDownVal;

@@ -9,6 +9,7 @@
  */
 
 class UBlueprintGeneratedClass;
+class AHOFEnemyPawn;
 struct FAssetData;
 
 class HOF_API EnemyData
@@ -22,7 +23,7 @@ public:
 
 	void SetEnemyData(FString enemySpecyStr, int number);
 
-	UClass *enemySpecy;
+	TSubclassOf<AHOFEnemyPawn> enemySpecy;
 	int number;
 
 private:
@@ -32,5 +33,5 @@ private:
 	TSharedPtr<TArray<UBlueprintGeneratedClass*>> LoadEnemyBlueprintAssets();
 	FString GetEnemyName(FString originalName);
 
-	TMap<FString, UClass*> specyMap;
+	TMap<FString, TSubclassOf<AHOFEnemyPawn>> specyMap;
 };
