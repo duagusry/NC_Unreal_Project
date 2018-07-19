@@ -4,6 +4,8 @@
 #include "HOFGameInstance.h"
 #include "GameData.h"
 #include "HOFCardEvent.h"
+#include "EnemyData.h"
+#include "HOF.h"
 #include "HOFWorldPlayerController.h"
 #include "HOFWorldGameMode.h"
 #include "HOFPlayerState.h"
@@ -172,6 +174,8 @@ void UHOFTextWidget::HandleEvent(int32 id, bool isSelection /* = true */)
 		return;
 	
 	int32 resultId = isSelection ? m_CardEvent.GetDialog(m_CurrentDialogId).GetSelectionResult(id) : id;
+	// TODO : It's better to make FResult Interface structure.
+	//        e.g. Transfer result, gambit result, and so on. 
 	FResult result = m_CardEvent.GetEventResult(resultId);
 	bool IsEventEnd = false;
 	
@@ -187,9 +191,9 @@ void UHOFTextWidget::HandleEvent(int32 id, bool isSelection /* = true */)
 		HandleAnotherDialog(result.Dialog);
 	}
 
-	if (result.Transfer)
+	if (result.Transfer.IsSet)
 	{
-		HandleTransfer(); 
+		HandleTransfer(result.Transfer);
 		IsEventEnd = true;
 	}
 
@@ -209,8 +213,8 @@ void UHOFTextWidget::HandleEvent(int32 id, bool isSelection /* = true */)
 
 void UHOFTextWidget::SetEvent(int32 eventId)
 {
-	bool hasSelection = false;
-	
+	bool hasSelection = false; 	
+
 	UPanelWidget* RootWidget = Cast<UPanelWidget>(GetRootWidget());
 
 	//≈∏¿Ã∆≤
@@ -327,7 +331,7 @@ void UHOFTextWidget::HandleReward(FReward reward)
 
 		Cast<UHOFGameInstance>(GetWorld()->GetGameInstance())->SetBattleParameter(param);
 		GameState->SetState(GAME_BATTLE);
-		HandleTransfer();
+		//HandleTransfer();
 	}
 }
 
@@ -344,9 +348,15 @@ void UHOFTextWidget::HandleAnotherEvent(int32 eventId)
 	SetEvent(eventId);
 }
 
-void UHOFTextWidget::HandleTransfer()
+void UHOFTextWidget::HandleTransfer(FTransfer transfer)
 {
-	Cast<UHOFGameInstance>(GetWorld()->GetGameInstance())->SwitchToBattle(FString("/Game/Maps/HOFBattleLevel"));
+	AB_LOG_CALLONLY(Warning);
+	auto gameInstance = Cast<UHOFGameInstance>(GetWorld()->GetGameInstance());
+	auto enemyData = gameInstance->GetEnemyData();
+
+	enemyData->SetEnemyData(transfer.Specy, transfer.Count);
+	gameInstance->SwitchLevel(FString("/Game/Maps/HOFBattleLevel"));
 }
+
 
 

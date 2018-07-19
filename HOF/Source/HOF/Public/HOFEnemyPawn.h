@@ -38,6 +38,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//virtual AActor SpawnActor();
 	float TakeDamage(float Damage, const FDamageEvent & DamageEvent, AController * EventInstigator, AActor * DamageCauser) override;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Collision")
@@ -64,21 +65,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation)
 		TMap<TEnumAsByte<EHOFEnemyAnimation>, UAnimSequence*> AnimationMap;
 
-	//UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "")
-
 	UFUNCTION(BlueprintCallable)
 		bool IsRunning();
 
 	UFUNCTION(BlueprintCallable)
 		bool IsDead();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation)
-		AHOFPlayerState *EnemyState;
+	UFUNCTION(BlueprintCallable)
+		AHOFPlayerState* GetEnemyState();
 
 	UFUNCTION(BlueprintCallable)
 		void SetCurrentState(EHOFCharacterState newState);
 
 private:
+	AHOFPlayerState *enemyState;
 	UPawnSensingComponent *PawnSenses;
 	float CurrentLeftRightVal;
 	float CurrentUpDownVal;

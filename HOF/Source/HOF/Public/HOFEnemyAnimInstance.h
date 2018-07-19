@@ -10,6 +10,9 @@
 /**
  * 
  */
+
+class AHOFEnemyPawn;
+
 UCLASS()
 class HOF_API UHOFEnemyAnimInstance : public UAnimInstance
 {
@@ -18,17 +21,27 @@ class HOF_API UHOFEnemyAnimInstance : public UAnimInstance
 public:
 	UHOFEnemyAnimInstance();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Pawn")
-		float VelocityAnim;
-
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-		TEnumAsByte<EHOFCharacterState> CurrentStateAnim;
 
 	UFUNCTION()
 		void AnimNotify_AttackHit(UAnimNotify *Notify);
 
 	UFUNCTION()
 		void AnimNotify_AttackEnd(UAnimNotify *Notify);
+
+	UFUNCTION(BlueprintCallable)
+		bool IsCurrentStateAnimSameAs(EHOFCharacterState state);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		TEnumAsByte<EHOFCharacterState> CurrentStateAnim;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "State")
+		bool IsRunning;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "State")
+		AHOFEnemyPawn *Pawn;
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void NativeBeginPlay() override;
 };

@@ -18,6 +18,8 @@ struct BattleTransferParameter
 	int32 ReturnDialog;
 };
 
+class EnemyData;
+
 UCLASS()
 class HOF_API UHOFGameInstance : public UGameInstance
 {
@@ -32,12 +34,15 @@ public :
 	
 	void SetGamePlayState(EGameplayState::Type state) { GamePlayState = state; }
 
-	void SwitchToBattle(FString levelDir);
+	void SwitchLevel(FString levelPath);
 
 	void SetBattleParameter(const BattleTransferParameter& ref) { BattleParameter = ref; }
+	TSharedPtr<EnemyData> GetEnemyData();
+	bool IsEnemyDataAvailable();
 
 private : 
 	EGameplayState::Type GamePlayState;
 
 	BattleTransferParameter BattleParameter;
+	TSharedPtr<EnemyData> enemyData;
 };
