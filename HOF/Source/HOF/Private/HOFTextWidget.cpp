@@ -196,9 +196,9 @@ void UHOFTextWidget::HandleEvent(int32 id, bool isSelection /* = true */)
 		// 근데 이런 방식이면 함수 콜스택이 너무 깊어질 것 같은 느낌이....
 	}
 
-	if (result.Transfer)
+	if (result.Transfer.IsSet)
 	{
-		HandleTransfer(); 
+		HandleTransfer(result.Transfer);
 		IsEventEnd = true;
 	}
 
@@ -330,13 +330,13 @@ void UHOFTextWidget::HandleAnotherEvent(int32 eventId)
 	SetEvent(eventId);
 }
 
-void UHOFTextWidget::HandleTransfer()
+void UHOFTextWidget::HandleTransfer(FTransfer transfer)
 {
 	AB_LOG_CALLONLY(Warning);
 	auto gameInstance = Cast<UHOFGameInstance>(GetWorld()->GetGameInstance());
 	auto enemyData = gameInstance->GetEnemyData();
 
-	enemyData->SetEnemyData("Logue", 3);
+	enemyData->SetEnemyData(transfer.Specy, transfer.Count);
 	gameInstance->SwitchLevel(FString("/Game/Maps/HOFBattleLevel"));
 }
 

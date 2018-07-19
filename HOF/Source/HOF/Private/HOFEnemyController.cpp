@@ -31,8 +31,10 @@ void AHOFEnemyController::Possess(APawn* InPawn)
 
 	AHOFEnemyPawn* pawn = Cast<AHOFEnemyPawn>(InPawn);
 
+	AB_LOG(Warning, TEXT("Before setting behavior tree."));
 	if (pawn && pawn->behaviorTreeAsset)
 	{
+		AB_LOG(Warning, TEXT("Set behaviorTree %s"), *(pawn->GetName()));
 		BlackboardComp->InitializeBlackboard(*(pawn->behaviorTreeAsset->BlackboardAsset));
 
 		BlackboardComp->SetValueAsVector(HomeLocKey, pawn->GetActorLocation());

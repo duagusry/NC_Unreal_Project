@@ -33,5 +33,5 @@ private:
 	TSharedPtr<TArray<UBlueprintGeneratedClass*>> LoadEnemyBlueprintAssets();
 	FString GetEnemyName(FString originalName);
 
-	TMap<FString, TSubclassOf<AHOFEnemyPawn>> specyMap;
+	TMap<FString, TSubclassOf<AHOFEnemyPawn>> PawnByName;
 };

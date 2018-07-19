@@ -96,17 +96,39 @@ void CardEventResult::Parse(const FXmlNode * Node)
 {
 	const TArray<FXmlNode*> ResultEventList = Node->GetChildrenNodes();
 
-	for (auto node : ResultEventList)
+	for (const auto &node : ResultEventList)
 	{
 		FResult newResult;
+
+		for (const auto &child : node->GetChildrenNodes())
+		{
+			if (IsChildNodeName(child, "Transfer"))
+			{
+				FTransfer newTransfer;
+				newTransfer.IsSet = true;
+				newTransfer.Specy = GetAttribute(child, "specy");
+				newTransfer.Count = FCString::Atoi(*GetAttribute(child, "count"));
+				newResult.Transfer = newTransfer;
+			}
+		}
+
 		newResult.Id = FCString::Atoi(*(node->GetAttribute(FString("id"))));
 		newResult.Reward = FCString::Atoi(*(node->GetAttribute(FString("reward"))));
 		newResult.Dialog = FCString::Atoi(*(node->GetAttribute(FString("dialog"))));
-		newResult.Transfer = node->GetAttribute(FString("transfer")).Equals(FString("true")) ? true : false;
 		newResult.Gambit = node->GetAttribute(FString("gambit")).Equals(FString("true")) ? true : false;
 
 		m_Results.Add(newResult);
 	}
+}
+
+bool CardEventResult::IsChildNodeName(const FXmlNode *node, FString tagName)
+{
+	return node->GetTag().Equals(tagName);
+}
+
+FString CardEventResult::GetAttribute(FXmlNode *node, FString attrName)
+{
+	return node->GetAttribute(attrName);
 }
 
 void CardEventReward::Parse(const FXmlNode * Node)

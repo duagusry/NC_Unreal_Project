@@ -77,14 +77,16 @@ void AHOFBattleGameMode::InitializeEnemyPawn()
 
 void AHOFBattleGameMode::SpawnEnemyPawn(TSubclassOf<AHOFEnemyPawn> specy, int number)
 {
-	for (int i = 0; i < 1; i++)
+	AB_LOG(Warning, TEXT("Spawn Enemy %s, %d times"), *(specy->GetName()), number);
+
+	for (int i = 0; i < number; i++)
 	{
 		FActorSpawnParameters SpawnInfo;
 		FRotator myRot(0.0f, 0.0f, 0.0f);
 		FVector myLoc(0.0f, 0.0f, -1400.0f);
-
-		AB_LOG(Warning, TEXT("SpawnEnemyPawn"));
-		GetWorld()->SpawnActor<AHOFEnemyPawn>(Pawn, myLoc, myRot, SpawnInfo);
+		
+		auto enemyPawn = GetWorld()->SpawnActor<AHOFEnemyPawn>(specy, myLoc, myRot, SpawnInfo);
+		enemyPawn->SpawnDefaultController();
 	}
 }
 

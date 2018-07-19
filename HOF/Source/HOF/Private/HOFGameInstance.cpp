@@ -3,6 +3,7 @@
 #include "HOFGameInstance.h"
 #include "PlayerData.h"
 #include "EnemyData.h"
+#include "HOFEnemyPawn.h"
 #include "Engine/World.h"
 
 UHOFGameInstance::UHOFGameInstance() : 
@@ -36,5 +37,5 @@ TSharedPtr<EnemyData> UHOFGameInstance::GetEnemyData()
 
 bool UHOFGameInstance::IsEnemyDataAvailable()
 {
-	return enemyData.IsValid();
+	return enemyData.IsValid() && enemyData->enemySpecy;
 }

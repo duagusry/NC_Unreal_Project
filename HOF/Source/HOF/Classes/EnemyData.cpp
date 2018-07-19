@@ -18,7 +18,7 @@ EnemyData::~EnemyData()
 
 void EnemyData::SetEnemyData(FString enemySpecyStr, int number)
 {
-	enemySpecy = specyMap[enemySpecyStr];
+	enemySpecy = PawnByName[enemySpecyStr];
 	this->number = number;
 }
 
@@ -53,7 +53,7 @@ void EnemyData::ExtractEnemyNameAndStoreWithAsset(UBlueprintGeneratedClass *asse
 	UBlueprint* MyBP = Cast<UBlueprint>(asset->ClassGeneratedBy);
 	TSubclassOf<AHOFEnemyPawn> enemyPawn= CastChecked<UClass>(MyBP->GeneratedClass);
 
-	specyMap.Add(enemyName, enemyPawn);
+	PawnByName.Add(enemyName, enemyPawn);
 }
 
 bool EnemyData::IsValidName(FString name)

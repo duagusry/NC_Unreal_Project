@@ -54,10 +54,19 @@ public :
 	TArray<FSelectionText> m_SelectionTexts;
 };
 
+struct FTransfer
+{
+	FTransfer() : IsSet(false) {}
+
+	bool IsSet;
+	FString Specy;
+	int Count;
+};
+
 struct FResult
 {
 	FResult()
-		: Id(0), Reward(0), Dialog(0), Transfer(false), Gambit(false)
+		: Id(0), Reward(0), Dialog(0), Gambit(false)
 	{ }
 
 	bool HasMultiResult()
@@ -70,7 +79,7 @@ struct FResult
 		if (Dialog > 0)
 			counter++;
 
-		if (Transfer)
+		if (Transfer.IsSet)
 			counter++;
 
 		if (Gambit)
@@ -82,7 +91,7 @@ struct FResult
 	int32 Id;
 	int32 Reward;
 	int32 Dialog;
-	bool Transfer;
+	FTransfer Transfer;
 	bool Gambit;
 };
 
@@ -91,7 +100,12 @@ class CardEventResult
 public : 
 	void Parse(const FXmlNode* Node);
 
+
 	TArray<FResult> m_Results;
+
+private:
+	bool IsChildNodeName(const FXmlNode * node, FString tagName);
+	FString GetAttribute(FXmlNode * node, FString attrName);
 };
 
 struct FItem
