@@ -30,10 +30,22 @@ void UHOFEnemyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 void UHOFEnemyAnimInstance::AnimNotify_AttackHit(UAnimNotify * Notify)
 {
+	AHOFEnemyPawn *HOFEnemyPawn = Cast<AHOFEnemyPawn>(TryGetPawnOwner());
+
+	if (HOFEnemyPawn && HOFEnemyPawn->IsValidLowLevel())
+	{
+		HOFEnemyPawn->AttackHit();
+	}
 }
 
 void UHOFEnemyAnimInstance::AnimNotify_AttackEnd(UAnimNotify * Notify)
 {
+	AHOFEnemyPawn *HOFEnemyPawn = Cast<AHOFEnemyPawn>(TryGetPawnOwner());
+
+	if (HOFEnemyPawn && HOFEnemyPawn->IsValidLowLevel())
+	{
+		HOFEnemyPawn->GetEnemyState()->SetState(EHOFCharacterState::PLAYER_PEACE);
+	}
 }
 
 bool UHOFEnemyAnimInstance::IsCurrentStateAnimSameAs(EHOFCharacterState state)

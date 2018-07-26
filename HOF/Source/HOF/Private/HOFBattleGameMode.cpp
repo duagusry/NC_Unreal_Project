@@ -7,6 +7,7 @@
 #include "EnemyData.h"
 #include "HOFEnemyPawn.h"
 #include "HOF.h"
+#include "HOFPlayerState.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -37,7 +38,7 @@ void AHOFBattleGameMode::BeginPlay()
 	Counter = 3;
 	GetWorldTimerManager().SetTimer(countDownHandle, this, &AHOFBattleGameMode::OnTimerTick, 1.0f, true);
 	GameInstance->SetGamePlayState(EGameplayState::Battle);
-	PlayerControllerClass = AHOFPlayerController::StaticClass();
+	//PlayerControllerClass = AHOFPlayerController::StaticClass();
 
 	InitializeEnemyPawn();
 }

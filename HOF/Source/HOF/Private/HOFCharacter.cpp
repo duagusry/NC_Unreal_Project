@@ -68,10 +68,13 @@ void AHOFCharacter::PossessedBy(AController * NewController)
 float AHOFCharacter::TakeDamage(float Damage, const FDamageEvent &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
 {
 	const float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-	AHOFPlayerState* HOFPlayerState = Cast<AHOFPlayerState>(PlayerState);
+	AHOFPlayerState* HOFPlayerState = Cast<AHOFPlayerState>(GetController()->PlayerState);
 
 	if (!HOFPlayerState)
+	{
+		AB_LOG_CALLONLY(Warning);
 		return ActualDamage;
+	}
 
 	if (HOFPlayerState->CurrentHP <= 0.f)
 		return 0.f;
