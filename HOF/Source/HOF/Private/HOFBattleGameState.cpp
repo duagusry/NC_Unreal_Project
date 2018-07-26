@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "HOF.h"
 #include "HOFBattleGameState.h"
+#include "HOF.h"
+
 
 void AHOFBattleGameState::SetEnemyCount(int initCount)
 {
