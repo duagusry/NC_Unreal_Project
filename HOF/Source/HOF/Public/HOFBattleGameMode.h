@@ -27,17 +27,19 @@ public :
 	virtual void InitGameState() override;
 
 	void OnTimerTick();
+	void OnPlayerDead();
+	void OnEnemyDead();
 
 private : 
-	void InitializeEnemyPawn();
-	void SpawnEnemyPawn(TSubclassOf<AHOFEnemyPawn> specy, int number);
 	UHOFGameInstance* GameInstance;
-	TSubclassOf<AHOFEnemyPawn> Pawn;
+	FTimerHandle countDownHandle;
+	TArray<AHOFEnemyPawn*> enemyPawns;
 	//PlayerController도 여기 있어야할것같음.
-	
 
 	UPROPERTY(EditAnywhere)
-	int32 Counter;
-	FTimerHandle countDownHandle;
+		int32 Counter;
 
+	void InitializeEnemyPawn();
+	void SpawnEnemyPawn(TSubclassOf<AHOFEnemyPawn> specy, int number);
+	void SwitchToWorldLevel();
 };

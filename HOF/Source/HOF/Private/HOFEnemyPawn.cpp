@@ -9,6 +9,7 @@
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
 #include "Runtime/Engine/Classes/GameFramework/FloatingPawnMovement.h"
 #include "HOFEnemyController.h"
+#include "HOFBattleGameMode.h"
 #include "Perception/PawnSensingComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 
@@ -64,7 +65,11 @@ float AHOFEnemyPawn::TakeDamage(float Damage, const FDamageEvent &DamageEvent, A
 	const float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
 	if (CurrentHP <= 0.f)
+	{
+		auto gameMode = Cast<AHOFBattleGameMode>(GetWorld()->GetAuthGameMode());
+		gameMode->OnEnemyDead();
 		return 0.f;
+	}
 
 	if (ActualDamage > 0.f)
 	{
