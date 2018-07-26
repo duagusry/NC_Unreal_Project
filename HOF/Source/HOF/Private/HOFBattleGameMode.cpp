@@ -8,6 +8,7 @@
 #include "HOFEnemyPawn.h"
 #include "HOF.h"
 #include "HOFPlayerState.h"
+#include "HOFBattleGameState.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -20,11 +21,9 @@ AHOFBattleGameMode::AHOFBattleGameMode()
 	if (PlayerPawnObject.Class != NULL)
 		DefaultPawnClass = PlayerPawnObject.Class;
 
-	ConstructorHelpers::FObjectFinder<UBlueprint> WorldCardActorBluePrint(TEXT("Blueprint'/Game/Blueprints/Enemy/BP_Logue'"));
-	Pawn = CastChecked<UClass>(WorldCardActorBluePrint.Object->GeneratedClass);
-
 	PlayerControllerClass = AHOFPlayerController::StaticClass();
 	PlayerStateClass = AHOFPlayerState::StaticClass();
+	GameStateClass = AHOFBattleGameState::StaticClass();
 
 	UE_LOG(LogClass, Warning, TEXT("BattleGameMode Start"));
 }
@@ -38,7 +37,6 @@ void AHOFBattleGameMode::BeginPlay()
 	Counter = 3;
 	GetWorldTimerManager().SetTimer(countDownHandle, this, &AHOFBattleGameMode::OnTimerTick, 1.0f, true);
 	GameInstance->SetGamePlayState(EGameplayState::Battle);
-	//PlayerControllerClass = AHOFPlayerController::StaticClass();
 
 	InitializeEnemyPawn();
 }
@@ -55,18 +53,33 @@ void AHOFBattleGameMode::InitGameState()
 
 void AHOFBattleGameMode::OnTimerTick()
 {
-	--Counter;
-	UE_LOG(LogClass, Warning, TEXT("Count %d"), Counter);
+	//--Counter;
+	//UE_LOG(LogClass, Warning, TEXT("Count %d"), Counter);
 	//타이머 만료시 WorldLevel 오픈
 	
-	if (Counter < 1)
-	{	
-		UGameplayStatics::OpenLevel(GetWorld(), "HOFWorldLevel");
-		//GetWorld()->ServerTravel(FString("/Game/Maps/HOFWorldLevel"));
-		//GameInstance->SwitchLevel(FString("/Game/Maps/HOFWorldLevel"));
-		GetWorldTimerManager().ClearTimer(countDownHandle);
+	//if (Counter < 1)
+	//{	
+	//	UGameplayStatics::OpenLevel(GetWorld(), "HOFWorldLevel");
+	//	//GetWorld()->ServerTravel(FString("/Game/Maps/HOFWorldLevel"));
+	//	//GameInstance->SwitchLevel(FString("/Game/Maps/HOFWorldLevel"));
+	//	GetWorldTimerManager().ClearTimer(countDownHandle);
+	//}
+}
+
+void AHOFBattleGameMode::OnPlayerDead()
+{
+	SwitchToWorldLevel();
+}
+
+void AHOFBattleGameMode::OnEnemyDead()
+{
+	auto battleGameState = Cast<AHOFBattleGameState>(GameState);
+	if (battleGameState != nullptr)
+	{
+		battleGameState->DecreaseEnemyCount();
+		if(battleGameState->AreEnemiesClear())
+			SwitchToWorldLevel();
 	}
-	
 }
 
 void AHOFBattleGameMode::InitializeEnemyPawn()
@@ -75,6 +88,10 @@ void AHOFBattleGameMode::InitializeEnemyPawn()
 	{
 		auto enemyData = GameInstance->GetEnemyData();
 		SpawnEnemyPawn(enemyData->enemySpecy, enemyData->number);
+
+		auto battleGameState = Cast<AHOFBattleGameState>(GameState);
+		if (battleGameState != nullptr)
+			battleGameState->SetEnemyCount(enemyData->number);
 	}
 }
 
@@ -90,8 +107,11 @@ void AHOFBattleGameMode::SpawnEnemyPawn(TSubclassOf<AHOFEnemyPawn> specy, int nu
 		
 		auto enemyPawn = GetWorld()->SpawnActor<AHOFEnemyPawn>(specy, myLoc, myRot, SpawnInfo);
 		enemyPawn->SpawnDefaultController();
+		enemyPawns.Add(enemyPawn);
 	}
 }
 
-
-
+void AHOFBattleGameMode::SwitchToWorldLevel()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "HOFWorldLevel");
+}

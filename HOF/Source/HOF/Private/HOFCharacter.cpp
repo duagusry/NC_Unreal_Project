@@ -8,6 +8,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/World.h"
 #include "HOFPlayerState.h"
+#include "HOFBattleGameMode.h"
 #include "DrawDebugHelpers.h"
 
 // Sets default values
@@ -66,19 +67,22 @@ float AHOFCharacter::TakeDamage(float Damage, const FDamageEvent &DamageEvent, A
 	const float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	AHOFPlayerState* HOFPlayerState = Cast<AHOFPlayerState>(GetController()->PlayerState);
 
+	AB_LOG(Warning, TEXT("HP:%f"), HOFPlayerState->CurrentHP);
+
 	if (!HOFPlayerState)
-	{
-		AB_LOG_CALLONLY(Warning);
 		return ActualDamage;
-	}
 
 	if (HOFPlayerState->CurrentHP <= 0.f)
+	{
+		auto gameMode = Cast<AHOFBattleGameMode>(GetWorld()->GetAuthGameMode());
+		gameMode->OnPlayerDead();
 		return 0.f;
+	}
 
 	if (ActualDamage > 0.f)
 	{
 		HOFPlayerState->CurrentHP = FMath::Clamp(HOFPlayerState->CurrentHP - ActualDamage, 0.0f, HOFPlayerState->MaxHP);
-		AB_LOG(Warning, TEXT("HP:%f"), HOFPlayerState->CurrentHP);
+		//AB_LOG(Warning, TEXT("HP:%f"), HOFPlayerState->CurrentHP);
 
 		if (HOFPlayerState->CurrentHP <= 0)
 			HOFPlayerState->SetState(EHOFCharacterState::PLAYER_DEAD);
