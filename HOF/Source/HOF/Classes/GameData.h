@@ -63,9 +63,9 @@ namespace NumberInGame
 	static const int MAX_SELECTION_COUNT = 4;
 	static const int TEXT_BLOCK_START = 2;
 
-	static const int32 FoodConsumption = 4;
+	static const int32 FoodConsumption = 1;
 	static const int32 HealByFood = 8;
-	static const int32 DamageByFood = 40;
+	static const int32 DamageByFood = 20;
 }
 
 namespace BaseStructs
@@ -105,6 +105,15 @@ namespace BaseStructs
 
 			return *this;
 		}
+	};
+
+	struct PlayerData
+	{
+		float MaxHP;
+		float CurrentHP;
+		int32 Food;
+		int32 Gold;
+		bool Alive;
 	};
 }
 

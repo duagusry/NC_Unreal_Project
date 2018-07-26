@@ -15,6 +15,15 @@ AHOFPlayerState::AHOFPlayerState()
 	Alive = true;
 }
 
+void AHOFPlayerState::SetPlayerData(BaseStructs::PlayerData playerData)
+{
+	MaxHP = playerData.MaxHP;
+	CurrentHP = playerData.CurrentHP;
+	Food = playerData.Food;
+	Gold = playerData.Gold;
+	Alive = playerData.Alive;
+}
+
 void AHOFPlayerState::SetState(EHOFCharacterState newState)
 {
 	if (newState == EHOFCharacterState::PLAYER_BATTLE)

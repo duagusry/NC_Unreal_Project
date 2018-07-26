@@ -48,6 +48,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Battle")
 	uint32 bIsBattleInAction:1;
 
+	void SetPlayerData(BaseStructs::PlayerData playerData);
+
 	BaseStructs::Position WorldPawnPosition;
 
 	void SetState(EHOFCharacterState newState);

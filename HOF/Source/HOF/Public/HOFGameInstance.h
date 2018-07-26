@@ -19,6 +19,7 @@ struct BattleTransferParameter
 };
 
 class EnemyData;
+class AHOFPlayerState;
 
 UCLASS()
 class HOF_API UHOFGameInstance : public UGameInstance
@@ -47,4 +48,5 @@ public :
 	BattleTransferParameter BattleParameter;
 	TSharedPtr<EnemyData> enemyData;
 	BaseStructs::TransferData TransferData;
+	BaseStructs::PlayerData PlayerData;
 };

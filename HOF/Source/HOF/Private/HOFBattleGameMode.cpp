@@ -23,6 +23,7 @@ AHOFBattleGameMode::AHOFBattleGameMode()
 	Pawn = CastChecked<UClass>(WorldCardActorBluePrint.Object->GeneratedClass);
 
 	PlayerControllerClass = AHOFPlayerController::StaticClass();
+	PlayerStateClass = AHOFPlayerState::StaticClass();
 
 	UE_LOG(LogClass, Warning, TEXT("BattleGameMode Start"));
 }
@@ -60,8 +61,6 @@ void AHOFBattleGameMode::OnTimerTick()
 	if (Counter < 1)
 	{	
 		UGameplayStatics::OpenLevel(GetWorld(), "HOFWorldLevel");
-		//GetWorld()->ServerTravel(FString("/Game/Maps/HOFWorldLevel"));
-		//GameInstance->SwitchLevel(FString("/Game/Maps/HOFWorldLevel"));
 		GetWorldTimerManager().ClearTimer(countDownHandle);
 	}
 	

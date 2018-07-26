@@ -8,6 +8,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/World.h"
 #include "HOFPlayerState.h"
+#include "HOFGameInstance.h"
 #include "DrawDebugHelpers.h"
 
 // Sets default values
@@ -35,6 +36,9 @@ void AHOFCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	PlayerState = Cast<AHOFPlayerState>(GetController()->PlayerState);
+
+	Cast<AHOFPlayerState>(PlayerState)->SetPlayerData(Cast<UHOFGameInstance>(GetGameInstance())->PlayerData);
 }
 
 // Called every frame

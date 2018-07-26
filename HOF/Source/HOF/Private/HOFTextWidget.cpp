@@ -352,10 +352,8 @@ void UHOFTextWidget::HandleTransfer(const FBattleInfo& battleInfo)
 	GameState->SetState(GAME_BATTLE);
 	gameInstance->SetBattleParameter(param);
 
-	auto x = battleInfo.SpawnInfoArray[0].Type;
-
-	enemyData->SetEnemyData(x, battleInfo.SpawnInfoArray[0].amount);
-
+	enemyData->SetEnemyData(battleInfo.SpawnInfoArray[0].Type, battleInfo.SpawnInfoArray[0].amount);
+	gameInstance->PlayerData = BaseStructs::PlayerData{ PlayerState->MaxHP, PlayerState->CurrentHP, PlayerState->Food, PlayerState->Gold, PlayerState->Alive };
 	gameInstance->SaveCurrentTransferData(gameMode->AssignTransferData(), battleInfo.ReturnDialog);
 	UGameplayStatics::OpenLevel(GetWorld(), "HOFBattleLevel");
 }
