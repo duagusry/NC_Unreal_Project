@@ -9,6 +9,7 @@
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
 #include "Runtime/Engine/Classes/GameFramework/FloatingPawnMovement.h"
 #include "HOFEnemyController.h"
+#include "Perception/PawnSensingComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 
 // Sets default values
@@ -74,6 +75,52 @@ float AHOFEnemyPawn::TakeDamage(float Damage, const FDamageEvent &DamageEvent, A
 			SetCurrentState(EHOFCharacterState::PLAYER_DEAD);//isDead = true;
 	}
 	return ActualDamage;
+}
+
+void AHOFEnemyPawn::AttackHit()
+{
+	AB_LOG_CALLONLY(Warning);
+
+	FHitResult HitResult(ForceInit);
+	FVector StartPos = GetActorLocation();
+	FVector EndPos = StartPos + GetActorForwardVector() * 100.0f;
+	auto TraceParams = GetTraceParams();
+	auto TraceObject = GetTraceObject(TArray<ECollisionChannel>{ECC_Pawn, ECC_WorldStatic});
+
+	if (GetWorld()->SweepSingleByObjectType(HitResult, StartPos, EndPos, FQuat(), *TraceObject, FCollisionShape::MakeSphere(50.0f), *TraceParams))
+		GiveDamage(HitResult);
+}
+
+TSharedPtr<FCollisionQueryParams> AHOFEnemyPawn::GetTraceParams()
+{
+	const FName TraceTag("MyTraceTag");
+	GetWorld()->DebugDrawTraceTag = TraceTag;
+
+	auto TraceParams = MakeShared<FCollisionQueryParams>(FName(TEXT("VictoreCore Trace")), true, this);
+	TraceParams->bTraceComplex = true;
+	TraceParams->bReturnPhysicalMaterial = false;
+	TraceParams->TraceTag = TraceTag;
+
+	//Ignore Actors
+	TraceParams->AddIgnoredActor(this);
+	return TraceParams;
+}
+
+TSharedPtr<FCollisionObjectQueryParams> AHOFEnemyPawn::GetTraceObject(const TArray<ECollisionChannel> &channels)
+{
+	auto TraceObject = MakeShared<FCollisionObjectQueryParams>();
+	for (auto channel : channels)
+		TraceObject->AddObjectTypesToQuery(channel);
+	return TraceObject;
+}
+
+void AHOFEnemyPawn::GiveDamage(const FHitResult &HitResult)
+{
+	AB_LOG(Warning, TEXT("HitActor=%s"), *(HitResult.GetActor()->GetName()));
+	float BaseDamage = 30.0f;
+
+	FPointDamageEvent PointDamageEvent(BaseDamage, HitResult, GetActorForwardVector(), UDamageType::StaticClass());
+	HitResult.GetActor()->TakeDamage(BaseDamage, PointDamageEvent, GetController(), this);
 }
 
 bool AHOFEnemyPawn::IsRunning()

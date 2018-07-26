@@ -6,7 +6,6 @@
 #include "GameFramework/Pawn.h"
 #include "HOFPlayerState.h"
 #include "Runtime/Engine/Classes/Animation/AnimSequence.h"
-#include "Perception/PawnSensingComponent.h"
 #include "HOFEnemyPawn.generated.h"
 
 UENUM(BlueprintType)
@@ -18,6 +17,7 @@ enum EHOFEnemyAnimation
 	ANIM_ATTACK UMETA(DisplayName = "ANIM_ATTACK"),
 };
 
+class UPawnSensingComponent;
 class UBlackboardData;
 class UBehaviorTree;
 
@@ -77,6 +77,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetCurrentState(EHOFCharacterState newState);
 
+	UFUNCTION(BlueprintCallable, Category = "Damage")
+		void AttackHit();
+
 private:
 	AHOFPlayerState *enemyState;
 	UPawnSensingComponent *PawnSenses;
@@ -84,6 +87,10 @@ private:
 	float CurrentUpDownVal;
 	bool isDead;
 	
+	TSharedPtr<FCollisionObjectQueryParams> GetTraceObject(const TArray<ECollisionChannel>& channels);
+	TSharedPtr<FCollisionQueryParams> GetTraceParams();
+	void GiveDamage(const FHitResult & HitResult);
+
 	UFUNCTION()
 		void OnSeePlayer(APawn *InPawn);
 };

@@ -7,6 +7,7 @@
 #include "EnemyData.h"
 #include "HOFEnemyPawn.h"
 #include "HOF.h"
+#include "HOFPlayerState.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 //생성자는 언리얼에디터 처음 켤 때 불리기때문에 여기서 무슨 짓을 하면 대부분의 다른 객체들이 생성 안된 nullptr여서 에러 날 확률이 높음.
@@ -22,6 +23,7 @@ AHOFBattleGameMode::AHOFBattleGameMode()
 	Pawn = CastChecked<UClass>(WorldCardActorBluePrint.Object->GeneratedClass);
 
 	PlayerControllerClass = AHOFPlayerController::StaticClass();
+	PlayerStateClass = AHOFPlayerState::StaticClass();
 
 	UE_LOG(LogClass, Warning, TEXT("BattleGameMode Start"));
 }
@@ -35,7 +37,7 @@ void AHOFBattleGameMode::BeginPlay()
 	Counter = 3;
 	GetWorldTimerManager().SetTimer(countDownHandle, this, &AHOFBattleGameMode::OnTimerTick, 1.0f, true);
 	GameInstance->SetGamePlayState(EGameplayState::Battle);
-	PlayerControllerClass = AHOFPlayerController::StaticClass();
+	//PlayerControllerClass = AHOFPlayerController::StaticClass();
 
 	InitializeEnemyPawn();
 }
