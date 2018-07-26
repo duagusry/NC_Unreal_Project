@@ -59,9 +59,9 @@ void AHOFWorldCardActor::OnInputTap_Implementation()
 	}
 }
 
-void AHOFWorldCardActor::TextEvent()
+void AHOFWorldCardActor::TextEvent(int32 returnDialog)
 {
-	Cast<AHOFWorldPlayerController>(GetWorld()->GetFirstPlayerController())->ShowEventWidget(m_CardEvent.GetID(), this);
+	Cast<AHOFWorldPlayerController>(GetWorld()->GetFirstPlayerController())->ShowEventWidget(m_CardEvent.GetID(), this, returnDialog);
 }
 
 void AHOFWorldCardActor::BattleEvent(/* TMap<int, int>& spawnList, int mapNumber*/ )
@@ -89,15 +89,26 @@ void AHOFWorldCardActor::Reveal()
 	}
 }
 
-void AHOFWorldCardActor::Visit()
+void AHOFWorldCardActor::Visit(int32 returnDialog)
 {
 	m_IsVisited = true;
 
-	auto PlayerController = Cast<AHOFWorldPlayerController>(GetWorld()->GetFirstPlayerController());
-	Cast<AHOFPlayerState>(PlayerController->PlayerState)->EatFood();
+	if (returnDialog == 1)
+	{
+		auto PlayerController = Cast<AHOFWorldPlayerController>(GetWorld()->GetFirstPlayerController());
+		Cast<AHOFPlayerState>(PlayerController->PlayerState)->EatFood();
+	}
 
 	Reveal();
-	TextEvent();
+	TextEvent(returnDialog);
 	//BattleEvent();
+}
+
+void AHOFWorldCardActor::SetCardDataFromTransferData(const BaseStructs::TransferData::WorldSlotDataStruct & transferData)
+{
+	if (transferData.IsRevealed)
+		Reveal();
+
+	m_IsVisited = transferData.IsVisited;
 }
 

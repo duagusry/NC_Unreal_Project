@@ -43,11 +43,6 @@ void AHOFWorldPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 }
 
-BaseStructs::Position AHOFWorldPawn::GetPosition()
-{
-	return Cast<AHOFPlayerState>(PlayerState)->GetWorldPawnPosition();
-}
-
 void AHOFWorldPawn::SetPosition(int x, int y)
 {
 	m_Position.x = x;

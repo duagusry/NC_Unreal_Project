@@ -16,9 +16,6 @@ AHOFWorldBoardActor::AHOFWorldBoardActor()
 	{
 		BP_WorldCardActor = CastChecked<UClass>(WorldCardActorBluePrint.Object->GeneratedClass);
 	}
-
-
-	InitMapInfo();
 }
 
 AHOFWorldBoardActor::~AHOFWorldBoardActor()
@@ -41,18 +38,16 @@ void AHOFWorldBoardActor::InitWorldStatus()
 	}
 }
 
-void AHOFWorldBoardActor::CreateCardAt(int id, int xi, int yi)
+void AHOFWorldBoardActor::CreateCardAt(int id, int xi, int yi, int32& cardIndex)
 {
 	//-1은 공백. 이 숫자도 따로 enum으로 정의를 하던가 해야할 듯.
 	if (id == -1)
 		return;
 
 	if (id == 0)
-		id = m_InitialEventArray[0];
-
-	m_InitialEventArray.Remove(id);
-	
-	//숫자 안맞으면 크래시 날 듯.
+		id = m_InitialEventArray[cardIndex++];
+	else
+		m_InitialEventArray.Remove(id);
 
 	float realSlotSizeY = WORLD_WIDTH / WORLD_SLOT_WIDTH;
 	float realSlotSizeX = WORLD_HEIGHT / WORLD_SLOT_HEIGHT;
@@ -69,6 +64,31 @@ void AHOFWorldBoardActor::CreateCardAt(int id, int xi, int yi)
 	{
 		AHOFWorldCardActor* newCard(world->SpawnActor<AHOFWorldCardActor>(BP_WorldCardActor, myLoc, myRot, SpawnInfo));
 		newCard->Init(id, xi, yi);
+		m_WorldSlot[xi][yi] = newCard;
+
+		m_RandomizedCardArray.Add(newCard);
+	}
+}
+
+void AHOFWorldBoardActor::CreateCardAt(int xi, int yi, int32 & cardIndex, const TArray<BaseStructs::TransferData::WorldSlotDataStruct>& trnasferDataArray)
+{
+	float realSlotSizeY = WORLD_WIDTH / WORLD_SLOT_WIDTH;
+	float realSlotSizeX = WORLD_HEIGHT / WORLD_SLOT_HEIGHT;
+
+	float LocY = BOARD_BASE_LOC_Y - (WORLD_WIDTH / 2) + ((realSlotSizeY / 2) + (realSlotSizeY * xi));
+	float LocX = BOARD_BASE_LOC_X + (WORLD_HEIGHT / 2) - ((realSlotSizeX / 2) + (realSlotSizeX * yi));
+
+	FActorSpawnParameters SpawnInfo;
+	FRotator myRot(0.0f, 0.0f, 0.0f);
+	FVector myLoc(LocX, LocY, 20.0f);
+
+	UWorld* world = GetWorld();
+	if (world && BP_WorldCardActor)
+	{
+		AHOFWorldCardActor* newCard(world->SpawnActor<AHOFWorldCardActor>(BP_WorldCardActor, myLoc, myRot, SpawnInfo));
+		newCard->Init(trnasferDataArray[cardIndex].EventId, xi, yi);
+		newCard->SetCardDataFromTransferData(trnasferDataArray[cardIndex]);
+		cardIndex++;
 		m_WorldSlot[xi][yi] = newCard;
 
 		m_RandomizedCardArray.Add(newCard);
@@ -167,5 +187,18 @@ void AHOFWorldBoardActor::Reveal(int32 amount)
 			}
 		}
 	}
+}
+
+TArray<BaseStructs::TransferData::WorldSlotDataStruct> AHOFWorldBoardActor::SerializeWorldSlotData()
+{
+	TArray<BaseStructs::TransferData::WorldSlotDataStruct> SerializedSlotArray;
+	for (int i = 0; i < WORLD_SLOT_WIDTH; i++)
+		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
+		{
+			if(m_WorldSlot[i][j])
+				SerializedSlotArray.Add(BaseStructs::TransferData::WorldSlotDataStruct{ m_WorldSlot[i][j]->m_CardEvent.GetID() , m_WorldSlot[i][j]->m_IsVisited, m_WorldSlot[i][j]->m_Revealed });
+		}
+
+	return SerializedSlotArray;
 }
 

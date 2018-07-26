@@ -18,7 +18,11 @@ public :
 
 	void InitWorldStatus();
 
-	void CreateCardAt(int id, int xi, int yi);
+	// 최초 월드 구성할 때
+	void CreateCardAt(int id, int xi, int yi, int32& cardIndex);
+
+	// TransferData가 있을 때
+	void CreateCardAt(int xi, int yi, int32& cardIndex, const TArray<BaseStructs::TransferData::WorldSlotDataStruct>& trnasferDataArray);
 
 	AHOFWorldCardActor& GetCardOn(int x, int y);
 
@@ -34,11 +38,12 @@ public :
 
 	void Reveal(int32 amount);
 
+	TArray<BaseStructs::TransferData::WorldSlotDataStruct> SerializeWorldSlotData();
+
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<AHOFWorldCardActor> BP_WorldCardActor;
 
-private : 
 	AHOFWorldCardActor* m_WorldSlot[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT];
 
 	//분명히 인접 리스트를 관리하는 우아한 방법이 있을 것 같은데 모르겠음

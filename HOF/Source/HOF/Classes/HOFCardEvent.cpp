@@ -106,19 +106,7 @@ void CardEventResult::Parse(const FXmlNode * Node)
 	for (const auto &node : ResultEventList)
 	{
 		FResult newResult;
-
-		for (const auto &child : node->GetChildrenNodes())
-		{
-			if (IsChildNodeName(child, "Transfer"))
-			{
-				FTransfer newTransfer;
-				newTransfer.IsSet = true;
-				newTransfer.Specy = GetAttribute(child, "specy");
-				newTransfer.Count = FCString::Atoi(*GetAttribute(child, "count"));
-				newResult.Transfer = newTransfer;
-			}
-		}
-
+		
 		newResult.Id = FCString::Atoi(*(node->GetAttribute(FString("id"))));
 		newResult.Reward = FCString::Atoi(*(node->GetAttribute(FString("reward"))));
 		newResult.Dialog = FCString::Atoi(*(node->GetAttribute(FString("dialog"))));
@@ -196,9 +184,22 @@ void CardEventBattle::Parse(const FXmlNode * Node)
 	for (auto node : BattleEventList)
 	{
 		FBattleInfo newBattle;
+
 		newBattle.Id = FCString::Atoi(*(node->GetAttribute(FString("id"))));
-		newBattle.Enemy = FCString::Atoi(*(node->GetAttribute(FString("enemy"))));
 		newBattle.ReturnDialog = FCString::Atoi(*(node->GetAttribute(FString("returnDialog"))));
+
+		const TArray<FXmlNode*> spawnList = node->GetChildrenNodes();
+		for (auto node : spawnList)
+		{
+			if (node->GetTag().Equals(FString("Spawn")))
+			{
+				FSpawnInfo newSpawn;
+				newSpawn.Type = node->GetAttribute(FString("type"));
+				newSpawn.amount = FCString::Atoi(*(node->GetAttribute(FString("amount"))));
+
+				newBattle.SpawnInfoArray.Add(newSpawn);
+			}
+		}
 
 		m_BattleInfo.Add(newBattle);
 	}

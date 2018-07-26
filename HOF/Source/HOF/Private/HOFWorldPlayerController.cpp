@@ -34,13 +34,13 @@ void AHOFWorldPlayerController::BeginPlay()
 	GameState = GetWorld()->GetAuthGameMode()->GetGameState<AHOFGameState>();
 }
 
-void AHOFWorldPlayerController::ShowEventWidget(int32 id, AHOFWorldCardActor * pCard)
+void AHOFWorldPlayerController::ShowEventWidget(int32 id, AHOFWorldCardActor * pCard, int32 returnDialog)
 {
 	EventWidget = CreateWidget<UHOFTextWidget>(this, BP_EventWidget); // Create Widget
 	if (!EventWidget)
 		return;
 
-	EventWidget->Init(id, pCard);
+	EventWidget->Init(id, pCard, returnDialog);
 
 	EventWidget->AddToViewport(); // Add it to the viewport so the Construct() method in the UUserWidget:: is run.
 	EventWidget->SetVisibility(ESlateVisibility::Visible); // Set it to hidden so its not open on spawn.

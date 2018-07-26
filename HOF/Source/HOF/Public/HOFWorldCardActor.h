@@ -6,6 +6,7 @@
 #include "HOFInputInterface.h"
 #include "HOFCardEvent.h"
 #include "GameFramework/Actor.h"
+#include "GameData.h"
 #include "HOFWorldCardActor.generated.h"
 
 UCLASS()
@@ -39,7 +40,7 @@ public:
 		etc... : 추가적으로 이벤트성의 설정이 들어갈 수 있을 듯. ex.) 시간제한, 보스전 여부, 기타 이벤트
 
 	*/
-	void TextEvent();
+	void TextEvent(int32 returnDialog = 1);
 
 	void BattleEvent(/* TMap<int, int>& spawnList, int mapNumber */);
 
@@ -47,16 +48,17 @@ public:
 
 	void Reveal();
 
-	void Visit();
+	void Visit(int32 returnDialog = 1);
 
 	bool IsRevealed() { return m_Revealed; }
+
+	void SetCardDataFromTransferData(const BaseStructs::TransferData::WorldSlotDataStruct& transferData);
 
 public : 
 	//WorldPawn과 인접해있는지 여부
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Default)
 	bool IsAdjacentToPawn;
 
-private : 
 	//WorldBoardActor상의 좌표
 	int32 m_X;
 	int32 m_Y;
