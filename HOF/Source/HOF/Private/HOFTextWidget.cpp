@@ -49,14 +49,14 @@ void UHOFTextWidget::OnNextClicked()
 	}
 }
 
-void UHOFTextWidget::Init(int32 id, AHOFWorldCardActor * pCard)
+void UHOFTextWidget::Init(int32 id, AHOFWorldCardActor * pCard, int32 returnDialog)
 {
 	PlayerState = GetOwningPlayerState<AHOFPlayerState>(true);
 	GameState = GetWorld()->GetAuthGameMode()->GetGameState<AHOFGameState>();
 
 	m_CardEvent = g_CardEvent->GetCardEventFromId(id);
 	m_Card = pCard;
-	m_CurrentDialogId = 1;
+	m_CurrentDialogId = returnDialog;
 
 	//위젯에 표시되는 텍스트들 세팅
 	SetEvent(id);
@@ -191,12 +191,6 @@ void UHOFTextWidget::HandleEvent(int32 id, bool isSelection /* = true */)
 		HandleAnotherDialog(result.Dialog);
 	}
 
-	if (result.Transfer.IsSet)
-	{
-		HandleTransfer(result.Transfer);
-		IsEventEnd = true;
-	}
-
 	if (result.Gambit)
 	{
 		// 뭔가 별도 처리가 필요할듯.. 고민해봐야됨.
@@ -323,15 +317,8 @@ void UHOFTextWidget::HandleReward(FReward reward)
 
 	if (reward.Battle > 0)
 	{
-		FBattleInfo& BattleInfo = m_CardEvent.GetEventBattle(reward.Battle);
-
-		BattleTransferParameter param;
-		param.EnemyCount = BattleInfo.Enemy;
-		param.ReturnDialog = BattleInfo.ReturnDialog;
-
-		Cast<UHOFGameInstance>(GetWorld()->GetGameInstance())->SetBattleParameter(param);
-		GameState->SetState(GAME_BATTLE);
-		//HandleTransfer();
+		const auto& BattleInfo = m_CardEvent.GetEventBattle(reward.Battle);
+		HandleTransfer(BattleInfo);
 	}
 }
 
@@ -348,14 +335,29 @@ void UHOFTextWidget::HandleAnotherEvent(int32 eventId)
 	SetEvent(eventId);
 }
 
-void UHOFTextWidget::HandleTransfer(FTransfer transfer)
+void UHOFTextWidget::HandleTransfer(const FBattleInfo& battleInfo)
 {
 	AB_LOG_CALLONLY(Warning);
 	auto gameInstance = Cast<UHOFGameInstance>(GetWorld()->GetGameInstance());
 	auto enemyData = gameInstance->GetEnemyData();
+	auto gameMode = Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode());
 
-	enemyData->SetEnemyData(transfer.Specy, transfer.Count);
-	gameInstance->SwitchLevel(FString("/Game/Maps/HOFBattleLevel"));
+	BattleTransferParameter param;
+	for (auto it : battleInfo.SpawnInfoArray)
+	{
+		param.SpawnInfo.Add(it.Type, it.amount);
+	}
+	param.ReturnDialog = battleInfo.ReturnDialog;
+
+	GameState->SetState(GAME_BATTLE);
+	gameInstance->SetBattleParameter(param);
+
+	auto x = battleInfo.SpawnInfoArray[0].Type;
+
+	enemyData->SetEnemyData(x, battleInfo.SpawnInfoArray[0].amount);
+
+	gameInstance->SaveCurrentTransferData(gameMode->AssignTransferData(), battleInfo.ReturnDialog);
+	UGameplayStatics::OpenLevel(GetWorld(), "HOFBattleLevel");
 }
 
 

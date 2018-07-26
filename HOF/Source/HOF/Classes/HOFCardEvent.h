@@ -40,15 +40,6 @@ public :
 	TArray<FSelectionText> m_SelectionTexts;
 };
 
-struct FTransfer
-{
-	FTransfer() : IsSet(false) {}
-
-	bool IsSet;
-	FString Specy;
-	int Count;
-};
-
 struct FResult
 {
 	FResult()
@@ -64,10 +55,7 @@ struct FResult
 
 		if (Dialog > 0)
 			counter++;
-
-		if (Transfer.IsSet)
-			counter++;
-
+		
 		if (Gambit)
 			counter++;
 
@@ -77,7 +65,6 @@ struct FResult
 	int32 Id;
 	int32 Reward;
 	int32 Dialog;
-	FTransfer Transfer;
 	bool Gambit;
 };
 
@@ -130,15 +117,17 @@ public :
 	TArray<FReward> m_Rewards;
 };
 
+struct FSpawnInfo
+{
+	FString Type;
+	int32 amount;
+};
+
 struct FBattleInfo
 {
-	FBattleInfo()
-		: Id(0), Enemy(0), ReturnDialog(0)
-	{ }
-
 	int32 Id;
-	int32 Enemy;
 	int32 ReturnDialog;
+	TArray<FSpawnInfo> SpawnInfoArray;
 };
 
 class CardEventBattle

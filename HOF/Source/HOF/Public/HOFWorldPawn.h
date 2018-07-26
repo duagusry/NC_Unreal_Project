@@ -28,7 +28,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	BaseStructs::Position GetPosition();
+	inline BaseStructs::Position GetPosition() { return m_Position; }
 
 	// WorldBoardActor에서의 위치 설정
 	void SetPosition(int x, int y);

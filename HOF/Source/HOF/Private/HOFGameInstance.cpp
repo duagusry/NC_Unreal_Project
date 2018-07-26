@@ -4,6 +4,7 @@
 #include "EnemyData.h"
 #include "HOFEnemyPawn.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 
 UHOFGameInstance::UHOFGameInstance() : 
 	enemyData(MakeShared<EnemyData>())
@@ -31,4 +32,11 @@ TSharedPtr<EnemyData> UHOFGameInstance::GetEnemyData()
 bool UHOFGameInstance::IsEnemyDataAvailable()
 {
 	return enemyData.IsValid() && enemyData->enemySpecy;
+}
+
+void UHOFGameInstance::SaveCurrentTransferData(const BaseStructs::TransferData& transferData, int32 returnDialogId)
+{
+	TransferData = transferData;
+	TransferData.IsSet = true;
+	TransferData.CurrentDialogId = returnDialogId;
 }

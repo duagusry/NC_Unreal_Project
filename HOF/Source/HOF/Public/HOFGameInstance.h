@@ -14,7 +14,7 @@
 // BattleMode로 넘어갈 때 전달할 파라미터
 struct BattleTransferParameter
 {
-	int32 EnemyCount;
+	TMap<FString, int32> SpawnInfo;
 	int32 ReturnDialog;
 };
 
@@ -39,10 +39,12 @@ public :
 	void SetBattleParameter(const BattleTransferParameter& ref) { BattleParameter = ref; }
 	TSharedPtr<EnemyData> GetEnemyData();
 	bool IsEnemyDataAvailable();
+	inline bool HasTransferData() { return TransferData.IsSet; }
+	void SaveCurrentTransferData(const BaseStructs::TransferData& transferData, int32 returnDialogId);
 
-private : 
 	EGameplayState::Type GamePlayState;
 
 	BattleTransferParameter BattleParameter;
 	TSharedPtr<EnemyData> enemyData;
+	BaseStructs::TransferData TransferData;
 };

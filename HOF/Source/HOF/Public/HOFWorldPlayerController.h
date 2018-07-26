@@ -22,7 +22,7 @@ public :
 
 	virtual void BeginPlay() override;
 
-	void ShowEventWidget(int32 id, AHOFWorldCardActor* pCard);
+	void ShowEventWidget(int32 id, AHOFWorldCardActor* pCard, int32 returnDialog = 1);
 
 protected : 
 	//실제 인풋을 처리하는 부분

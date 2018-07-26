@@ -2,6 +2,8 @@
 
 #include "GameData.generated.h"
 
+class AHOFWorldCardActor;
+
 namespace EGameplayState
 {
 	enum Type
@@ -72,6 +74,37 @@ namespace BaseStructs
 	{
 		int32 x;
 		int32 y;
+	};
+
+	struct TransferData
+	{
+		struct WorldSlotDataStruct
+		{
+			int32 EventId;
+			bool IsVisited;
+			bool IsRevealed;
+		};
+
+		struct WorldBoardDataStruct
+		{
+			TArray<WorldSlotDataStruct> WorldSlotData;
+			TArray<int32> InitialEventArray;
+		} WorldBoardData;
+
+		Position CurrentPosition;
+		int32 CurrentDialogId;
+		bool IsSet;
+
+		TransferData() = default;
+		
+		TransferData& operator=(const TransferData& ref)
+		{
+			WorldBoardData = ref.WorldBoardData;
+			CurrentPosition = ref.CurrentPosition;
+			CurrentDialogId = ref.CurrentDialogId;
+
+			return *this;
+		}
 	};
 }
 

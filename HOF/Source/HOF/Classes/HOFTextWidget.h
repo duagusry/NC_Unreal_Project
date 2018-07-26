@@ -26,7 +26,7 @@ class HOF_API UHOFTextWidget : public UUserWidget
 	
 public : 
 
-	void Init(int32 id, AHOFWorldCardActor* pCard);
+	void Init(int32 id, AHOFWorldCardActor* pCard, int32 returnDialog = 1);
 	
 private:
 	void HandleEvent(int32 id, bool isSelection = true);
@@ -37,8 +37,7 @@ private:
 	void HandleReward(FReward reward);
 	void HandleAnotherDialog(int32 dialogId);
 	void HandleAnotherEvent(int32 eventId);
-	void HandleTransfer(FTransfer transfer);
-	void SetEnemyData();
+	void HandleTransfer(const FBattleInfo& battleInfo);
 
 	UFUNCTION()
 		void OnSelection1Clicked();

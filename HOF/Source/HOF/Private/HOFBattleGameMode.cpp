@@ -9,6 +9,7 @@
 #include "HOF.h"
 #include "HOFPlayerState.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 //생성자는 언리얼에디터 처음 켤 때 불리기때문에 여기서 무슨 짓을 하면 대부분의 다른 객체들이 생성 안된 nullptr여서 에러 날 확률이 높음.
 //초기화는 게임이 시작할때 호출되는 BeginPlay에서..
@@ -54,20 +55,18 @@ void AHOFBattleGameMode::InitGameState()
 
 void AHOFBattleGameMode::OnTimerTick()
 {
-	//--Counter;
+	--Counter;
 	UE_LOG(LogClass, Warning, TEXT("Count %d"), Counter);
 	//타이머 만료시 WorldLevel 오픈
-	/*
+	
 	if (Counter < 1)
-	{
-		g_PlayerData->EatFood();
-
-		UE_LOG(LogClass, Warning, TEXT("Alive? %s"), g_PlayerData->IsAlive() ? TEXT("Alive") : TEXT("Dead"));
-		
-		GetWorld()->ServerTravel(FString("/Game/Maps/HOFWorldLevel"));
+	{	
+		UGameplayStatics::OpenLevel(GetWorld(), "HOFWorldLevel");
+		//GetWorld()->ServerTravel(FString("/Game/Maps/HOFWorldLevel"));
+		//GameInstance->SwitchLevel(FString("/Game/Maps/HOFWorldLevel"));
 		GetWorldTimerManager().ClearTimer(countDownHandle);
 	}
-	*/
+	
 }
 
 void AHOFBattleGameMode::InitializeEnemyPawn()
