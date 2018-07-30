@@ -30,7 +30,7 @@ public :
 
 	void SwitchLevel(FString levelPath);
 
-	void SetBattleData(const BaseStructs::BattleData& ref) { BattleData = ref; }
+	void SetBattleData(const BaseStructs::BattleData& ref) { BattleData.Reset();  BattleData = ref; }
 	TSharedPtr<EnemyData> GetEnemyData();
 	bool IsEnemyDataAvailable();
 	inline bool HasTransferData() { return TransferData.IsSet; }

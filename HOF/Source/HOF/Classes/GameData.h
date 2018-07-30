@@ -119,6 +119,11 @@ namespace BaseStructs
 	struct BattleData
 	{
 		TMap<FString, int32> SpawnInfo;
+
+		void Reset()
+		{
+			SpawnInfo.Reset();
+		}
 	};
 }
 
