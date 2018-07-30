@@ -14,8 +14,6 @@ UHOFGameInstance::UHOFGameInstance() :
 void UHOFGameInstance::Init()
 {
 	Super::Init();
-
-	GamePlayState = EGameplayState::Init;
 }
 
 void UHOFGameInstance::SwitchLevel(FString levelPath)

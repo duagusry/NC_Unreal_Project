@@ -42,7 +42,6 @@ void AHOFWorldGameMode::BeginPlay()
 	Counter = 3;
 	GetWorldTimerManager().SetTimer(countDownHandle, this, &AHOFWorldGameMode::OnTimerTick, 1.0f, true);
 	
-	GameInstance->SetGamePlayState(EGameplayState::World);		// 이걸 따로 유지할 필요가..?
 	GetGameState<AHOFGameState>()->SetState(EHOFGameState::GAME_WORLD);
 
 	//리소스 로딩

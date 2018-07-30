@@ -36,7 +36,6 @@ void AHOFBattleGameMode::BeginPlay()
 
 	Counter = 3;
 	GetWorldTimerManager().SetTimer(countDownHandle, this, &AHOFBattleGameMode::OnTimerTick, 1.0f, true);
-	GameInstance->SetGamePlayState(EGameplayState::Battle);
 
 	InitializeEnemyPawn();
 }

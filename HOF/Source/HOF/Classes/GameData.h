@@ -4,19 +4,6 @@
 
 class AHOFWorldCardActor;
 
-namespace EGameplayState
-{
-	enum Type
-	{
-		Init, 
-		Menu,
-		Setting,
-		World,
-		Battle,
-		Finished,
-	};
-}
-
 namespace EGameKey
 {
 	enum Type

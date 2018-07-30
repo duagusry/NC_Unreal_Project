@@ -24,10 +24,6 @@ public :
 
 	virtual void Init() override;
 	
-	EGameplayState::Type GetGamePlayState() { return GamePlayState; }
-	
-	void SetGamePlayState(EGameplayState::Type state) { GamePlayState = state; }
-
 	void SwitchLevel(FString levelPath);
 
 	void SetBattleData(const BaseStructs::BattleData& ref) { BattleData.Reset();  BattleData = ref; }
@@ -35,8 +31,6 @@ public :
 	bool IsEnemyDataAvailable();
 	inline bool HasTransferData() { return TransferData.IsSet; }
 	void SaveCurrentTransferData(const BaseStructs::TransferData& transferData, int32 returnDialogId);
-
-	EGameplayState::Type GamePlayState;
 
 	TSharedPtr<EnemyData> enemyData;		// enemyData can save ONLY one enemy info. It would be better saved as TMap (or TArray) via struct.
 	BaseStructs::TransferData TransferData;
