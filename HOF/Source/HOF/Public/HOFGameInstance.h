@@ -11,13 +11,6 @@
  * 
  */
 
-// BattleMode로 넘어갈 때 전달할 파라미터
-struct BattleTransferParameter
-{
-	TMap<FString, int32> SpawnInfo;
-	int32 ReturnDialog;
-};
-
 class EnemyData;
 class AHOFPlayerState;
 
@@ -37,7 +30,7 @@ public :
 
 	void SwitchLevel(FString levelPath);
 
-	void SetBattleParameter(const BattleTransferParameter& ref) { BattleParameter = ref; }
+	void SetBattleData(const BaseStructs::BattleData& ref) { BattleData = ref; }
 	TSharedPtr<EnemyData> GetEnemyData();
 	bool IsEnemyDataAvailable();
 	inline bool HasTransferData() { return TransferData.IsSet; }
@@ -45,8 +38,8 @@ public :
 
 	EGameplayState::Type GamePlayState;
 
-	BattleTransferParameter BattleParameter;
-	TSharedPtr<EnemyData> enemyData;
+	TSharedPtr<EnemyData> enemyData;		// enemyData can save ONLY one enemy info. It would be better saved as TMap (or TArray) via struct.
 	BaseStructs::TransferData TransferData;
 	BaseStructs::PlayerData PlayerData;
+	BaseStructs::BattleData BattleData;
 };

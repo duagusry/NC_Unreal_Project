@@ -342,15 +342,14 @@ void UHOFTextWidget::HandleTransfer(const FBattleInfo& battleInfo)
 	auto enemyData = gameInstance->GetEnemyData();
 	auto gameMode = Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode());
 
-	BattleTransferParameter param;
+	BaseStructs::BattleData BattleParam;
 	for (auto it : battleInfo.SpawnInfoArray)
 	{
-		param.SpawnInfo.Add(it.Type, it.amount);
+		BattleParam.SpawnInfo.Add(it.Type, it.amount);
 	}
-	param.ReturnDialog = battleInfo.ReturnDialog;
 
 	GameState->SetState(GAME_BATTLE);
-	gameInstance->SetBattleParameter(param);
+	gameInstance->SetBattleData(BattleParam);
 
 	enemyData->SetEnemyData(battleInfo.SpawnInfoArray[0].Type, battleInfo.SpawnInfoArray[0].amount);
 	gameInstance->PlayerData = BaseStructs::PlayerData{ PlayerState->MaxHP, PlayerState->CurrentHP, PlayerState->Food, PlayerState->Gold, PlayerState->Alive };

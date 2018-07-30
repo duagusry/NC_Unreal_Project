@@ -115,6 +115,11 @@ namespace BaseStructs
 		int32 Gold;
 		bool Alive;
 	};
+
+	struct BattleData
+	{
+		TMap<FString, int32> SpawnInfo;
+	};
 }
 
 USTRUCT()
