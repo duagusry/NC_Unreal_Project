@@ -25,15 +25,19 @@ public :
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void InitGameState() override;
 
-	void InitWorldCardBoard(int32 mapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT]);
+	void InitWorld(int32 mapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT]);
 
-	void LoadWorldCardBoard(int32 mapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT]);
+	void LoadWorld(int32 mapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT]);
 
 	void OnTimerTick();
 	
 	void MovePawnTo(int32 x, int32 y);
 
 	void HandleRevealEvent(int32 amount);
+
+	void SpawnPawnOnBoard(int32 x, int32 y);
+
+	void InitWorldBoardPosition(int32 x, int32 y);
 
 	inline BaseStructs::TransferData AssignTransferData() { return BaseStructs::TransferData{ BaseStructs::TransferData::WorldBoardDataStruct{ WorldBoard->SerializeWorldSlotData(), WorldBoard->m_InitialEventArray }, WorldPawn->GetPosition(), 0 }; }
 

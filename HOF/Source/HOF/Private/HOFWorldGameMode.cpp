@@ -69,9 +69,9 @@ void AHOFWorldGameMode::BeginPlay()
 	};
 
 	if (!GameInstance->HasTransferData())
-		InitWorldCardBoard(mapEventInfo);
+		InitWorld(mapEventInfo);
 	else
-		LoadWorldCardBoard(mapEventInfo);
+		LoadWorld(mapEventInfo);
 
 }
 
@@ -92,7 +92,7 @@ void AHOFWorldGameMode::InitGameState()
 	*/
 }
 
-void AHOFWorldGameMode::InitWorldCardBoard(int32 mapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT])
+void AHOFWorldGameMode::InitWorld(int32 mapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT])
 {
 	FActorSpawnParameters SpawnInfo;
 	FRotator myRot(0.0f, 0.0f, 0.0f);
@@ -108,18 +108,13 @@ void AHOFWorldGameMode::InitWorldCardBoard(int32 mapEventInfo[WORLD_SLOT_WIDTH][
 			WorldBoard->CreateCardAt(mapEventInfo[i][j], i, j, cardIndex);
 		}
 	}
-	WorldBoard->InitWorldStatus();
-	WorldBoard->InitAdjacentList();
 
-	FVector PawnInitialLocaiton = WorldBoard->GetCardLocationOn(0, 0);
-
-	WorldPawn = GetWorld()->SpawnActor<AHOFWorldPawn>(BP_WorldPawn, PawnInitialLocaiton, myRot, SpawnInfo);
-	WorldPawn->SetPosition(0, 0);
-	WorldBoard->UpdateAdjacentList(0, 0, 0, 0);
+	SpawnPawnOnBoard(0, 0);
+	InitWorldBoardPosition(0, 0);
 	WorldBoard->GetCardOn(0, 0).Visit();
 }
 
-void AHOFWorldGameMode::LoadWorldCardBoard(int32 mapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT])
+void AHOFWorldGameMode::LoadWorld(int32 mapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT])
 {
 	FActorSpawnParameters SpawnInfo;
 	FRotator myRot(0.0f, 0.0f, 0.0f);
@@ -137,16 +132,10 @@ void AHOFWorldGameMode::LoadWorldCardBoard(int32 mapEventInfo[WORLD_SLOT_WIDTH][
 				WorldBoard->CreateCardAt(i, j, cardIndex, transferData.WorldBoardData.WorldSlotData);
 		}
 	}
-	WorldBoard->InitWorldStatus();
-	WorldBoard->InitAdjacentList();
 
 	BaseStructs::Position LastPosition = transferData.CurrentPosition;
-
-	FVector PawnInitialLocaiton = WorldBoard->GetCardLocationOn(LastPosition.x, LastPosition.y);
-
-	WorldPawn = GetWorld()->SpawnActor<AHOFWorldPawn>(BP_WorldPawn, PawnInitialLocaiton, myRot, SpawnInfo);
-	WorldPawn->SetPosition(LastPosition.x, LastPosition.y);
-	WorldBoard->UpdateAdjacentList(0, 0, LastPosition.x, LastPosition.y);
+	SpawnPawnOnBoard(LastPosition.x, LastPosition.y);
+	InitWorldBoardPosition(LastPosition.x, LastPosition.y);
 	WorldBoard->GetCardOn(LastPosition.x, LastPosition.y).Visit(transferData.CurrentDialogId);
 }
 
@@ -183,6 +172,25 @@ void AHOFWorldGameMode::MovePawnTo(int32 x, int32 y)
 void AHOFWorldGameMode::HandleRevealEvent(int32 amount)
 {
 	WorldBoard->Reveal(amount);
+}
+
+void AHOFWorldGameMode::SpawnPawnOnBoard(int32 x, int32 y)
+{
+	FActorSpawnParameters SpawnInfo;
+	FRotator myRot(0.0f, 0.0f, 0.0f);
+	FVector myLoc(0.0f, 0.0f, 0.0f);
+
+	FVector PawnInitialLocaiton = WorldBoard->GetCardLocationOn(x, y);
+
+	WorldPawn = GetWorld()->SpawnActor<AHOFWorldPawn>(BP_WorldPawn, PawnInitialLocaiton, myRot, SpawnInfo);
+	WorldPawn->SetPosition(x, y);
+}
+
+void AHOFWorldGameMode::InitWorldBoardPosition(int32 x, int32 y)
+{
+	WorldBoard->InitWorldStatus();
+	WorldBoard->InitAdjacentList();
+	WorldBoard->UpdateAdjacentList(0, 0, x, y);
 }
 
 
