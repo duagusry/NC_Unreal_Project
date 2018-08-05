@@ -218,13 +218,13 @@ void UHOFTextWidget::SetEvent(int32 eventId)
 	//다이얼로그 텍스트
 	UTextBlock* TextBlock = Cast<UTextBlock>(RootWidget->GetChildAt(NumberInGame::TEXT_BLOCK_START));
 	CardEventDialog& DialogEvent =  m_CardEvent.GetDialog(m_CurrentDialogId);
-	TextBlock->SetText(FText::FromString(DialogEvent.m_Text.Text));
+	TextBlock->SetText(FText::FromString(DialogEvent.Text.Text));
 	
 	int32 index = 1;
 
-	for (index; index <= DialogEvent.m_SelectionTexts.Num(); index++)
+	for (index; index <= DialogEvent.SelectionTextArray.Num(); index++)
 	{
-		FText ButtonText = FText::FromString(DialogEvent.m_SelectionTexts[index - 1].Text);
+		FText ButtonText = FText::FromString(DialogEvent.SelectionTextArray[index - 1].Text);
 
 		UButton* SelectionButton = Cast<UButton>(RootWidget->GetChildAt(index + NumberInGame::TEXT_BLOCK_START));
 		UTextBlock* SelectionText = Cast<UTextBlock>(SelectionButton->GetChildAt(0));
@@ -269,7 +269,7 @@ void UHOFTextWidget::CloseWidget(EHOFGameState newState)
 //코드 더러움
 void UHOFTextWidget::HandleReward(FReward reward)
 {
-	if (reward.ItemList.Num())
+	if (reward.ItemArray.Num())
 	{
 		//아이템 처리
 	}
@@ -345,14 +345,14 @@ void UHOFTextWidget::HandleTransfer(const FBattleInfo& battleInfo)
 	BattleTransferParameter param;
 	for (auto it : battleInfo.SpawnInfoArray)
 	{
-		param.SpawnInfo.Add(it.Type, it.amount);
+		param.SpawnInfo.Add(it.Type, it.Amount);
 	}
 	param.ReturnDialog = battleInfo.ReturnDialog;
 
 	GameState->SetState(GAME_BATTLE);
 	gameInstance->SetBattleParameter(param);
 
-	enemyData->SetEnemyData(battleInfo.SpawnInfoArray[0].Type, battleInfo.SpawnInfoArray[0].amount);
+	enemyData->SetEnemyData(battleInfo.SpawnInfoArray[0].Type, battleInfo.SpawnInfoArray[0].Amount);
 	gameInstance->PlayerData = BaseStructs::PlayerData{ PlayerState->MaxHP, PlayerState->CurrentHP, PlayerState->Food, PlayerState->Gold, PlayerState->Alive };
 	gameInstance->SaveCurrentTransferData(gameMode->AssignTransferData(), battleInfo.ReturnDialog);
 	UGameplayStatics::OpenLevel(GetWorld(), "HOFBattleLevel");
