@@ -38,13 +38,6 @@ void AHOFWorldGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	GameInstance = Cast<UHOFGameInstance>(GetGameInstance());
-<<<<<<< HEAD
-
-	Counter = 3;
-	GetWorldTimerManager().SetTimer(countDownHandle, this, &AHOFWorldGameMode::OnTimerTick, 1.0f, true);
-	
-=======
->>>>>>> CardEvent
 	GetGameState<AHOFGameState>()->SetState(EHOFGameState::GAME_WORLD);
 
 	//리소스 로딩
