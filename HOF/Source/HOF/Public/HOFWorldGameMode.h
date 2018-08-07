@@ -10,6 +10,10 @@
 #include "HOFWorldPawn.h"
 #include "HOFWorldGameMode.generated.h"
 
+class AHOFWorldPawn;
+class UHOFGameInstance;
+class AHOFWorldBoardActor;
+
 /**
  * 
  */
@@ -25,17 +29,19 @@ public :
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void InitGameState() override;
 
-	void InitWorldCardBoard(int32 mapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT]);
+	void InitWorld(int32 MapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT]);
 
-	void LoadWorldCardBoard(int32 mapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT]);
-
-	void OnTimerTick();
-	
+	void LoadWorld(int32 MapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT]);
+		
 	void MovePawnTo(int32 x, int32 y);
 
-	void HandleRevealEvent(int32 amount);
+	void HandleRevealEvent(int32 Amount);
 
-	inline BaseStructs::TransferData AssignTransferData() { return BaseStructs::TransferData{ BaseStructs::TransferData::WorldBoardDataStruct{ WorldBoard->SerializeWorldSlotData(), WorldBoard->m_InitialEventArray }, WorldPawn->GetPosition(), 0 }; }
+	void SpawnPawnOnBoard(int32 x, int32 y);
+
+	void InitWorldBoardPosition(int32 x, int32 y);
+
+	BaseStructs::TransferData AssignTransferData();
 
 public : 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -46,8 +52,4 @@ private :
 	AHOFWorldBoardActor* WorldBoard;
 	AHOFWorldPawn* WorldPawn;
 	
-	UPROPERTY(EditAnywhere)
-	int32 Counter;
-	FTimerHandle countDownHandle;
-
 };
