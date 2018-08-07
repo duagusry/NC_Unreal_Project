@@ -29,11 +29,11 @@ public :
 	void SetBattleData(const BaseStructs::BattleData& ref) { BattleData.Reset();  BattleData = ref; }
 	TSharedPtr<EnemyData> GetEnemyData();
 	bool IsEnemyDataAvailable();
-	inline bool HasTransferData() { return TransferData.IsSet; }
-	void SaveCurrentTransferData(const BaseStructs::TransferData& transferData, int32 returnDialogId);
+	inline bool HasTransferData() { return WorldStatusData.IsSet; }
+	void SaveCurrentWorldStatusData(const BaseStructs::WorldStatusData& transferData);
 
 	TSharedPtr<EnemyData> enemyData;		// enemyData can save ONLY one enemy info. It would be better saved as TMap (or TArray) via struct.
-	BaseStructs::TransferData TransferData;
+	BaseStructs::WorldStatusData WorldStatusData;
 	BaseStructs::PlayerData PlayerData;
 	BaseStructs::BattleData BattleData;
 };

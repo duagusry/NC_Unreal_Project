@@ -104,11 +104,11 @@ void AHOFWorldCardActor::Visit(int32 returnDialog)
 	//BattleEvent();
 }
 
-void AHOFWorldCardActor::SetCardDataFromTransferData(const BaseStructs::TransferData::WorldSlotDataStruct & transferData)
+void AHOFWorldCardActor::SetCardDataFromWorldStatusData(const BaseStructs::WorldStatusData::WorldSlotDataStruct & worldStatusData)
 {
-	if (transferData.IsRevealed)
+	if (worldStatusData.IsRevealed)
 		Reveal();
 
-	m_IsVisited = transferData.IsVisited;
+	m_IsVisited = worldStatusData.IsVisited;
 }
 

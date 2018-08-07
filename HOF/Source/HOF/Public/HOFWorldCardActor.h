@@ -52,7 +52,7 @@ public:
 
 	bool IsRevealed() { return m_Revealed; }
 
-	void SetCardDataFromTransferData(const BaseStructs::TransferData::WorldSlotDataStruct& transferData);
+	void SetCardDataFromWorldStatusData(const BaseStructs::WorldStatusData::WorldSlotDataStruct&worldStatusrData);
 
 public : 
 	//WorldPawn과 인접해있는지 여부

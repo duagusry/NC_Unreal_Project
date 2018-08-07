@@ -63,7 +63,7 @@ namespace BaseStructs
 		int32 y;
 	};
 
-	struct TransferData
+	struct WorldStatusData
 	{
 		struct WorldSlotDataStruct
 		{
@@ -82,9 +82,9 @@ namespace BaseStructs
 		int32 CurrentDialogId;
 		bool IsSet;
 
-		TransferData() = default;
+		WorldStatusData() = default;
 		
-		TransferData& operator=(const TransferData& ref)
+		WorldStatusData& operator=(const WorldStatusData& ref)
 		{
 			WorldBoardData = ref.WorldBoardData;
 			CurrentPosition = ref.CurrentPosition;

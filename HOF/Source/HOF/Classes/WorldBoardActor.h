@@ -22,7 +22,7 @@ public :
 	void CreateCardAt(int id, int xi, int yi, int32& cardIndex);
 
 	// TransferData가 있을 때
-	void CreateCardAt(int xi, int yi, int32& cardIndex, const TArray<BaseStructs::TransferData::WorldSlotDataStruct>& trnasferDataArray);
+	void CreateCardAt(int xi, int yi, int32& cardIndex, const TArray<BaseStructs::WorldStatusData::WorldSlotDataStruct>& worldStatusDataArray);
 
 	AHOFWorldCardActor& GetCardOn(int x, int y);
 
@@ -38,7 +38,7 @@ public :
 
 	void Reveal(int32 amount);
 
-	TArray<BaseStructs::TransferData::WorldSlotDataStruct> SerializeWorldSlotData();
+	TArray<BaseStructs::WorldStatusData::WorldSlotDataStruct> SerializeWorldSlotData();
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

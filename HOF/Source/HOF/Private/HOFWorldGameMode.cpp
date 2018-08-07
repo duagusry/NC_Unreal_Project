@@ -113,23 +113,23 @@ void AHOFWorldGameMode::LoadWorld(int32 MapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLO
 	FRotator MyRot(0.0f, 0.0f, 0.0f);
 	FVector MyLoc(0.0f, 0.0f, 0.0f);
 	int32 CardIndex = 0;
-	auto TransferData = GameInstance->TransferData;
+	const auto& WorldStatusData = GameInstance->WorldStatusData;
 
 	WorldBoard = GetWorld()->SpawnActor<AHOFWorldBoardActor>(AHOFWorldBoardActor::StaticClass(), MyLoc, MyRot, SpawnInfo);
-	WorldBoard->m_InitialEventArray = TransferData.WorldBoardData.InitialEventArray;
+	WorldBoard->m_InitialEventArray = WorldStatusData.WorldBoardData.InitialEventArray;
 	for (int i = 0; i < WORLD_SLOT_WIDTH; i++)
 	{
 		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
 		{
 			if(MapEventInfo[i][j] != -1)
-				WorldBoard->CreateCardAt(i, j, CardIndex, TransferData.WorldBoardData.WorldSlotData);
+				WorldBoard->CreateCardAt(i, j, CardIndex, WorldStatusData.WorldBoardData.WorldSlotData);
 		}
 	}
 
-	BaseStructs::Position LastPosition = TransferData.CurrentPosition;
+	BaseStructs::Position LastPosition = WorldStatusData.CurrentPosition;
 	SpawnPawnOnBoard(LastPosition.x, LastPosition.y);
 	InitWorldBoardPosition(LastPosition.x, LastPosition.y);
-	WorldBoard->GetCardOn(LastPosition.x, LastPosition.y).Visit(TransferData.CurrentDialogId);
+	WorldBoard->GetCardOn(LastPosition.x, LastPosition.y).Visit(WorldStatusData.CurrentDialogId);
 }
 
 void AHOFWorldGameMode::MovePawnTo(int32 x, int32 y)
@@ -166,15 +166,15 @@ void AHOFWorldGameMode::InitWorldBoardPosition(int32 x, int32 y)
 	WorldBoard->UpdateAdjacentList(0, 0, x, y);
 }
 
-BaseStructs::TransferData AHOFWorldGameMode::AssignTransferData()
+BaseStructs::WorldStatusData AHOFWorldGameMode::AssignWorldStatusData(int32 returnDialogId)
 {
-	return BaseStructs::TransferData
-		{ BaseStructs::TransferData::WorldBoardDataStruct
+	return BaseStructs::WorldStatusData
+		{ BaseStructs::WorldStatusData::WorldBoardDataStruct
 			{ WorldBoard->SerializeWorldSlotData(), 
 			WorldBoard->m_InitialEventArray 
 			}, 
 			WorldPawn->GetPosition(), 
-			0 
+			returnDialogId
 		};
 }
 

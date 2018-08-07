@@ -32,9 +32,8 @@ bool UHOFGameInstance::IsEnemyDataAvailable()
 	return enemyData.IsValid() && enemyData->enemySpecy;
 }
 
-void UHOFGameInstance::SaveCurrentTransferData(const BaseStructs::TransferData& transferData, int32 returnDialogId)
+void UHOFGameInstance::SaveCurrentWorldStatusData(const BaseStructs::WorldStatusData& worldStatusData)
 {
-	TransferData = transferData;
-	TransferData.IsSet = true;
-	TransferData.CurrentDialogId = returnDialogId;
+	WorldStatusData = worldStatusData;
+	WorldStatusData.IsSet = true;
 }

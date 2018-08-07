@@ -70,7 +70,7 @@ void AHOFWorldBoardActor::CreateCardAt(int id, int xi, int yi, int32& cardIndex)
 	}
 }
 
-void AHOFWorldBoardActor::CreateCardAt(int xi, int yi, int32 & cardIndex, const TArray<BaseStructs::TransferData::WorldSlotDataStruct>& trnasferDataArray)
+void AHOFWorldBoardActor::CreateCardAt(int xi, int yi, int32 & cardIndex, const TArray<BaseStructs::WorldStatusData::WorldSlotDataStruct>& worldStatusDataArray)
 {
 	float realSlotSizeY = WORLD_WIDTH / WORLD_SLOT_WIDTH;
 	float realSlotSizeX = WORLD_HEIGHT / WORLD_SLOT_HEIGHT;
@@ -86,8 +86,8 @@ void AHOFWorldBoardActor::CreateCardAt(int xi, int yi, int32 & cardIndex, const 
 	if (world && BP_WorldCardActor)
 	{
 		AHOFWorldCardActor* newCard(world->SpawnActor<AHOFWorldCardActor>(BP_WorldCardActor, myLoc, myRot, SpawnInfo));
-		newCard->Init(trnasferDataArray[cardIndex].EventId, xi, yi);
-		newCard->SetCardDataFromTransferData(trnasferDataArray[cardIndex]);
+		newCard->Init(worldStatusDataArray[cardIndex].EventId, xi, yi);
+		newCard->SetCardDataFromWorldStatusData(worldStatusDataArray[cardIndex]);
 		cardIndex++;
 		m_WorldSlot[xi][yi] = newCard;
 
@@ -189,14 +189,14 @@ void AHOFWorldBoardActor::Reveal(int32 amount)
 	}
 }
 
-TArray<BaseStructs::TransferData::WorldSlotDataStruct> AHOFWorldBoardActor::SerializeWorldSlotData()
+TArray<BaseStructs::WorldStatusData::WorldSlotDataStruct> AHOFWorldBoardActor::SerializeWorldSlotData()
 {
-	TArray<BaseStructs::TransferData::WorldSlotDataStruct> SerializedSlotArray;
+	TArray<BaseStructs::WorldStatusData::WorldSlotDataStruct> SerializedSlotArray;
 	for (int i = 0; i < WORLD_SLOT_WIDTH; i++)
 		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
 		{
 			if(m_WorldSlot[i][j])
-				SerializedSlotArray.Add(BaseStructs::TransferData::WorldSlotDataStruct{ m_WorldSlot[i][j]->m_CardEvent.GetID() , m_WorldSlot[i][j]->m_IsVisited, m_WorldSlot[i][j]->m_Revealed });
+				SerializedSlotArray.Add(BaseStructs::WorldStatusData::WorldSlotDataStruct{ m_WorldSlot[i][j]->m_CardEvent.GetID() , m_WorldSlot[i][j]->m_IsVisited, m_WorldSlot[i][j]->m_Revealed });
 		}
 
 	return SerializedSlotArray;

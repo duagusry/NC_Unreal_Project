@@ -41,7 +41,7 @@ public :
 
 	void InitWorldBoardPosition(int32 x, int32 y);
 
-	BaseStructs::TransferData AssignTransferData();
+	BaseStructs::WorldStatusData AssignWorldStatusData(int32 returnDialogId);
 
 public : 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
