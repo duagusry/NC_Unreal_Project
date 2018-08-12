@@ -5,23 +5,19 @@
 #include "HOFWorldPlayerController.h"
 #include "HOFWorldGameMode.h"
 #include "HOFGameState.h"
+#include "GameData.h"
 
 AHOFPlayerState::AHOFPlayerState()
 {
-	CurrentHP = MaxHP = 100.0f;
 	CurrentStatePawn = EHOFCharacterState::PLAYER_PEACE;
-	Food = 0;
-	Gold = 30;
-	Alive = true;
 }
 
 void AHOFPlayerState::SetPlayerData(BaseStructs::PlayerData playerData)
 {
-	MaxHP = playerData.MaxHP;
-	CurrentHP = playerData.CurrentHP;
-	Food = playerData.Food;
-	Gold = playerData.Gold;
-	Alive = playerData.Alive;
+	PlayerData.HP = playerData.HP;
+	PlayerData.Food = playerData.Food;
+	PlayerData.Gold = playerData.Gold;
+	PlayerData.Alive = playerData.Alive;
 }
 
 void AHOFPlayerState::SetState(EHOFCharacterState newState)
@@ -42,46 +38,43 @@ EHOFCharacterState AHOFPlayerState::GetState()
 void AHOFPlayerState::EatFood()
 {
 	//식량이 모자라면 데미지를 받음
-	if (Food < NumberInGame::FoodConsumption)
+	PlayerData.Food(-NumberInGame::FoodConsumption);
+
+	if (PlayerData.Food.CheckOnMinValue())
 	{
-		Food = 0;
 		GetDamage(NumberInGame::DamageByFood);
 
 		return;
 	}
 
-	Food -= NumberInGame::FoodConsumption;
-	UE_LOG(LogClass, Warning, TEXT("Food Consumed, Current Food : %d"), Food);
+	UE_LOG(LogClass, Warning, TEXT("Food Consumed, Current Food : %d"), PlayerData.Food.GetCurrentValue());
 
 	Heal(NumberInGame::HealByFood);
 }
 
 void AHOFPlayerState::Heal(int32 heal)
 {
-	int32 TempHP = CurrentHP;
+	float TempHP = PlayerData.HP.GetCurrentValue();
 
-	CurrentHP += heal;
-	if (CurrentHP > MaxHP)
-		CurrentHP = MaxHP;
-	UE_LOG(LogClass, Warning, TEXT("Healed, %d -> %d / %d(max)"), TempHP, CurrentHP, MaxHP);
+	PlayerData.HP(heal);
+
+	UE_LOG(LogClass, Warning, TEXT("Healed, %f -> %f / %f(max)"), TempHP, PlayerData.HP.GetCurrentValue(), PlayerData.HP.GetMaxValue());
 }
 
 void AHOFPlayerState::GetDamage(int damage)
 {
-	int32 TempHP = CurrentHP;
+	float TempHP = PlayerData.HP.GetCurrentValue();
 
-	CurrentHP -= damage;
-	if (CurrentHP <= 0)
-		CurrentHP = 0;
-	UE_LOG(LogClass, Warning, TEXT("GetDamage, %d -> %d / %d(max)"), TempHP, CurrentHP, MaxHP);
+	PlayerData.HP(-damage);
+	UE_LOG(LogClass, Warning, TEXT("GetDamage, %f -> %f / %f(max)"), TempHP, PlayerData.HP.GetCurrentValue(), PlayerData.HP.GetMaxValue());
 
-	if (CurrentHP <= 0)
+	if (PlayerData.HP.CheckOnMinValue())
 		Die();
 }
 
 void AHOFPlayerState::Die()
 {
-	Alive = false;
+	PlayerData.Alive = false;
 	UE_LOG(LogClass, Warning, TEXT("YOU DIED"));
 	CurrentStatePawn = EHOFCharacterState::PLAYER_DEAD;
 

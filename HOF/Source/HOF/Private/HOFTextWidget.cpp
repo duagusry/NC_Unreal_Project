@@ -266,7 +266,6 @@ void UHOFTextWidget::CloseWidget(EHOFGameState newState)
 	GameState->SetState(newState);
 }
 
-//코드 더러움
 void UHOFTextWidget::HandleReward(FReward reward)
 {
 	if (reward.ItemArray.Num())
@@ -274,40 +273,24 @@ void UHOFTextWidget::HandleReward(FReward reward)
 		//아이템 처리
 	}
 
-	if (reward.Food > 0)
+	if (reward.Food != 0)
 	{
-		PlayerState->GainFood(reward.Food);
-	}
-	else if (reward.Food < 0)
-	{
-		PlayerState->LoseFood(reward.Food);
+		PlayerState->ModifyFood(reward.Food);
 	}
 
-	if (reward.Gold > 0)
+	if (reward.Gold != 0)
 	{
-		PlayerState->GainGold(reward.Gold);
-	}
-	else if (reward.Gold < 0)
-	{
-		PlayerState->LoseGold(reward.Gold);
+		PlayerState->ModifyGold(reward.Gold);
 	}
 
-	if (reward.MaxHealth > 0)
+	if (reward.MaxHealth != 0)
 	{
-		PlayerState->GainMaxHP(reward.MaxHealth);
-	}
-	else if (reward.MaxHealth < 0)
-	{
-		PlayerState->LoseMaxHP(reward.MaxHealth);
+		PlayerState->ModifyMaxHP(reward.MaxHealth);
 	}
 
-	if (reward.CurrentHealth > 0)
+	if (reward.CurrentHealth != 0)
 	{
-		PlayerState->GainCurrentHP(reward.CurrentHealth);
-	}
-	else if (reward.CurrentHealth < 0)
-	{
-		PlayerState->LoseCurrentHP(reward.CurrentHealth);
+		PlayerState->ModifyCurrentHP(reward.CurrentHealth);
 	}
 
 	if (reward.Reveal > 0)
@@ -352,7 +335,7 @@ void UHOFTextWidget::HandleTransfer(const FBattleInfo& battleInfo)
 	gameInstance->SetBattleData(BattleParam);
 
 	enemyData->SetEnemyData(battleInfo.SpawnInfoArray[0].Type, battleInfo.SpawnInfoArray[0].Amount);
-	gameInstance->PlayerData = BaseStructs::PlayerData{ PlayerState->MaxHP, PlayerState->CurrentHP, PlayerState->Food, PlayerState->Gold, PlayerState->Alive };
+	gameInstance->PlayerData = BaseStructs::PlayerData{ PlayerState->PlayerData.HP, PlayerState->PlayerData.Food, PlayerState->PlayerData.Gold, PlayerState->PlayerData.Alive };
 	gameInstance->SaveCurrentWorldStatusData(gameMode->AssignWorldStatusData(battleInfo.ReturnDialog));
 	UGameplayStatics::OpenLevel(GetWorld(), "HOFBattleLevel");
 }

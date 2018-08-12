@@ -94,12 +94,46 @@ namespace BaseStructs
 		}
 	};
 
+	template <typename T>
+	class Stat
+	{
+	public : 
+		Stat(T current, T max, T min)
+			: CurrentValue(current)
+			, MaxValue(max)
+			, MinValue(min)
+		{ }
+
+		Stat(const Stat& ref) = default;
+		Stat& operator=(const Stat& ref) = default;
+
+		inline void operator()(T value) { value > 0 ? Ceil(value) : Floor(value); }	// Modify Current Value
+
+		inline void ModifyMaxValue(T value) { MaxValue = MaxValue + value <= MinValue ? MinValue : MaxValue + value; }
+		inline void ModifyMinValue(T value) { MinValue = MinValue + value >= MaxValue ? MaxValue : MinValue + value; }
+
+		inline bool CheckOnMinValue() { return CurrentValue <= MinValue; }
+
+		inline const T GetCurrentValue() const { return CurrentValue; }
+		// for logging
+		inline const T GetMaxValue() const { return MaxValue; }
+		inline const T GetMinValue() const { return MinValue; }
+
+	private : 
+		inline void Ceil(T value) { CurrentValue = CurrentValue + value >= MaxValue ? MaxValue : CurrentValue + value; }
+		inline void Floor(T value) { CurrentValue = CurrentValue - value <= MinValue ? MinValue : CurrentValue - value; }
+
+	private : 
+		T CurrentValue;
+		T MinValue;
+		T MaxValue;
+	};
+
 	struct PlayerData
 	{
-		float MaxHP;
-		float CurrentHP;
-		int32 Food;
-		int32 Gold;
+		Stat<float> HP{ 100, 100, 0 };
+		Stat<int32> Food{ 30, 100, 0 };
+		Stat<int32> Gold{ 50, 1000, 0 };
 		bool Alive;
 	};
 

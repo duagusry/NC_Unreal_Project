@@ -71,12 +71,12 @@ float AHOFCharacter::TakeDamage(float Damage, const FDamageEvent &DamageEvent, A
 	const float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	AHOFPlayerState* HOFPlayerState = Cast<AHOFPlayerState>(GetController()->PlayerState);
 
-	AB_LOG(Warning, TEXT("HP:%f"), HOFPlayerState->CurrentHP);
+	AB_LOG(Warning, TEXT("HP:%f"), HOFPlayerState->PlayerData.HP.GetCurrentValue());
 
 	if (!HOFPlayerState)
 		return ActualDamage;
 
-	if (HOFPlayerState->CurrentHP <= 0.f)
+	if (HOFPlayerState->PlayerData.HP.CheckOnMinValue())
 	{
 		auto gameMode = Cast<AHOFBattleGameMode>(GetWorld()->GetAuthGameMode());
 		gameMode->OnPlayerDead();
@@ -85,10 +85,10 @@ float AHOFCharacter::TakeDamage(float Damage, const FDamageEvent &DamageEvent, A
 
 	if (ActualDamage > 0.f)
 	{
-		HOFPlayerState->CurrentHP = FMath::Clamp(HOFPlayerState->CurrentHP - ActualDamage, 0.0f, HOFPlayerState->MaxHP);
+		HOFPlayerState->PlayerData.HP(-ActualDamage);
 		//AB_LOG(Warning, TEXT("HP:%f"), HOFPlayerState->CurrentHP);
 
-		if (HOFPlayerState->CurrentHP <= 0)
+		if (HOFPlayerState->PlayerData.HP.CheckOnMinValue())
 			HOFPlayerState->SetState(EHOFCharacterState::PLAYER_DEAD);
 	}
 	return ActualDamage;

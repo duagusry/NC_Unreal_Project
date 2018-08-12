@@ -26,28 +26,7 @@ class HOF_API AHOFPlayerState : public APlayerState
 	GENERATED_BODY()
 public:
 	AHOFPlayerState();
-
-	UPROPERTY()
-		float MaxHP;
-
-	UPROPERTY()
-		float CurrentHP;
-
-	UPROPERTY()
-		int32 Food;
-
-	UPROPERTY()
-		int32 Gold;
-
-	UPROPERTY()
-		bool Alive;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		TEnumAsByte<EHOFCharacterState> CurrentStatePawn;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Battle")
-	uint32 bIsBattleInAction:1;
-
+	
 	void SetPlayerData(BaseStructs::PlayerData playerData);
 
 	BaseStructs::Position WorldPawnPosition;
@@ -59,20 +38,16 @@ public:
 	void Heal(int32 heal);
 	void GetDamage(int damage);
 	void Die();
-	inline bool IsAlive() const { return Alive; }
+	inline bool IsAlive() const { return PlayerData.Alive; }
 
-	inline void GainFood(int32 amount) { Food += amount; }
-	inline void LoseFood(int32 amount) { Food = Food < amount ? 0 : Food - amount; }
-	inline void GainGold(int32 amount) { Gold += amount; }
-	inline void LoseGold(int32 amount) { Gold = Gold < amount ? 0 : Gold - amount; }
-	inline void GainMaxHP(int32 amount) { MaxHP += amount; }
-	inline void LoseMaxHP(int32 amount) { MaxHP = MaxHP < amount ? 0 : MaxHP - amount; }
-	inline void GainCurrentHP(int32 amount) { CurrentHP = CurrentHP + amount > MaxHP ? MaxHP : CurrentHP + amount; }
-	void LoseCurrentHP(int32 amount)
+	inline void ModifyFood(int32 amount) { PlayerData.Food(amount); }
+	inline void ModifyGold(int32 amount) { PlayerData.Gold(amount); }
+	inline void ModifyMaxHP(int32 amount) { PlayerData.HP.ModifyMaxValue(amount); }
+	inline void ModifyCurrentHP(int32 amount)
 	{
-		CurrentHP = CurrentHP < amount ? 0 : CurrentHP - amount;
+		PlayerData.HP(amount);
 
-		if (CurrentHP <= 0)
+		if (PlayerData.HP.CheckOnMinValue())
 			Die();
 	}
 
@@ -82,4 +57,12 @@ public:
 		WorldPawnPosition.x = x;
 		WorldPawnPosition.y = y;
 	}
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		TEnumAsByte<EHOFCharacterState> CurrentStatePawn;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Battle")
+		uint32 bIsBattleInAction : 1;
+
+	BaseStructs::PlayerData PlayerData;
 };
