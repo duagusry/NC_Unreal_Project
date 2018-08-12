@@ -34,9 +34,6 @@ void AHOFBattleGameMode::BeginPlay()
 
 	GameInstance = Cast<UHOFGameInstance>(GetGameInstance());
 
-	Counter = 3;
-	GetWorldTimerManager().SetTimer(countDownHandle, this, &AHOFBattleGameMode::OnTimerTick, 1.0f, true);
-
 	InitializeEnemyPawn();
 }
 
@@ -48,21 +45,6 @@ void AHOFBattleGameMode::Tick(float DeltaSeconds)
 void AHOFBattleGameMode::InitGameState()
 {
 	Super::InitGameState();
-}
-
-void AHOFBattleGameMode::OnTimerTick()
-{
-	//--Counter;
-	//UE_LOG(LogClass, Warning, TEXT("Count %d"), Counter);
-	//타이머 만료시 WorldLevel 오픈
-	
-	//if (Counter < 1)
-	//{	
-	//	UGameplayStatics::OpenLevel(GetWorld(), "HOFWorldLevel");
-	//	//GetWorld()->ServerTravel(FString("/Game/Maps/HOFWorldLevel"));
-	//	//GameInstance->SwitchLevel(FString("/Game/Maps/HOFWorldLevel"));
-	//	GetWorldTimerManager().ClearTimer(countDownHandle);
-	//}
 }
 
 void AHOFBattleGameMode::OnPlayerDead()

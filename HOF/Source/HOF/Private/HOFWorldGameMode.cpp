@@ -63,7 +63,7 @@ void AHOFWorldGameMode::BeginPlay()
 		{ 0, 0, 0 }
 	};
 
-	if (!GameInstance->HasTransferData())
+	if (!GameInstance->HasWorldStatusData())
 		InitWorld(MapEventInfo);
 	else
 		LoadWorld(MapEventInfo);

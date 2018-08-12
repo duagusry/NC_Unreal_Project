@@ -21,7 +21,7 @@ public :
 	// 최초 월드 구성할 때
 	void CreateCardAt(int id, int xi, int yi, int32& cardIndex);
 
-	// TransferData가 있을 때
+	// WorldStatusData가 있을 때
 	void CreateCardAt(int xi, int yi, int32& cardIndex, const TArray<BaseStructs::WorldStatusData::WorldSlotDataStruct>& worldStatusDataArray);
 
 	AHOFWorldCardActor& GetCardOn(int x, int y);

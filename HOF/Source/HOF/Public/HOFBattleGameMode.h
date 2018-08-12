@@ -26,7 +26,6 @@ public :
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void InitGameState() override;
 
-	void OnTimerTick();
 	void OnPlayerDead();
 	void OnEnemyDead();
 
@@ -35,10 +34,7 @@ private :
 	FTimerHandle countDownHandle;
 	TArray<AHOFEnemyPawn*> enemyPawns;
 	//PlayerController도 여기 있어야할것같음.
-
-	UPROPERTY(EditAnywhere)
-		int32 Counter;
-
+	
 	void InitializeEnemyPawn();
 	void SpawnEnemyPawn(TSubclassOf<AHOFEnemyPawn> specy, int number);
 	void SwitchToWorldLevel();
