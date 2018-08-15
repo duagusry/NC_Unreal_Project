@@ -34,18 +34,19 @@ void UHOFTextWidget::OnSelection4Clicked()
 void UHOFTextWidget::OnNextClicked()
 {
 	//텍스트에 있는 기본 이벤트를 처리하고 다음 다이얼로그로 이동
-	int32 currentDialogEvent = m_CardEvent.GetDialogEventResult(m_CurrentDialogId);
-	m_CurrentDialogId = m_CardEvent.GetNextDialog(m_CurrentDialogId);
+	int32 CurrentDialogEvent = CardEvent.GetDialogEventResult(CurrentDialogId);
+	CurrentDialogId = CardEvent.GetNextDialog(CurrentDialogId);
 
-	HandleEvent(currentDialogEvent, false);
+	HandleEvent(CurrentDialogEvent, false);
 
-	if (m_CurrentDialogId)
+	if (CurrentDialogId)
 	{
-		SetEvent(m_CardEvent.GetID());
+		SetWidgetFrame(CardEvent.GetID());
 	}
 	else
 	{
-		CloseWidget(GAME_WORLD);
+		CloseWidget();
+		GameState->SetState(GAME_WORLD);
 	}
 }
 
@@ -54,20 +55,20 @@ void UHOFTextWidget::Init(int32 id, AHOFWorldCardActor * pCard, int32 returnDial
 	PlayerState = GetOwningPlayerState<AHOFPlayerState>(true);
 	GameState = GetWorld()->GetAuthGameMode()->GetGameState<AHOFGameState>();
 
-	m_CardEvent = g_CardEvent->GetCardEventFromId(id);
-	m_Card = pCard;
-	m_CurrentDialogId = returnDialog;
+	CardEvent = g_CardEvent->GetCardEventFromId(id);
+	Card = pCard;
+	CurrentDialogId = returnDialog;
 
-	//위젯에 표시되는 텍스트들 세팅
-	SetEvent(id);
+	// Fill texts, buttons to widget with eventId
+	SetWidgetFrame(id);
 
-	int index = 1;
+	int Index = 1;
 	//버튼에 클릭시 실행될 핸들러 함수 연결
-	for (index; index < MAX_SELECTION_COUNT; index++)
+	for (Index; Index < MAX_SELECTION_COUNT; Index++)
 	{
-		UButton* SelectionButton = Cast<UButton>(Cast<UPanelWidget>(GetRootWidget())->GetChildAt(index + NumberInGame::TEXT_BLOCK_START));
+		UButton* SelectionButton = Cast<UButton>(Cast<UPanelWidget>(GetRootWidget())->GetChildAt(Index + NumberInGame::TEXT_BLOCK_START));
 
-		switch (index)
+		switch (Index)
 		{
 		case 1:
 			SelectionButton->OnClicked.AddDynamic(this, &UHOFTextWidget::OnSelection1Clicked);
@@ -84,7 +85,7 @@ void UHOFTextWidget::Init(int32 id, AHOFWorldCardActor * pCard, int32 returnDial
 		}
 	}
 
-	UButton* NextButton = Cast<UButton>(Cast<UPanelWidget>(GetRootWidget())->GetChildAt(index + NumberInGame::TEXT_BLOCK_START + 1));
+	UButton* NextButton = Cast<UButton>(Cast<UPanelWidget>(GetRootWidget())->GetChildAt(Index + NumberInGame::TEXT_BLOCK_START + 1));
 	NextButton->OnClicked.AddDynamic(this, &UHOFTextWidget::OnNextClicked);
 
 	GameState->SetState(GAME_DIALOG);
@@ -94,7 +95,7 @@ void UHOFTextWidget::Init(int32 id, AHOFWorldCardActor * pCard, int32 returnDial
 	/*
 	int textIndex = 0;
 
-	for (auto it : m_CardEvent.GetDialog().m_Texts)
+	for (auto it : CardEvent.GetDialog().m_Texts)
 	{
 		float positionX = WIDGET_POSITION_X;
 		float positionY = WIDGET_POSITION_Y + (textIndex * WIDGET_SIZE_Y);
@@ -118,7 +119,7 @@ void UHOFTextWidget::Init(int32 id, AHOFWorldCardActor * pCard, int32 returnDial
 
 	int index = 1;
 
-	for (auto it : m_CardEvent.GetDialog().m_SelectionTexts)
+	for (auto it : CardEvent.GetDialog().m_SelectionTexts)
 	{
 		float positionX = WIDGET_POSITION_X;
 		float positionY = WIDGET_POSITION_Y + (textIndex * WIDGET_SIZE_Y);
@@ -173,15 +174,15 @@ void UHOFTextWidget::HandleEvent(int32 id, bool isSelection /* = true */)
 	if (!id)
 		return;
 	
-	int32 resultId = isSelection ? m_CardEvent.GetDialog(m_CurrentDialogId).GetSelectionResult(id) : id;
+	int32 resultId = isSelection ? CardEvent.GetDialog(CurrentDialogId).GetSelectionResult(id) : id;
 	// TODO : It's better to make FResult Interface structure.
 	//        e.g. Transfer result, gambit result, and so on. 
-	FResult result = m_CardEvent.GetEventResult(resultId);
+	FResult result = CardEvent.GetEventResult(resultId);
 	bool IsEventEnd = false;
 	
 	if (result.Reward)
 	{
-		HandleReward(m_CardEvent.GetEventReward(result.Reward));
+		HandleReward(CardEvent.GetEventReward(result.Reward));
 		if (!result.HasMultiResult())
 			IsEventEnd = true;
 	}
@@ -200,55 +201,55 @@ void UHOFTextWidget::HandleEvent(int32 id, bool isSelection /* = true */)
 
 	if (IsEventEnd)
 	{
-		CloseWidget(GAME_WORLD);
+		CloseWidget();
+		GameState->SetState(GAME_WORLD);
 	}
 
 }
 
-void UHOFTextWidget::SetEvent(int32 eventId)
+void UHOFTextWidget::SetWidgetFrame(int32 eventId)
 {
-	bool hasSelection = false; 	
-
 	UPanelWidget* RootWidget = Cast<UPanelWidget>(GetRootWidget());
 
 	//타이틀
 	UTextBlock* Title = Cast<UTextBlock>(RootWidget->GetChildAt(1));
-	Title->SetText(FText::FromString(m_CardEvent.GetTitle()));
+	Title->SetText(FText::FromString(CardEvent.GetTitle()));
 
 	//다이얼로그 텍스트
 	UTextBlock* TextBlock = Cast<UTextBlock>(RootWidget->GetChildAt(NumberInGame::TEXT_BLOCK_START));
-	CardEventDialog& DialogEvent =  m_CardEvent.GetDialog(m_CurrentDialogId);
+	const CardEventDialog& DialogEvent = CardEvent.GetDialog(CurrentDialogId);
 	TextBlock->SetText(FText::FromString(DialogEvent.Text.Text));
-	
-	int32 index = 1;
 
-	for (index; index <= DialogEvent.SelectionTextArray.Num(); index++)
+	bool HasSelection = false;
+	int32 Index = 1;
+
+	for (Index; Index <= DialogEvent.SelectionTextArray.Num(); Index++)
 	{
-		FText ButtonText = FText::FromString(DialogEvent.SelectionTextArray[index - 1].Text);
+		FText ButtonText = FText::FromString(DialogEvent.SelectionTextArray[Index - 1].Text);
 
-		UButton* SelectionButton = Cast<UButton>(RootWidget->GetChildAt(index + NumberInGame::TEXT_BLOCK_START));
+		UButton* SelectionButton = Cast<UButton>(RootWidget->GetChildAt(Index + NumberInGame::TEXT_BLOCK_START));
 		UTextBlock* SelectionText = Cast<UTextBlock>(SelectionButton->GetChildAt(0));
 		SelectionText->SetText(ButtonText);
 		SelectionButton->SetIsEnabled(true);
 
-		hasSelection = true;
+		HasSelection = true;
 	}
 
 	//남는 선택지 버튼 비활성화
-	for (index; index <= MAX_SELECTION_COUNT; index++)
+	for (Index; Index <= MAX_SELECTION_COUNT; Index++)
 	{
-		UButton* SelectionButton = Cast<UButton>(RootWidget->GetChildAt(index + NumberInGame::TEXT_BLOCK_START));
+		UButton* SelectionButton = Cast<UButton>(RootWidget->GetChildAt(Index + NumberInGame::TEXT_BLOCK_START));
 		UTextBlock* SelectionText = Cast<UTextBlock>(SelectionButton->GetChildAt(0));
 		SelectionText->SetText(FText::FromString(""));
 		SelectionButton->SetIsEnabled(false);
 	}
 
 	// '계속' 버튼에 대한 처리
-	UButton* NextButton = Cast<UButton>(RootWidget->GetChildAt(index + NumberInGame::TEXT_BLOCK_START));
+	UButton* NextButton = Cast<UButton>(RootWidget->GetChildAt(Index + NumberInGame::TEXT_BLOCK_START));
 	UTextBlock* NextText = Cast<UTextBlock>(NextButton->GetChildAt(0));
 
 	//선택지가 있으면 '계속' 버튼 비활성화, 없으면 '계속' 버튼 활성화
-	if (hasSelection)
+	if (HasSelection)
 	{
 		NextButton->SetVisibility(ESlateVisibility::Hidden);
 		NextButton->SetIsEnabled(false);
@@ -260,10 +261,9 @@ void UHOFTextWidget::SetEvent(int32 eventId)
 	}
 }
 
-void UHOFTextWidget::CloseWidget(EHOFGameState newState)
+void UHOFTextWidget::CloseWidget()
 {
 	SetVisibility(ESlateVisibility::Hidden);
-	GameState->SetState(newState);
 }
 
 void UHOFTextWidget::HandleReward(FReward reward)
@@ -300,43 +300,42 @@ void UHOFTextWidget::HandleReward(FReward reward)
 
 	if (reward.Battle > 0)
 	{
-		const auto& BattleInfo = m_CardEvent.GetEventBattle(reward.Battle);
+		const auto& BattleInfo = CardEvent.GetEventBattle(reward.Battle);
 		HandleTransfer(BattleInfo);
 	}
 }
 
 void UHOFTextWidget::HandleAnotherDialog(int32 dialogId)
 {
-	m_CurrentDialogId = dialogId;
-	SetEvent(m_CardEvent.GetID());
+	CurrentDialogId = dialogId;
+	SetWidgetFrame(CardEvent.GetID());
 }
 
 void UHOFTextWidget::HandleAnotherEvent(int32 eventId)
 {
 	//위젯은 새로 만드는게 아니라 재활용.
-	m_CardEvent = g_CardEvent->GetCardEventFromId(eventId);
-	SetEvent(eventId);
+	CardEvent = g_CardEvent->GetCardEventFromId(eventId);
+	SetWidgetFrame(eventId);
 }
 
 void UHOFTextWidget::HandleTransfer(const FBattleInfo& battleInfo)
 {
 	AB_LOG_CALLONLY(Warning);
-	auto gameInstance = Cast<UHOFGameInstance>(GetWorld()->GetGameInstance());
-	auto enemyData = gameInstance->GetEnemyData();
+	auto enemyData = GameInstance->GetEnemyData();
 	auto gameMode = Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode());
 
 	BaseStructs::BattleData BattleParam;
-	for (auto it : battleInfo.SpawnInfoArray)
+	for (const auto& it : battleInfo.SpawnInfoArray)
 	{
 		BattleParam.SpawnInfo.Add(it.Type, it.Amount);
 	}
 
 	GameState->SetState(GAME_BATTLE);
-	gameInstance->SetBattleData(BattleParam);
+	GameInstance->SetBattleData(BattleParam);
 
 	enemyData->SetEnemyData(battleInfo.SpawnInfoArray[0].Type, battleInfo.SpawnInfoArray[0].Amount);
-	gameInstance->PlayerData = BaseStructs::PlayerData{ PlayerState->PlayerData.HP, PlayerState->PlayerData.Food, PlayerState->PlayerData.Gold, PlayerState->PlayerData.Alive };
-	gameInstance->SaveCurrentWorldStatusData(gameMode->AssignWorldStatusData(battleInfo.ReturnDialog));
+	GameInstance->PlayerData = BaseStructs::PlayerData{ PlayerState->PlayerData.HP, PlayerState->PlayerData.Food, PlayerState->PlayerData.Gold, PlayerState->PlayerData.Alive };
+	GameInstance->SaveCurrentWorldStatusData(gameMode->AssignWorldStatusData(battleInfo.ReturnDialog));
 	UGameplayStatics::OpenLevel(GetWorld(), "HOFBattleLevel");
 }
 

@@ -7,14 +7,16 @@
 #include "UMG.h"
 #include "HOFCardEvent.h"
 #include "Blueprint/UserWidget.h"
-#include "HOFGameInstance.h"
-#include "HOFWorldCardActor.h"
-#include "HOFGameState.h"
-#include "HOFPlayerState.h"
 #include "HOFTextWidget.generated.h"
 
 using namespace SizeInGame;
 using namespace NumberInGame;
+
+class HOFCardEvent;
+class AHOFWorldCardActor;
+class UHOFGameInstance;
+class AHOFPlayerState;
+class AHOFGameState;
 
 /**
  * 
@@ -31,8 +33,8 @@ public :
 private:
 	void HandleEvent(int32 id, bool isSelection = true);
 	
-	void SetEvent(int32 eventId);
-	void CloseWidget(EHOFGameState newState);
+	void SetWidgetFrame(int32 eventId);
+	void CloseWidget();
 
 	void HandleReward(FReward reward);
 	void HandleAnotherDialog(int32 dialogId);
@@ -54,11 +56,11 @@ private:
 	UFUNCTION()
 		void OnNextClicked();
 
-	HOFCardEvent m_CardEvent;
-	AHOFWorldCardActor* m_Card;
+	HOFCardEvent CardEvent;
+	AHOFWorldCardActor* Card;
 	UHOFGameInstance* GameInstance;
 	AHOFPlayerState* PlayerState;
 	AHOFGameState* GameState;
 
-	int32 m_CurrentDialogId;
+	int32 CurrentDialogId;
 };
