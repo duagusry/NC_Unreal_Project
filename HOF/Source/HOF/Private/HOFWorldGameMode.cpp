@@ -93,7 +93,7 @@ void AHOFWorldGameMode::InitWorld(int32 MapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLO
 	int32 CardIndex = 0;
 
 	WorldBoard = GetWorld()->SpawnActor<AHOFWorldBoardActor>(AHOFWorldBoardActor::StaticClass(), MyLoc, MyRot, SpawnInfo);
-	WorldBoard->InitMapInfo();
+	WorldBoard->InitMapInfo(MapEventInfo);
 	for (int i = 0; i < WORLD_SLOT_WIDTH; i++)
 	{
 		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
@@ -116,7 +116,7 @@ void AHOFWorldGameMode::LoadWorld(int32 MapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLO
 	const auto& WorldStatusData = GameInstance->WorldStatusData;
 
 	WorldBoard = GetWorld()->SpawnActor<AHOFWorldBoardActor>(AHOFWorldBoardActor::StaticClass(), MyLoc, MyRot, SpawnInfo);
-	WorldBoard->m_InitialEventArray = WorldStatusData.WorldBoardData.InitialEventArray;
+	WorldBoard->InitialEventArray = WorldStatusData.WorldBoardData.InitialEventArray;
 	for (int i = 0; i < WORLD_SLOT_WIDTH; i++)
 	{
 		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
@@ -171,7 +171,7 @@ BaseStructs::WorldStatusData AHOFWorldGameMode::AssignWorldStatusData(int32 retu
 	return BaseStructs::WorldStatusData
 		{ BaseStructs::WorldStatusData::WorldBoardDataStruct
 			{ WorldBoard->SerializeWorldSlotData(), 
-			WorldBoard->m_InitialEventArray 
+			WorldBoard->InitialEventArray 
 			}, 
 			WorldPawn->GetPosition(), 
 			returnDialogId

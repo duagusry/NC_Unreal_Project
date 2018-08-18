@@ -26,83 +26,78 @@ AHOFWorldBoardActor::~AHOFWorldBoardActor()
 
 void AHOFWorldBoardActor::InitWorldStatus()
 {
-	// m_RandomizedCardArray 초기화.
-	int32 size = m_RandomizedCardArray.Num();
+	// RandomizedCardArray 초기화.
+	int32 size = RandomizedCardArray.Num();
 
 	for (int32 i = size - 1; i > 0; i--) 
 	{
 		int32 j = (FMath::Rand() * (i + 1)) % size;
-		auto temp = m_RandomizedCardArray[i];
-		m_RandomizedCardArray[i] = m_RandomizedCardArray[j];
-		m_RandomizedCardArray[j] = temp;
+		auto temp = RandomizedCardArray[i];
+		RandomizedCardArray[i] = RandomizedCardArray[j];
+		RandomizedCardArray[j] = temp;
 	}
 }
 
+// for init
 void AHOFWorldBoardActor::CreateCardAt(int id, int xi, int yi, int32& cardIndex)
 {
 	//-1은 공백. 이 숫자도 따로 enum으로 정의를 하던가 해야할 듯.
 	if (id == -1)
 		return;
 
+	// random
 	if (id == 0)
-		id = m_InitialEventArray[cardIndex++];
-	else
-		m_InitialEventArray.Remove(id);
+		id = InitialEventArray[cardIndex++];
 
-	float realSlotSizeY = WORLD_WIDTH / WORLD_SLOT_WIDTH;
-	float realSlotSizeX = WORLD_HEIGHT / WORLD_SLOT_HEIGHT;
-
-	float LocY = BOARD_BASE_LOC_Y - (WORLD_WIDTH / 2) + ((realSlotSizeY / 2) + (realSlotSizeY * xi));
-	float LocX = BOARD_BASE_LOC_X + (WORLD_HEIGHT / 2) - ((realSlotSizeX / 2) + (realSlotSizeX * yi));
+	float LocY = BOARD_BASE_LOC_Y - (WORLD_WIDTH / 2) + ((REAL_SLOT_SIZE_Y / 2) + (REAL_SLOT_SIZE_Y * xi));
+	float LocX = BOARD_BASE_LOC_X + (WORLD_HEIGHT / 2) - ((REAL_SLOT_SIZE_X / 2) + (REAL_SLOT_SIZE_X * yi));
 
 	FActorSpawnParameters SpawnInfo;
-	FRotator myRot(0.0f, 0.0f, 0.0f);
-	FVector myLoc(LocX, LocY, 20.0f);
+	FRotator MyRot(0.0f, 0.0f, 0.0f);
+	FVector MyLoc(LocX, LocY, 20.0f);
 	
-	UWorld* world = GetWorld();
-	if (world && BP_WorldCardActor)
+	UWorld* World = GetWorld();
+	if (World && BP_WorldCardActor)
 	{
-		AHOFWorldCardActor* newCard(world->SpawnActor<AHOFWorldCardActor>(BP_WorldCardActor, myLoc, myRot, SpawnInfo));
-		newCard->Init(id, xi, yi);
-		m_WorldSlot[xi][yi] = newCard;
+		AHOFWorldCardActor* NewCard(World->SpawnActor<AHOFWorldCardActor>(BP_WorldCardActor, MyLoc, MyRot, SpawnInfo));
+		NewCard->Init(id, xi, yi);
+		WorldSlot[xi][yi] = NewCard;
 
-		m_RandomizedCardArray.Add(newCard);
+		RandomizedCardArray.Add(NewCard);
 	}
 }
 
+// for load
 void AHOFWorldBoardActor::CreateCardAt(int xi, int yi, int32 & cardIndex, const TArray<BaseStructs::WorldStatusData::WorldSlotDataStruct>& worldStatusDataArray)
 {
-	float realSlotSizeY = WORLD_WIDTH / WORLD_SLOT_WIDTH;
-	float realSlotSizeX = WORLD_HEIGHT / WORLD_SLOT_HEIGHT;
-
-	float LocY = BOARD_BASE_LOC_Y - (WORLD_WIDTH / 2) + ((realSlotSizeY / 2) + (realSlotSizeY * xi));
-	float LocX = BOARD_BASE_LOC_X + (WORLD_HEIGHT / 2) - ((realSlotSizeX / 2) + (realSlotSizeX * yi));
+	const float LocY = BOARD_BASE_LOC_Y - (WORLD_WIDTH / 2) + ((REAL_SLOT_SIZE_Y / 2) + (REAL_SLOT_SIZE_Y * xi));
+	const float LocX = BOARD_BASE_LOC_X + (WORLD_HEIGHT / 2) - ((REAL_SLOT_SIZE_X / 2) + (REAL_SLOT_SIZE_X * yi));
 
 	FActorSpawnParameters SpawnInfo;
-	FRotator myRot(0.0f, 0.0f, 0.0f);
-	FVector myLoc(LocX, LocY, 20.0f);
+	FRotator MyRot(0.0f, 0.0f, 0.0f);
+	FVector MyLoc(LocX, LocY, 20.0f);
 
-	UWorld* world = GetWorld();
-	if (world && BP_WorldCardActor)
+	UWorld* World = GetWorld();
+	if (World && BP_WorldCardActor)
 	{
-		AHOFWorldCardActor* newCard(world->SpawnActor<AHOFWorldCardActor>(BP_WorldCardActor, myLoc, myRot, SpawnInfo));
-		newCard->Init(worldStatusDataArray[cardIndex].EventId, xi, yi);
-		newCard->SetCardDataFromWorldStatusData(worldStatusDataArray[cardIndex]);
+		AHOFWorldCardActor* NewCard(World->SpawnActor<AHOFWorldCardActor>(BP_WorldCardActor, MyLoc, MyRot, SpawnInfo));
+		NewCard->Init(worldStatusDataArray[cardIndex].EventId, xi, yi);
+		NewCard->SetCardDataFromWorldStatusData(worldStatusDataArray[cardIndex]);
 		cardIndex++;
-		m_WorldSlot[xi][yi] = newCard;
+		WorldSlot[xi][yi] = NewCard;
 
-		m_RandomizedCardArray.Add(newCard);
+		RandomizedCardArray.Add(NewCard);
 	}
 }
 
 AHOFWorldCardActor & AHOFWorldBoardActor::GetCardOn(int x, int y)
 {
-	return *m_WorldSlot[x][y];
+	return *WorldSlot[x][y];
 }
 
 FVector AHOFWorldBoardActor::GetCardLocationOn(int x, int y)
 {
-	return m_WorldSlot[x][y]->GetActorLocation();
+	return WorldSlot[x][y]->GetActorLocation();
 }
 
 void AHOFWorldBoardActor::ResetWorldSlot()
@@ -113,11 +108,11 @@ void AHOFWorldBoardActor::ResetWorldSlot()
 	{
 		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
 		{
-			if (m_WorldSlot[i][j])
-				m_WorldSlot[i][j]->Destroy();
+			if (WorldSlot[i][j])
+				WorldSlot[i][j]->Destroy();
 
-			if (m_AdjacentList[i][j].Num())
-				m_AdjacentList[i][j].Empty();
+			if (AdjacentList[i][j].Num())
+				AdjacentList[i][j].Empty();
 		}
 	}
 }
@@ -129,60 +124,70 @@ void AHOFWorldBoardActor::InitAdjacentList()
 	{
 		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
 		{
-			if (i - 1 >= 0 && m_WorldSlot[i - 1][j])
-				m_AdjacentList[i][j].Add(m_WorldSlot[i - 1][j]);
-			if (i + 1 < WORLD_SLOT_WIDTH && m_WorldSlot[i + 1][j])
-				m_AdjacentList[i][j].Add(m_WorldSlot[i + 1][j]);
-			if (j - 1 >= 0 && m_WorldSlot[i][j - 1])
-				m_AdjacentList[i][j].Add(m_WorldSlot[i][j - 1]);
-			if (j + 1 < WORLD_SLOT_HEIGHT && m_WorldSlot[i][j + 1])
-				m_AdjacentList[i][j].Add(m_WorldSlot[i][j + 1]);
+			if (i - 1 >= 0 && WorldSlot[i - 1][j])
+				AdjacentList[i][j].Add(WorldSlot[i - 1][j]);
+			if (i + 1 < WORLD_SLOT_WIDTH && WorldSlot[i + 1][j])
+				AdjacentList[i][j].Add(WorldSlot[i + 1][j]);
+			if (j - 1 >= 0 && WorldSlot[i][j - 1])
+				AdjacentList[i][j].Add(WorldSlot[i][j - 1]);
+			if (j + 1 < WORLD_SLOT_HEIGHT && WorldSlot[i][j + 1])
+				AdjacentList[i][j].Add(WorldSlot[i][j + 1]);
 		}
 	}
 }
 
 void AHOFWorldBoardActor::UpdateAdjacentList(int32 old_x, int32 old_y, int32 new_x, int32 new_y)
 {
-	for (auto card : m_AdjacentList[old_x][old_y])
+	for (auto card : AdjacentList[old_x][old_y])
 	{
 		card->SetAdjacency(false);
 	}
 
-	for (auto card : m_AdjacentList[new_x][new_y])
+	for (auto card : AdjacentList[new_x][new_y])
 	{
 		card->SetAdjacency(true);
 	}
 }
 
 
-void AHOFWorldBoardActor::InitMapInfo()
+void AHOFWorldBoardActor::InitMapInfo(int32 mapEventInfo[WORLD_SLOT_WIDTH][WORLD_SLOT_HEIGHT])
 {
-	g_CardEvent->AssignEventArray(m_InitialEventArray);
-	int32 size = m_InitialEventArray.Num();
+	g_CardEvent->AssignEventArray(InitialEventArray);
 
-	for (int32 i = size - 1; i > 0; i--)
+	// remove fixed id
+	for (int i = 0; i < WORLD_SLOT_WIDTH; i++)
 	{
-		int32 j = (FMath::Rand() * (i + 1)) % size;
-		int32 temp = m_InitialEventArray[i];
-		m_InitialEventArray[i] = m_InitialEventArray[j];
-		m_InitialEventArray[j] = temp;
+		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
+		{
+			if (mapEventInfo[i][j] != 0)
+				InitialEventArray.Remove(mapEventInfo[i][j]);
+		}
+	}
+
+	int32 Size = InitialEventArray.Num();
+	for (int32 i = Size - 1; i > 0; i--)
+	{
+		int32 j = (FMath::Rand() * (i + 1)) % Size;
+		int32 temp = InitialEventArray[i];
+		InitialEventArray[i] = InitialEventArray[j];
+		InitialEventArray[j] = temp;
 	}
 }
 
 void AHOFWorldBoardActor::Reveal(int32 amount)
 {
-	int32 index = 0;
-	int32 size = m_RandomizedCardArray.Num();
-	AHOFWorldCardActor* targetCard;
+	int32 Index = 0;
+	int32 Size = RandomizedCardArray.Num();
+	AHOFWorldCardActor* TargetCard;
 
 	while (amount-- > 0)
 	{
-		for (index; index < size; index++)
+		for (Index; Index < Size; Index++)
 		{
-			targetCard = m_RandomizedCardArray[index];
-			if (!targetCard->IsRevealed())
+			TargetCard = RandomizedCardArray[Index];
+			if (!TargetCard->IsRevealed())
 			{
-				targetCard->Reveal();
+				TargetCard->Reveal();
 				break;
 			}
 		}
@@ -195,8 +200,8 @@ TArray<BaseStructs::WorldStatusData::WorldSlotDataStruct> AHOFWorldBoardActor::S
 	for (int i = 0; i < WORLD_SLOT_WIDTH; i++)
 		for (int j = 0; j < WORLD_SLOT_HEIGHT; j++)
 		{
-			if(m_WorldSlot[i][j])
-				SerializedSlotArray.Add(BaseStructs::WorldStatusData::WorldSlotDataStruct{ m_WorldSlot[i][j]->m_CardEvent.GetID() , m_WorldSlot[i][j]->m_IsVisited, m_WorldSlot[i][j]->m_Revealed });
+			if(WorldSlot[i][j])
+				SerializedSlotArray.Add(BaseStructs::WorldStatusData::WorldSlotDataStruct{ WorldSlot[i][j]->CardEvent.GetID() , WorldSlot[i][j]->IsVisited, WorldSlot[i][j]->Revealed });
 		}
 
 	return SerializedSlotArray;

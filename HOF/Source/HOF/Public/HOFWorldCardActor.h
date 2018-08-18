@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "HOFInputInterface.h"
-#include "HOFCardEvent.h"
 #include "GameFramework/Actor.h"
 #include "GameData.h"
+#include "HOFCardEvent.h"
 #include "HOFWorldCardActor.generated.h"
 
 UCLASS()
@@ -41,16 +41,14 @@ public:
 
 	*/
 	void TextEvent(int32 returnDialog = 1);
-
-	void BattleEvent(/* TMap<int, int>& spawnList, int mapNumber */);
-
+	
 	void SetAdjacency(bool isAdjacent);
 
 	void Reveal();
 
 	void Visit(int32 returnDialog = 1);
 
-	bool IsRevealed() { return m_Revealed; }
+	inline bool IsRevealed() { return Revealed; }
 
 	void SetCardDataFromWorldStatusData(const BaseStructs::WorldStatusData::WorldSlotDataStruct&worldStatusrData);
 
@@ -60,11 +58,11 @@ public :
 	bool IsAdjacentToPawn;
 
 	//WorldBoardActor»óÀÇ ÁÂÇ¥
-	int32 m_X;
-	int32 m_Y;
-	bool m_Revealed;
-	bool m_IsVisited;
+	int32 X;
+	int32 Y;
+	bool Revealed;
+	bool IsVisited;
 	
-	FText m_Title;
-	HOFCardEvent m_CardEvent;
+	FText Title;
+	HOFCardEvent CardEvent;
 };

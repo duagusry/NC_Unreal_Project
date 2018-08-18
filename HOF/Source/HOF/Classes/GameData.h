@@ -43,6 +43,9 @@ namespace SizeInGame
 
 	static const float WIDGET_SIZE_X = 1200.0f;
 	static const float WIDGET_SIZE_Y = 50.0f;
+
+	static const float REAL_SLOT_SIZE_X = WORLD_HEIGHT / WORLD_SLOT_HEIGHT;
+	static const float REAL_SLOT_SIZE_Y = WORLD_WIDTH / WORLD_SLOT_WIDTH;
 }
 
 namespace NumberInGame

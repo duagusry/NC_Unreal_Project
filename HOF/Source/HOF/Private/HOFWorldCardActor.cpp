@@ -18,16 +18,16 @@ AHOFWorldCardActor::AHOFWorldCardActor()
 
 void AHOFWorldCardActor::Init(int32 id, int32 x, int32 y)
 {
-	m_X = x;
-	m_Y = y;
-	m_Revealed = false;
-	m_IsVisited = false;
+	X = x;
+	Y = y;
+	Revealed = false;
+	IsVisited = false;
 	IsAdjacentToPawn = false;
-	m_CardEvent = g_CardEvent->GetCardEventFromId(id);
-	if (!m_CardEvent.GetID())
+	CardEvent = g_CardEvent->GetCardEventFromId(id);
+	if (!CardEvent.GetID())
 		return;
 
-	m_Title = FText::FromString(m_CardEvent.GetTitle());
+	Title = FText::FromString(CardEvent.GetTitle());
 }
 
 // Called when the game starts or when spawned
@@ -46,14 +46,14 @@ void AHOFWorldCardActor::Tick(float DeltaTime)
 
 void AHOFWorldCardActor::OnInputTap_Implementation()
 {
-	if (m_IsVisited)
+	if (IsVisited)
 		return;
 
 	if (IsAdjacentToPawn)
 	{
-		UE_LOG(LogClass, Warning, TEXT("Card selected -> x : %d, y : %d"), m_X, m_Y);
+		UE_LOG(LogClass, Warning, TEXT("Card selected -> x : %d, y : %d"), X, Y);
 
-		Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode())->MovePawnTo(m_X, m_Y);
+		Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode())->MovePawnTo(X, Y);
 
 		Visit();
 	}
@@ -61,15 +61,7 @@ void AHOFWorldCardActor::OnInputTap_Implementation()
 
 void AHOFWorldCardActor::TextEvent(int32 returnDialog)
 {
-	Cast<AHOFWorldPlayerController>(GetWorld()->GetFirstPlayerController())->ShowEventWidget(m_CardEvent.GetID(), this, returnDialog);
-}
-
-void AHOFWorldCardActor::BattleEvent(/* TMap<int, int>& spawnList, int mapNumber*/ )
-{
-	//레벨 이동할 때 파라미터로 넘겨야되는데 방법 찾아봐야됨.
-	//GameInstance에 다 넣어놓고 쓸수도 있을거같은데 그건 좀..
-
-	Cast<UHOFGameInstance>(GetGameInstance())->SwitchLevel(FString("/Game/Maps/HOFBattleLevel"));
+	Cast<AHOFWorldPlayerController>(GetWorld()->GetFirstPlayerController())->ShowEventWidget(CardEvent.GetID(), this, returnDialog);
 }
 
 void AHOFWorldCardActor::SetAdjacency(bool isAdjacent)
@@ -79,9 +71,9 @@ void AHOFWorldCardActor::SetAdjacency(bool isAdjacent)
 
 void AHOFWorldCardActor::Reveal()
 {
-	m_Revealed = true;
+	Revealed = true;
 
-	if (m_Revealed)
+	if (Revealed)
 	{
 		FRotator newRotation = GetActorRotation();
 		newRotation.Roll = -180;
@@ -91,7 +83,7 @@ void AHOFWorldCardActor::Reveal()
 
 void AHOFWorldCardActor::Visit(int32 returnDialog)
 {
-	m_IsVisited = true;
+	IsVisited = true;
 
 	if (returnDialog == 1)
 	{
@@ -109,6 +101,6 @@ void AHOFWorldCardActor::SetCardDataFromWorldStatusData(const BaseStructs::World
 	if (worldStatusData.IsRevealed)
 		Reveal();
 
-	m_IsVisited = worldStatusData.IsVisited;
+	IsVisited = worldStatusData.IsVisited;
 }
 

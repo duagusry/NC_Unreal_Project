@@ -321,8 +321,8 @@ void UHOFTextWidget::HandleAnotherEvent(int32 eventId)
 void UHOFTextWidget::HandleTransfer(const FBattleInfo& battleInfo)
 {
 	AB_LOG_CALLONLY(Warning);
-	auto enemyData = GameInstance->GetEnemyData();
-	auto gameMode = Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode());
+	const auto& EnemyData = GameInstance->GetEnemyData();
+	const auto& GameMode = Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode());
 
 	BaseStructs::BattleData BattleParam;
 	for (const auto& it : battleInfo.SpawnInfoArray)
@@ -333,9 +333,9 @@ void UHOFTextWidget::HandleTransfer(const FBattleInfo& battleInfo)
 	GameState->SetState(GAME_BATTLE);
 	GameInstance->SetBattleData(BattleParam);
 
-	enemyData->SetEnemyData(battleInfo.SpawnInfoArray[0].Type, battleInfo.SpawnInfoArray[0].Amount);
+	EnemyData->SetEnemyData(battleInfo.SpawnInfoArray[0].Type, battleInfo.SpawnInfoArray[0].Amount);
 	GameInstance->PlayerData = BaseStructs::PlayerData{ PlayerState->PlayerData.HP, PlayerState->PlayerData.Food, PlayerState->PlayerData.Gold, PlayerState->PlayerData.Alive };
-	GameInstance->SaveCurrentWorldStatusData(gameMode->AssignWorldStatusData(battleInfo.ReturnDialog));
+	GameInstance->SaveCurrentWorldStatusData(GameMode->AssignWorldStatusData(battleInfo.ReturnDialog));
 	UGameplayStatics::OpenLevel(GetWorld(), "HOFBattleLevel");
 }
 
