@@ -54,6 +54,7 @@ void UHOFTextWidget::Init(int32 id, AHOFWorldCardActor * pCard, int32 returnDial
 {
 	PlayerState = GetOwningPlayerState<AHOFPlayerState>(true);
 	GameState = GetWorld()->GetAuthGameMode()->GetGameState<AHOFGameState>();
+	GameInstance = Cast<UHOFGameInstance>(GetWorld()->GetGameInstance());
 
 	CardEvent = g_CardEvent->GetCardEventFromId(id);
 	Card = pCard;
