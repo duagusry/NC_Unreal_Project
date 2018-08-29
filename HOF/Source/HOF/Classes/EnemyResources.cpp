@@ -1,28 +1,30 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "EnemyData.h"
+#include "EnemyResources.h"
 #include "HOF.h"
 #include "Engine/ObjectLibrary.h"
 #include "Engine/World.h"
 #include "Engine/BlueprintGeneratedClass.h"
 #include "HOFEnemyPawn.h"
 
-EnemyData::EnemyData()
+TMap<FString, TSubclassOf<AHOFEnemyPawn>> EnemyResources::PawnByName;
+
+void EnemyResources::Init()
 {
 	InitSpecyMap();
 }
 
-EnemyData::~EnemyData()
+bool EnemyResources::Contains(FString enemyType)
 {
+	return EnemyResources::PawnByName.Contains(enemyType);
 }
 
-void EnemyData::SetEnemyData(FString enemySpecyStr, int number)
+TSubclassOf<AHOFEnemyPawn> EnemyResources::GetSubClassOf(FString enemyType)
 {
-	enemySpecy = PawnByName[enemySpecyStr];
-	this->number = number;
+	return EnemyResources::PawnByName[enemyType];
 }
 
-void EnemyData::InitSpecyMap()
+void EnemyResources::InitSpecyMap()
 {
 	auto assets = LoadEnemyBlueprintAssets();
 
@@ -30,11 +32,11 @@ void EnemyData::InitSpecyMap()
 		ExtractEnemyNameAndStoreWithAsset(asset);
 }
 
-TSharedPtr<TArray<UBlueprintGeneratedClass*>> EnemyData::LoadEnemyBlueprintAssets()
+TSharedPtr<TArray<UBlueprintGeneratedClass*>> EnemyResources::LoadEnemyBlueprintAssets()
 {
 	auto ObjectLibrary = UObjectLibrary::CreateLibrary(AActor::StaticClass(), true, true);
 	ObjectLibrary->AddToRoot();
-	ObjectLibrary->LoadBlueprintsFromPath(ENEMY_BLUEPRINT_PATH);
+	ObjectLibrary->LoadBlueprintsFromPath(TEXT("/Game/Blueprints/Enemy"));
 	//AB_LOG(Warning, TEXT("Assets: %d"), numOfAssets);
 
 	auto blueprintAssets = MakeShared<TArray<UBlueprintGeneratedClass*>>();
@@ -44,7 +46,7 @@ TSharedPtr<TArray<UBlueprintGeneratedClass*>> EnemyData::LoadEnemyBlueprintAsset
 	return blueprintAssets;
 }
 
-void EnemyData::ExtractEnemyNameAndStoreWithAsset(UBlueprintGeneratedClass *asset)
+void EnemyResources::ExtractEnemyNameAndStoreWithAsset(UBlueprintGeneratedClass *asset)
 {
 	auto assetName = asset->GetName();
 	if (!IsValidName(assetName)) return;
@@ -56,14 +58,14 @@ void EnemyData::ExtractEnemyNameAndStoreWithAsset(UBlueprintGeneratedClass *asse
 	PawnByName.Add(enemyName, enemyPawn);
 }
 
-bool EnemyData::IsValidName(FString name)
+bool EnemyResources::IsValidName(FString name)
 {
 	if (name.StartsWith(TEXT("SKEL_"))) return false;
 
 	return true;
 }
 
-FString EnemyData::GetEnemyName(FString originalName)
+FString EnemyResources::GetEnemyName(FString originalName)
 {
 	TArray<FString> token;
 	const TCHAR *delim = TEXT("_");

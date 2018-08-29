@@ -14,6 +14,7 @@ class HOF_API AHOFBattleGameState : public AGameState
 {
 	GENERATED_BODY()
 public:
+	AHOFBattleGameState();
 	void SetEnemyCount(int initCount);
 	bool AreEnemiesClear();
 	void DecreaseEnemyCount();
