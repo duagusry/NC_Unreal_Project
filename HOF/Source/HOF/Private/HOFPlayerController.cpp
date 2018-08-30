@@ -32,8 +32,8 @@ void AHOFPlayerController::BeginPlayingState()
 	Super::BeginPlayingState();
 	CurrentMouseCursor = EMouseCursor::Crosshairs;
 
-	character = Cast<AHOFCharacter>(this->GetCharacter());
-	if (character == NULL)
+	PlayerCharacter = Cast<AHOFCharacter>(this->GetCharacter());
+	if (PlayerCharacter == NULL)
 		AB_LOG(Warning, TEXT("Can't load a pawn. Controller should possesss a apawn."));
 }
 
@@ -61,17 +61,17 @@ void AHOFPlayerController::MoveForward(float NewInputVal)
 	if (NewInputVal != 0.0f)
 	{
 		// find out which way is forward
-		FRotator Rotation = character->Camera->GetComponentRotation();
+		FRotator Rotation = PlayerCharacter->Camera->GetComponentRotation();
 		// Limit pitch when walking or falling
-		if (character->GetCharacterMovement()->IsMovingOnGround() || character->GetCharacterMovement()->IsFalling())
+		if (PlayerCharacter->GetCharacterMovement()->IsMovingOnGround() || PlayerCharacter->GetCharacterMovement()->IsFalling())
 		{
 			Rotation.Pitch = 0.0f;
 		}
 		// add movement in that direction
 		const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::X);
-		character->AddMovementInput(Direction, NewInputVal);
+		PlayerCharacter->AddMovementInput(Direction, NewInputVal);
 
-		const FRotator curRotation = character->GetActorRotation();
+		const FRotator curRotation = PlayerCharacter->GetActorRotation();
 		const FVector XScaledCurRotation = FRotationMatrix(curRotation).GetScaledAxis(EAxis::X);
 		FRotator newRotation = UKismetMathLibrary::MakeRotFromX(FVector(NewInputVal, XScaledCurRotation.Y, 0));
 		SetControlRotation(newRotation);
@@ -82,11 +82,11 @@ void AHOFPlayerController::MoveRight(float NewInputVal)
 {
 	if (NewInputVal != 0.0f)
 	{
-		FRotator rotation = character->Camera->GetComponentRotation(); //Controller->GetControlRotation();
+		FRotator rotation = PlayerCharacter->Camera->GetComponentRotation(); //Controller->GetControlRotation();
 		const FVector direction = FRotationMatrix(rotation).GetScaledAxis(EAxis::Y);
-		character->AddMovementInput(direction, NewInputVal);
+		PlayerCharacter->AddMovementInput(direction, NewInputVal);
 
-		const FRotator curRotation = character->GetActorRotation();
+		const FRotator curRotation = PlayerCharacter->GetActorRotation();
 		const FVector XScaledCurRotation = FRotationMatrix(curRotation).GetScaledAxis(EAxis::X);
 		FRotator newRotation = UKismetMathLibrary::MakeRotFromX(FVector(XScaledCurRotation.X, NewInputVal, 0));
 		SetControlRotation(newRotation);
@@ -95,28 +95,28 @@ void AHOFPlayerController::MoveRight(float NewInputVal)
 
 void AHOFPlayerController::Turn(float NewInputval)
 {
-	character->AddControllerYawInput(NewInputval);
+	PlayerCharacter->AddControllerYawInput(NewInputval);
 }
 
 void AHOFPlayerController::LookUp(float NewinputVal)
 {
-	character->AddControllerPitchInput(NewinputVal);
+	PlayerCharacter->AddControllerPitchInput(NewinputVal);
 }
 
 void AHOFPlayerController::JumpInput()
 {
-	character->bPressedJump = true;
+	PlayerCharacter->bPressedJump = true;
 }
 
 void AHOFPlayerController::JumpIfNotInput()
 {
-	character->bPressedJump = false;
+	PlayerCharacter->bPressedJump = false;
 }
 
 void AHOFPlayerController::Attack()
 {
 	SetStateToBattle();
-	character->isAttacking = true;
+	PlayerCharacter->isAttacking = true;
 }
 
 void AHOFPlayerController::SetStateToBattle()
@@ -133,7 +133,7 @@ void AHOFPlayerController::SetStateToBattle()
 
 void AHOFPlayerController::NotAttack()
 {
-	character->isAttacking = false;
+	PlayerCharacter->isAttacking = false;
 }
 
 

@@ -10,7 +10,7 @@
 *
 */
 
-enum EHOFCharacterState;
+enum EHOFEnemyState;
 
 UCLASS()
 class HOF_API AHOFEnemyController : public AAIController
@@ -22,7 +22,7 @@ public:
 
 	virtual void Possess(APawn* InPawn) override;
 
-	void SetStateInBlackBoard(EHOFCharacterState newState);
+	void SetStateInBlackBoard(EHOFEnemyState newState);
 
 protected:
 	// Called when the game starts or when spawned

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "HOFPlayerState.h"
+#include "HOFEnemyState.h"
 #include "Runtime/Engine/Classes/Animation/AnimSequence.h"
 #include "HOFEnemyPawn.generated.h"
 
@@ -72,20 +72,20 @@ public:
 		bool IsDead();
 
 	UFUNCTION(BlueprintCallable)
-		AHOFPlayerState* GetEnemyState();
+		UHOFEnemyState* GetEnemyState();
 
 	UFUNCTION(BlueprintCallable)
-		void SetCurrentState(EHOFCharacterState newState);
+		void SetCurrentState(EHOFEnemyState newState);
 
 	UFUNCTION(BlueprintCallable, Category = "Damage")
 		void AttackHit();
 
 private:
-	AHOFPlayerState *enemyState;
+	UHOFEnemyState *EnemyState;
 	UPawnSensingComponent *PawnSenses;
 	float CurrentLeftRightVal;
 	float CurrentUpDownVal;
-	bool isDead;
+	bool Dead;
 	
 	TSharedPtr<FCollisionObjectQueryParams> GetTraceObject(const TArray<ECollisionChannel>& channels);
 	TSharedPtr<FCollisionQueryParams> GetTraceParams();

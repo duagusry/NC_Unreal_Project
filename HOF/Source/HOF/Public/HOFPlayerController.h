@@ -29,7 +29,7 @@ public:
 	virtual void SetupInputComponent() override;
 
 private:
-	AHOFCharacter* character;
+	AHOFCharacter* PlayerCharacter;
 
 	float CurrentLeftRightVal;
 	float CurrentUpDownVal;

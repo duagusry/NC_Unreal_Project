@@ -16,19 +16,13 @@ class HOF_API UHOFAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 
 public:
-	UHOFAnimInstance();
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Pawn")
-		float VelocityAnim;
-
-	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-		TEnumAsByte<EHOFCharacterState> CurrentStateAnim;
+	virtual void NativeUpdateAnimation(float DeltaSeconds) { Super::NativeUpdateAnimation(DeltaSeconds); }
+	
+	UFUNCTION()
+		virtual void AnimNotify_AttackHit(UAnimNotify *Notify) { }
 
 	UFUNCTION()
-		void AnimNotify_AttackHit(UAnimNotify *Notify);
-
-	UFUNCTION()
-		void AnimNotify_AttackEnd(UAnimNotify *Notify);
+		virtual void AnimNotify_AttackEnd(UAnimNotify *Notify) { }
+	
 };

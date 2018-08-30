@@ -12,6 +12,7 @@
 #include "HOFBattleGameMode.h"
 #include "Perception/PawnSensingComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "HOFEnemyState.h"
 
 // Sets default values
 AHOFEnemyPawn::AHOFEnemyPawn()
@@ -42,10 +43,10 @@ AHOFEnemyPawn::AHOFEnemyPawn()
 	behaviorTreeAsset = Cast<UBehaviorTree>(StaticLoadObject(UBehaviorTree::StaticClass(), NULL, *BTPath.ToString()));
 	AIControllerClass = AHOFEnemyController::StaticClass();
 
-	enemyState = CreateDefaultSubobject<AHOFPlayerState>(TEXT("EnemyPlayerState"));
+	EnemyState = CreateDefaultSubobject<UHOFEnemyState>(TEXT("EnemyState"));
 	AB_LOG(Warning, TEXT("Create EnemyState"));
 	MaxHP = CurrentHP = 100.0f;
-	isDead = false;
+	Dead = false;
 }
 
 // Called when the game starts or when spawned
@@ -62,14 +63,7 @@ void AHOFEnemyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 float AHOFEnemyPawn::TakeDamage(float Damage, const FDamageEvent &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
 {
-	const float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-
-	if (CurrentHP <= 0.f)
-	{
-		auto gameMode = Cast<AHOFBattleGameMode>(GetWorld()->GetAuthGameMode());
-		gameMode->OnEnemyDead();
-		return 0.f;
-	}
+	const float& ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser); // ????
 
 	if (ActualDamage > 0.f)
 	{
@@ -77,8 +71,13 @@ float AHOFEnemyPawn::TakeDamage(float Damage, const FDamageEvent &DamageEvent, A
 		AB_LOG(Warning, TEXT("HP:%f"), CurrentHP);
 
 		if (CurrentHP <= 0)
-			SetCurrentState(EHOFCharacterState::PLAYER_DEAD);//isDead = true;
+		{
+			SetCurrentState(EHOFEnemyState::ENEMY_DEAD);
+			const auto& gameMode = Cast<AHOFBattleGameMode>(GetWorld()->GetAuthGameMode());
+			gameMode->OnEnemyDead();
+		}
 	}
+	
 	return ActualDamage;
 }
 
@@ -138,26 +137,26 @@ bool AHOFEnemyPawn::IsRunning()
 
 bool AHOFEnemyPawn::IsDead()
 {
-	return isDead;
+	return Dead;
 }
 
-AHOFPlayerState * AHOFEnemyPawn::GetEnemyState()
+UHOFEnemyState * AHOFEnemyPawn::GetEnemyState()
 {
-	if(!enemyState)
-		enemyState = NewObject<AHOFPlayerState>();
+	if(!EnemyState)
+		EnemyState = NewObject<UHOFEnemyState>();
 
-	return enemyState;
+	return EnemyState;
 }
 
 void AHOFEnemyPawn::OnSeePlayer(APawn * InPawn)
 {
-	SetCurrentState(EHOFCharacterState::PLAYER_CHASE);
+	SetCurrentState(EHOFEnemyState::ENEMY_CHASE);
 	Instigator = InPawn;
 }
 
-void AHOFEnemyPawn::SetCurrentState(EHOFCharacterState newState)
+void AHOFEnemyPawn::SetCurrentState(EHOFEnemyState newState)
 {
-	if (enemyState->GetState() != EHOFCharacterState::PLAYER_DEAD)
+	if (EnemyState->GetState() != EHOFEnemyState::ENEMY_DEAD)
 	{
 		Cast<AHOFEnemyController>(GetController())->SetStateInBlackBoard(newState);
 		GetEnemyState()->SetState(newState);

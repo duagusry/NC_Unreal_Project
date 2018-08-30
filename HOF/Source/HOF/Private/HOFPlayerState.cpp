@@ -30,11 +30,6 @@ void AHOFPlayerState::SetState(EHOFCharacterState newState)
 	CurrentStatePawn = newState;
 }
 
-EHOFCharacterState AHOFPlayerState::GetState()
-{
-	return CurrentStatePawn;
-}
-
 void AHOFPlayerState::EatFood()
 {
 	//식량이 모자라면 데미지를 받음

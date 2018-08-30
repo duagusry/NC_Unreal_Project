@@ -6,7 +6,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "AI/Navigation/NavigationSystem.h"
-#include "HOFPlayerState.h"
+#include "HOFEnemyState.h"
 #include "HOFEnemyPawn.h"
 
 AHOFEnemyController::AHOFEnemyController(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -47,7 +47,7 @@ void AHOFEnemyController::Possess(APawn* InPawn)
 	}
 }
 
-void AHOFEnemyController::SetStateInBlackBoard(EHOFCharacterState newState)
+void AHOFEnemyController::SetStateInBlackBoard(EHOFEnemyState newState)
 {
 	BlackboardComp->SetValueAsEnum(StateKey, newState);
 }

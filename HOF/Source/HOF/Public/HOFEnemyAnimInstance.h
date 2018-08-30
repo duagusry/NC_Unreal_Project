@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Animation/AnimInstance.h"
-#include "HOFPlayerState.h"
+#include "HOFAnimInstance.h"
+#include "HOFEnemyState.h"
 #include "HOFEnemyAnimInstance.generated.h"
 
 /**
@@ -14,32 +14,34 @@
 class AHOFEnemyPawn;
 
 UCLASS()
-class HOF_API UHOFEnemyAnimInstance : public UAnimInstance
+class HOF_API UHOFEnemyAnimInstance : public UHOFAnimInstance
 {
 	GENERATED_BODY()
 
 public:
-	UHOFEnemyAnimInstance();
 
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UFUNCTION()
-		void AnimNotify_AttackHit(UAnimNotify *Notify);
+		virtual void AnimNotify_AttackHit(UAnimNotify *Notify) override;
 
 	UFUNCTION()
-		void AnimNotify_AttackEnd(UAnimNotify *Notify);
+		virtual void AnimNotify_AttackEnd(UAnimNotify *Notify) override;
 
 	UFUNCTION(BlueprintCallable)
-		bool IsCurrentStateAnimSameAs(EHOFCharacterState state);
+		virtual bool IsCurrentStateAnimSameAs(EHOFEnemyState state);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-		TEnumAsByte<EHOFCharacterState> CurrentStateAnim;
-
+public : 
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "State")
 		bool IsRunning;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "State")
 		AHOFEnemyPawn *Pawn;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		TEnumAsByte<EHOFEnemyState> CurrentStateAnim;
 
 protected:
 	// Called when the game starts or when spawned

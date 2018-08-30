@@ -32,7 +32,7 @@ public:
 	BaseStructs::Position WorldPawnPosition;
 
 	void SetState(EHOFCharacterState newState);
-	EHOFCharacterState GetState();
+	inline EHOFCharacterState GetState() { return CurrentStatePawn; }
 
 	void EatFood();
 	void Heal(int32 heal);

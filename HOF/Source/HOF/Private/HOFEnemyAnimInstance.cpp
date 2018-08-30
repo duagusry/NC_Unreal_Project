@@ -4,10 +4,6 @@
 #include "HOF.h"
 #include "HOFEnemyPawn.h"
 
-UHOFEnemyAnimInstance::UHOFEnemyAnimInstance()
-{
-}
-
 void UHOFEnemyAnimInstance::NativeBeginPlay()
 {
 	AB_LOG(Warning, TEXT("BeginPlay in EnemyAnimInstance"))
@@ -44,11 +40,11 @@ void UHOFEnemyAnimInstance::AnimNotify_AttackEnd(UAnimNotify * Notify)
 
 	if (HOFEnemyPawn && HOFEnemyPawn->IsValidLowLevel())
 	{
-		HOFEnemyPawn->GetEnemyState()->SetState(EHOFCharacterState::PLAYER_PEACE);
+		HOFEnemyPawn->GetEnemyState()->SetState(EHOFEnemyState::ENEMY_PEACE);
 	}
 }
 
-bool UHOFEnemyAnimInstance::IsCurrentStateAnimSameAs(EHOFCharacterState state)
+bool UHOFEnemyAnimInstance::IsCurrentStateAnimSameAs(EHOFEnemyState state)
 {
 	if(!CurrentStateAnim)
 		return false;
