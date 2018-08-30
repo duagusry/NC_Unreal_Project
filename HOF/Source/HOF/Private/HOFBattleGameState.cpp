@@ -3,11 +3,14 @@
 #include "HOFBattleGameState.h"
 #include "HOF.h"
 
+AHOFBattleGameState::AHOFBattleGameState() : enemyCount(0)
+{
+}
 
 void AHOFBattleGameState::SetEnemyCount(int initCount)
 {
 	AB_LOG(Warning, TEXT("Set enemyCount %d in BattleGameState"), initCount);
-	enemyCount = initCount;
+	enemyCount += initCount;
 }
 
 bool AHOFBattleGameState::AreEnemiesClear()

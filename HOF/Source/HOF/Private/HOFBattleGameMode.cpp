@@ -4,7 +4,7 @@
 #include "Engine/World.h"
 #include "HOFPlayerController.h"
 #include "Runtime/Engine/Public/TimerManager.h"
-#include "EnemyData.h"
+#include "EnemyResources.h"
 #include "HOFEnemyPawn.h"
 #include "HOF.h"
 #include "HOFPlayerState.h"
@@ -25,6 +25,8 @@ AHOFBattleGameMode::AHOFBattleGameMode()
 	PlayerStateClass = AHOFPlayerState::StaticClass();
 	GameStateClass = AHOFBattleGameState::StaticClass();
 
+	EnemyResources::Init();
+
 	UE_LOG(LogClass, Warning, TEXT("BattleGameMode Start"));
 }
 
@@ -34,7 +36,7 @@ void AHOFBattleGameMode::BeginPlay()
 
 	GameInstance = Cast<UHOFGameInstance>(GetGameInstance());
 
-	InitializeEnemyPawn();
+	InitializeEnemyPawns();
 }
 
 void AHOFBattleGameMode::Tick(float DeltaSeconds)
@@ -63,16 +65,26 @@ void AHOFBattleGameMode::OnEnemyDead()
 	}
 }
 
-void AHOFBattleGameMode::InitializeEnemyPawn()
+void AHOFBattleGameMode::InitializeEnemyPawns()
 {
-	if (GameInstance != nullptr && GameInstance->IsEnemyDataAvailable())
+	const auto &spawnInfos = GameInstance->BattleData.SpawnInfo;
+	
+	for (const auto &spawnInfo : spawnInfos)
+		InitializeEnemyPawn(spawnInfo);
+}
+
+void AHOFBattleGameMode::InitializeEnemyPawn(const TPair<FString, int32> &spawnInfo)
+{
+	FString type = spawnInfo.Key;
+	int amount = spawnInfo.Value;
+
+	if (GameInstance != nullptr && EnemyResources::Contains(type))
 	{
-		auto enemyData = GameInstance->GetEnemyData();
-		SpawnEnemyPawn(enemyData->enemySpecy, enemyData->number);
+		SpawnEnemyPawn(EnemyResources::GetSubClassOf(type), amount);
 
 		auto battleGameState = Cast<AHOFBattleGameState>(GameState);
 		if (battleGameState != nullptr)
-			battleGameState->SetEnemyCount(enemyData->number);
+			battleGameState->SetEnemyCount(amount);
 	}
 }
 

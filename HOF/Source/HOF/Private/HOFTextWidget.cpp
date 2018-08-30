@@ -4,7 +4,7 @@
 #include "HOFGameInstance.h"
 #include "GameData.h"
 #include "HOFCardEvent.h"
-#include "EnemyData.h"
+#include "EnemyResources.h"
 #include "HOF.h"
 #include "HOFWorldPlayerController.h"
 #include "HOFWorldGameMode.h"
@@ -322,7 +322,6 @@ void UHOFTextWidget::HandleAnotherEvent(int32 eventId)
 void UHOFTextWidget::HandleTransfer(const FBattleInfo& battleInfo)
 {
 	AB_LOG_CALLONLY(Warning);
-	const auto& EnemyData = GameInstance->GetEnemyData();
 	const auto& GameMode = Cast<AHOFWorldGameMode>(GetWorld()->GetAuthGameMode());
 
 	BaseStructs::BattleData BattleParam;
@@ -333,8 +332,6 @@ void UHOFTextWidget::HandleTransfer(const FBattleInfo& battleInfo)
 
 	GameState->SetState(GAME_BATTLE);
 	GameInstance->SetBattleData(BattleParam);
-
-	EnemyData->SetEnemyData(battleInfo.SpawnInfoArray[0].Type, battleInfo.SpawnInfoArray[0].Amount);
 	GameInstance->PlayerData = BaseStructs::PlayerData{ PlayerState->PlayerData.HP, PlayerState->PlayerData.Food, PlayerState->PlayerData.Gold, PlayerState->PlayerData.Alive };
 	GameInstance->SaveCurrentWorldStatusData(GameMode->AssignWorldStatusData(battleInfo.ReturnDialog));
 	UGameplayStatics::OpenLevel(GetWorld(), "HOFBattleLevel");

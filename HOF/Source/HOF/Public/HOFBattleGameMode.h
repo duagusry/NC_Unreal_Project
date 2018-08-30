@@ -21,21 +21,22 @@ class HOF_API AHOFBattleGameMode : public AGameMode
 	
 public : 
 	AHOFBattleGameMode();
+	void OnPlayerDead();
+	void OnEnemyDead();
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void InitGameState() override;
 
-	void OnPlayerDead();
-	void OnEnemyDead();
+private:
+	void InitializeEnemyPawns();
+	void InitializeEnemyPawn(const TPair<FString, int32> &spawnInfo);
+	void SpawnEnemyPawn(TSubclassOf<AHOFEnemyPawn> specy, int number);
+	void SwitchToWorldLevel();
 
 private : 
 	UHOFGameInstance* GameInstance;
 	FTimerHandle countDownHandle;
 	TArray<AHOFEnemyPawn*> enemyPawns;
 	//PlayerController도 여기 있어야할것같음.
-	
-	void InitializeEnemyPawn();
-	void SpawnEnemyPawn(TSubclassOf<AHOFEnemyPawn> specy, int number);
-	void SwitchToWorldLevel();
 };
