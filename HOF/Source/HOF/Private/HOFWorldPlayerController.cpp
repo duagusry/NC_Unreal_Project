@@ -4,6 +4,7 @@
 #include "HOFInputInterface.h"
 #include "HOFWorldInput.h"
 #include "HOFTextWidget.h"
+#include "HOFMainStatusWidget.h"
 #include "HOFPlayerState.h"
 #include "HOFGameState.h"
 
@@ -18,13 +19,21 @@ AHOFWorldPlayerController::AHOFWorldPlayerController()
 	//Initialize Widget
 	BP_EventWidget = nullptr;
 	
-	static ConstructorHelpers::FObjectFinder<UBlueprint> WorldEventWidgetBluePrint(TEXT("Blueprint'/Game/Blueprints/BP_EventWidget'"));
+	static ConstructorHelpers::FObjectFinder<UBlueprint> WorldEventWidgetBluePrint(TEXT("Blueprint'/Game/Blueprints/UI/BP_EventWidget'"));
 
 	if (WorldEventWidgetBluePrint.Object)
 	{
 		BP_EventWidget = CastChecked<UClass>(WorldEventWidgetBluePrint.Object->GeneratedClass);
 	}
 	
+	BP_MainUIWidget = nullptr;
+
+	static ConstructorHelpers::FObjectFinder<UBlueprint> MainStatusUIWidgetBluePrint(TEXT("Blueprint'/Game/Blueprints/UI/BP_MainStatusWidget'"));
+
+	if (MainStatusUIWidgetBluePrint.Object)
+	{
+		BP_MainUIWidget = CastChecked<UClass>(MainStatusUIWidgetBluePrint.Object->GeneratedClass);
+	}
 }
 
 void AHOFWorldPlayerController::BeginPlay()
@@ -42,9 +51,20 @@ void AHOFWorldPlayerController::ShowEventWidget(int32 id, AHOFWorldCardActor * p
 
 	EventWidget->Init(id, pCard, returnDialog);
 
-	EventWidget->AddToViewport(); // Add it to the viewport so the Construct() method in the UUserWidget:: is run.
+	EventWidget->AddToViewport(1); // Add it to the viewport so the Construct() method in the UUserWidget:: is run.
 	EventWidget->SetVisibility(ESlateVisibility::Visible); // Set it to hidden so its not open on spawn.
 	
+}
+
+void AHOFWorldPlayerController::ShowMainStatusWidget()
+{
+	MainUIWidget = CreateWidget<UHOFMainStatusWidget>(this, BP_MainUIWidget); // Create Widget
+	if (!MainUIWidget)
+		return;
+	
+	MainUIWidget->AddToViewport(0); // Add it to the viewport so the Construct() method in the UUserWidget:: is run.
+	MainUIWidget->SetVisibility(ESlateVisibility::Visible); // Set it to hidden so its not open on spawn.
+
 }
 
 void AHOFWorldPlayerController::ProcessPlayerInput(const float DeltaTime, const bool bGamePaused)

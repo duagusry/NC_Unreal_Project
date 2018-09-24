@@ -43,7 +43,7 @@ public:
 	inline void ModifyFood(int32 amount) { PlayerData.Food(amount); }
 	inline void ModifyGold(int32 amount) { PlayerData.Gold(amount); }
 	inline void ModifyMaxHP(int32 amount) { PlayerData.HP.ModifyMaxValue(amount); }
-	inline void ModifyCurrentHP(int32 amount)
+	inline void ModifyCurrentHP(float amount)
 	{
 		PlayerData.HP(amount);
 

@@ -106,5 +106,7 @@ void AHOFBattleGameMode::SpawnEnemyPawn(TSubclassOf<AHOFEnemyPawn> specy, int nu
 
 void AHOFBattleGameMode::SwitchToWorldLevel()
 {
+	Cast<UHOFGameInstance>(GetGameInstance())->PlayerData = Cast<AHOFPlayerState>(GetWorld()->GetFirstPlayerController()->PlayerState)->PlayerData;
+
 	UGameplayStatics::OpenLevel(GetWorld(), "HOFWorldLevel");
 }

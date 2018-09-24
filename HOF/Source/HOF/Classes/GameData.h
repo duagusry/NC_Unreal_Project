@@ -124,7 +124,7 @@ namespace BaseStructs
 
 	private : 
 		inline void Ceil(T value) { CurrentValue = CurrentValue + value >= MaxValue ? MaxValue : CurrentValue + value; }
-		inline void Floor(T value) { CurrentValue = CurrentValue - value <= MinValue ? MinValue : CurrentValue - value; }
+		inline void Floor(T value) { CurrentValue = CurrentValue + value <= MinValue ? MinValue : CurrentValue + value; }
 
 	private : 
 		T CurrentValue;

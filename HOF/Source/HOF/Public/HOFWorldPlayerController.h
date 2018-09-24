@@ -23,6 +23,7 @@ public :
 	virtual void BeginPlay() override;
 
 	void ShowEventWidget(int32 id, AHOFWorldCardActor* pCard, int32 returnDialog = 1);
+	void ShowMainStatusWidget();
 
 protected : 
 	//실제 인풋을 처리하는 부분
@@ -48,13 +49,21 @@ protected :
 	//따라서 위젯을 여러개 만들어놓으면 메모리에 큰 영향을 줄 수 있음.
 	//위젯은 가급적 하나 만든걸 재사용하는게 좋음
 
-	// The class that will be used for the players Inventory UI
+	// The class that will be used for Texts
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Player, HUD and UI")
 	TSubclassOf<class UHOFTextWidget> BP_EventWidget;
 
-	// The instance of the players Inventory UI Widget
+	// The instance of the Text Widget
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Player, HUD and UI")
 	class UHOFTextWidget* EventWidget;
 	
+	// The class that will be used for the Main UI
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Player, HUD and UI")
+		TSubclassOf<class UHOFMainStatusWidget> BP_MainUIWidget;
+
+	// The instance of the players Main UI Widget
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Player, HUD and UI")
+		class UHOFMainStatusWidget* MainUIWidget;
+
 	AHOFGameState* GameState;
 };

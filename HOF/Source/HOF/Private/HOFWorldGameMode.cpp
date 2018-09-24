@@ -68,6 +68,7 @@ void AHOFWorldGameMode::BeginPlay()
 	else
 		LoadWorld(MapEventInfo);
 
+	Cast<AHOFWorldPlayerController>(GetWorld()->GetFirstPlayerController())->ShowMainStatusWidget();
 }
 
 void AHOFWorldGameMode::Tick(float DeltaSeconds)

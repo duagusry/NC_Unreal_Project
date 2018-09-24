@@ -9,6 +9,7 @@
 #include "GameData.h"
 #include "HOFPlayerState.h"
 #include "HOFWorldGameMode.h"
+#include "HOFGameInstance.h"
 #include "HOFWorldPlayerController.h"
 
 
@@ -27,6 +28,7 @@ void AHOFWorldPawn::BeginPlay()
 	
 	PlayerController = Cast<AHOFWorldPlayerController>(GetWorld()->GetPlayerControllerIterator()->Get());
 	PlayerState = Cast<AHOFPlayerState>(PlayerController->PlayerState);
+	Cast<AHOFPlayerState>(PlayerState)->SetPlayerData(Cast<UHOFGameInstance>(GetGameInstance())->PlayerData);
 }
 
 // Called every frame
