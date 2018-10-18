@@ -10,6 +10,9 @@
 #include "HOFPlayerState.h"
 #include "HOFGameInstance.h"
 #include "HOFBattleGameMode.h"
+#include "HOFItem.h"
+#include "HOFGearItem.h"
+#include "HOFWeaponItem.h"
 #include "DrawDebugHelpers.h"
 
 // Sets default values
@@ -134,8 +137,27 @@ TSharedPtr<FCollisionObjectQueryParams> AHOFCharacter::GetTraceObject(const TArr
 void AHOFCharacter::GiveDamage(const FHitResult &HitResult)
 {
 	AB_LOG(Warning, TEXT("HitActor=%s"), *(HitResult.GetActor()->GetName()));
-	float BaseDamage = 100.0f;
+	float BaseDamage = 30.0f;
 
-	FPointDamageEvent PointDamageEvent(BaseDamage, HitResult, GetActorForwardVector(), UDamageType::StaticClass());
-	HitResult.GetActor()->TakeDamage(BaseDamage, PointDamageEvent, GetController(), this);
+	// Get Attack Info from Current Weapon
+	const auto& SlotItem = Equip->GetEquippedItemWithSlot(EnumInGame::ITEM_MAIN_WEAPON);
+
+	float WeaponDamage = 0.0f;
+	while (0)
+	{
+		if (!SlotItem)
+			break;
+
+		if (!SlotItem->IsWeaponItem())
+			break;
+
+		AHOFWeaponItem* Weapon = static_cast<AHOFWeaponItem*>(SlotItem);
+
+		WeaponDamage += Weapon->GetAttackDamage();
+	}
+
+	float FinalDamage = BaseDamage + WeaponDamage;
+
+	FPointDamageEvent PointDamageEvent(FinalDamage, HitResult, GetActorForwardVector(), UDamageType::StaticClass());
+	HitResult.GetActor()->TakeDamage(FinalDamage, PointDamageEvent, GetController(), this);
 }

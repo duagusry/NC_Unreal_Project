@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "HOFCharacter.generated.h"
 
+class AHOFInventory;
+class AHOFEquipStatus;
+
 UCLASS(config=Game)
 class HOF_API AHOFCharacter : public ACharacter
 {
@@ -68,4 +71,8 @@ private:
 	TSharedPtr<FCollisionObjectQueryParams> GetTraceObject(const TArray<ECollisionChannel>& channels);
 	TSharedPtr<FCollisionQueryParams> GetTraceParams();
 	void GiveDamage(const FHitResult & HitResult);
+
+private : 
+	TSharedPtr<AHOFInventory> Inventory;
+	TSharedPtr<AHOFEquipStatus> Equip;
 };

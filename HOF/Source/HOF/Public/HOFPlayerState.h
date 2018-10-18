@@ -20,6 +20,9 @@ enum EHOFCharacterState
 	PLAYER_DEAD UMETA(DisplayName = "PLAYER_DEAD"),
 };
 
+class AHOFEquipStatus;
+class AHOFInventory;
+
 UCLASS()
 class HOF_API AHOFPlayerState : public APlayerState
 {
@@ -65,4 +68,5 @@ public:
 		uint32 bIsBattleInAction : 1;
 
 	BaseStructs::PlayerData PlayerData;
+
 };

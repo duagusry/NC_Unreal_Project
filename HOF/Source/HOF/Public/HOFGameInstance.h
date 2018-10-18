@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "GameData.h"
+#include"HOFEquipStatus.h"
 #include "HOFGameInstance.generated.h"
 
 /**
@@ -34,4 +35,5 @@ public :
 	BaseStructs::WorldStatusData WorldStatusData;
 	BaseStructs::PlayerData PlayerData;
 	BaseStructs::BattleData BattleData;
+	TSharedPtr<AHOFEquipStatus> EquipData;
 };

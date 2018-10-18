@@ -149,6 +149,33 @@ namespace BaseStructs
 			SpawnInfo.Reset();
 		}
 	};
+
+}
+
+namespace EnumInGame
+{
+	enum EHOFItemType
+	{
+		ITEM_HELMET UMETA(DisplayName = "ITEM_HELMET"),
+		ITEM_TORSO UMETA(DisplayName = "ITEM_TORSO"),
+		ITEM_CLOAK UMETA(DisplayName = "ITEM_CLOAK"),
+		ITEM_GLOVES UMETA(DisplayName = "ITEM_GLOVES"),
+		ITEM_BOOTS UMETA(DisplayName = "ITEM_BOOTS"),
+		ITEM_NECKLACE UMETA(DisplayName = "ITEM_NECKLACE"),
+		ITEM_MAIN_WEAPON UMETA(DisplayName = "ITEM_MAIN_WEAPON"),
+		ITEM_SUB_WEAPON UMETA(DisplayName = "ITEM_SUB_WEAPON"),
+
+		ITEM_TYPE_END, 
+	};
+
+	enum EHOFElement
+	{
+		ELEMENT_NONE UMETA(DisplayName = "ELEMENT_NONE"),
+		ELEMENT_FIRE UMETA(DisplayName = "ELEMENT_FIRE"),
+		ELEMENT_ICE UMETA(DisplayName = "ELEMENT_ICE"),
+		ELEMENT_LIGHT UMETA(DisplayName = "ELEMENT_LIGHT"),
+		ELEMENT_DARKNESS UMETA(DisplayName = "ELEMENT_DARKNESS"),
+	};
 }
 
 USTRUCT()

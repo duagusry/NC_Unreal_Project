@@ -272,6 +272,7 @@ void UHOFTextWidget::HandleReward(FReward reward)
 	if (reward.ItemArray.Num())
 	{
 		//아이템 처리
+
 	}
 
 	if (reward.Food != 0)
