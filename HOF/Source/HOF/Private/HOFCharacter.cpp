@@ -33,6 +33,7 @@ AHOFCharacter::AHOFCharacter()
 	Camera->AttachTo(SpringArm);
 
 	//Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
+	Equip = CreateDefaultSubobject<AHOFEquipStatus>(TEXT("EquipStatus"));
 }
 
 // Called when the game starts or when spawned
@@ -43,6 +44,14 @@ void AHOFCharacter::BeginPlay()
 	PlayerState = Cast<AHOFPlayerState>(GetController()->PlayerState);
 
 	Cast<AHOFPlayerState>(PlayerState)->SetPlayerData(Cast<UHOFGameInstance>(GetGameInstance())->PlayerData);
+
+	///////////////////////////////////////////////////////////////////////// For Test	///////////////////////////////////////////////////////////////////////////
+	UWorld* World = GetWorld();
+
+	//TSharedPtr<AHOFWeaponItem> DummyWeapon = MakeShared<AHOFWeaponItem>(World->SpawnActor<AHOFWeaponItem>(MyLoc, MyRot, SpawnInfo));
+	AHOFWeaponItem* DummyWeapon = World->SpawnActor<AHOFWeaponItem>(GetActorLocation(), GetActorRotation(), FActorSpawnParameters());
+	Equip->Equip(EnumInGame::ITEM_MAIN_WEAPON, DummyWeapon);
+	///////////////////////////////////////////////////////////////////////// For Test	///////////////////////////////////////////////////////////////////////////
 }
 
 // Called every frame
@@ -143,18 +152,19 @@ void AHOFCharacter::GiveDamage(const FHitResult &HitResult)
 	const auto& SlotItem = Equip->GetEquippedItemWithSlot(EnumInGame::ITEM_MAIN_WEAPON);
 
 	float WeaponDamage = 0.0f;
-	while (0)
+	
+	do
 	{
-		if (!SlotItem)
+		if (!SlotItem.Get())
 			break;
 
 		if (!SlotItem->IsWeaponItem())
 			break;
 
-		AHOFWeaponItem* Weapon = static_cast<AHOFWeaponItem*>(SlotItem);
+		AHOFWeaponItem* Weapon = static_cast<AHOFWeaponItem*>(SlotItem.Get());
 
 		WeaponDamage += Weapon->GetAttackDamage();
-	}
+	} while (0);
 
 	float FinalDamage = BaseDamage + WeaponDamage;
 

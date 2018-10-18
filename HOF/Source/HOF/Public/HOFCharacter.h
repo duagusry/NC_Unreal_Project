@@ -74,5 +74,5 @@ private:
 
 private : 
 	TSharedPtr<AHOFInventory> Inventory;
-	TSharedPtr<AHOFEquipStatus> Equip;
+	AHOFEquipStatus* Equip;
 };

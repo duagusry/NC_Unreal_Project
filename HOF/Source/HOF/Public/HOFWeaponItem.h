@@ -20,7 +20,7 @@ public :
 	inline float GetAttackDamage() { return Damage; }
 
 protected : 
-	float Damage;
+	float Damage = 30;
 	float Range;
 	float AtttackSpeed;
 	EnumInGame::EHOFElement Element;

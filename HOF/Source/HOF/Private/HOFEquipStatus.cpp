@@ -29,14 +29,14 @@ void AHOFEquipStatus::Tick(float DeltaTime)
 
 }
 
-void AHOFEquipStatus::Equip(EnumInGame::EHOFItemType slotNumber, AHOFItem & item)
+void AHOFEquipStatus::Equip(EnumInGame::EHOFItemType slotNumber, AHOFItem * item)
 {
-	EquipList[slotNumber] = &item;
+	EquipList[slotNumber] = MakeShareable<AHOFItem>(item);
 }
 
 void AHOFEquipStatus::Equip(EnumInGame::EHOFItemType slotNumber, int32 itemId)
 {
-	EquipList[slotNumber] = g_ItemResource->GetItemFromId(itemId).Get();
+	EquipList[slotNumber] = (g_ItemResource->GetItemFromId(itemId));
 }
 
 void AHOFEquipStatus::UnEquip(EnumInGame::EHOFItemType slotNumber)
@@ -44,10 +44,10 @@ void AHOFEquipStatus::UnEquip(EnumInGame::EHOFItemType slotNumber)
 	EquipList[slotNumber] = nullptr;
 }
 
-AHOFGearItem * AHOFEquipStatus::GetEquippedItemWithSlot(EnumInGame::EHOFItemType slotNumber)
+TSharedPtr<AHOFItem> AHOFEquipStatus::GetEquippedItemWithSlot(EnumInGame::EHOFItemType slotNumber)
 {
 	if (EquipList[slotNumber]->IsGearItem())
-		return dynamic_cast<AHOFGearItem*>(EquipList[slotNumber]);
+		return EquipList[slotNumber];
 	else
 		return nullptr;
 }

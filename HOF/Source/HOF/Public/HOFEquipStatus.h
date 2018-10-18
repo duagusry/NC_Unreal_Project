@@ -27,13 +27,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void Equip(EnumInGame::EHOFItemType slotNumber, AHOFItem& item);
+	void Equip(EnumInGame::EHOFItemType slotNumber, AHOFItem* item);
 	void Equip(EnumInGame::EHOFItemType slotNumber, int32 itemId);
 	void UnEquip(EnumInGame::EHOFItemType slotNumber);
 
-	AHOFGearItem* GetEquippedItemWithSlot(EnumInGame::EHOFItemType slotNumber);
+	TSharedPtr<AHOFItem> GetEquippedItemWithSlot(EnumInGame::EHOFItemType slotNumber);
 
 private : 
-	TArray<AHOFItem*> EquipList;
+	TArray<TSharedPtr<AHOFItem>> EquipList;
 	
 };
