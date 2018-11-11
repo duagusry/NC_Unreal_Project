@@ -48,9 +48,9 @@ void AHOFCharacter::BeginPlay()
 	///////////////////////////////////////////////////////////////////////// For Test	///////////////////////////////////////////////////////////////////////////
 	UWorld* World = GetWorld();
 
-	//TSharedPtr<AHOFWeaponItem> DummyWeapon = MakeShared<AHOFWeaponItem>(World->SpawnActor<AHOFWeaponItem>(MyLoc, MyRot, SpawnInfo));
-	AHOFWeaponItem* DummyWeapon = World->SpawnActor<AHOFWeaponItem>(GetActorLocation(), GetActorRotation(), FActorSpawnParameters());
-	Equip->Equip(EnumInGame::ITEM_MAIN_WEAPON, DummyWeapon);
+	//AHOFWeaponItem* DummyWeaponPointer = World->SpawnActor<AHOFWeaponItem>(GetActorLocation(), GetActorRotation(), FActorSpawnParameters());
+	//TSharedPtr<AHOFWeaponItem> DummyWeapon = MakeShareable<AHOFWeaponItem>(DummyWeaponPointer);
+	//Equip->Equip(EnumInGame::ITEM_MAIN_WEAPON, DummyWeapon);
 	///////////////////////////////////////////////////////////////////////// For Test	///////////////////////////////////////////////////////////////////////////
 }
 
@@ -155,7 +155,7 @@ void AHOFCharacter::GiveDamage(const FHitResult &HitResult)
 	
 	do
 	{
-		if (!SlotItem.Get())
+		if (!SlotItem.IsValid())
 			break;
 
 		if (!SlotItem->IsWeaponItem())

@@ -15,6 +15,15 @@ AHOFEquipStatus::AHOFEquipStatus()
 	EquipList.Init(nullptr, EnumInGame::EHOFItemType::ITEM_TYPE_END);
 }
 
+AHOFEquipStatus::~AHOFEquipStatus()
+{
+	// 장착 상태 초기화
+	for (auto item : EquipList)
+	{
+		item = nullptr;
+	}
+}
+
 // Called when the game starts or when spawned
 void AHOFEquipStatus::BeginPlay()
 {
@@ -27,6 +36,11 @@ void AHOFEquipStatus::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AHOFEquipStatus::Equip(EnumInGame::EHOFItemType slotNumber, TSharedPtr<AHOFItem> item)
+{
+	EquipList[slotNumber] = item;
 }
 
 void AHOFEquipStatus::Equip(EnumInGame::EHOFItemType slotNumber, AHOFItem * item)
@@ -46,6 +60,9 @@ void AHOFEquipStatus::UnEquip(EnumInGame::EHOFItemType slotNumber)
 
 TSharedPtr<AHOFItem> AHOFEquipStatus::GetEquippedItemWithSlot(EnumInGame::EHOFItemType slotNumber)
 {
+	if (!EquipList[slotNumber].IsValid())
+		return nullptr;
+
 	if (EquipList[slotNumber]->IsGearItem())
 		return EquipList[slotNumber];
 	else
