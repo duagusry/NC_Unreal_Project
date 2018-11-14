@@ -18,12 +18,12 @@ public:
 		return ItemResourceInstance;
 	}
 
-	TSharedPtr<AHOFItem> GetItemFromId(int32 id);
+	AHOFItem* GetItemFromId(int32 id);
 	
 private:
-	ItemResource() { }
+	ItemResource();
 
-	TMap<int32, TSharedPtr<AHOFItem>> ItemMap;
+	TMap<int32, AHOFItem*> ItemMap;
 
 	static ItemResource* ItemResourceInstance;
 };

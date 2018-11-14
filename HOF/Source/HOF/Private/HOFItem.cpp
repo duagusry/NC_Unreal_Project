@@ -12,7 +12,7 @@ AHOFItem::AHOFItem()
 
 AHOFItem::AHOFItem(const AHOFItem & ref)
 {
-	NameId = ref.NameId;
+	Id = ref.Id;
 	Name = ref.Name;
 	BuyCost = ref.BuyCost;
 	SellCost = ref.SellCost;
@@ -21,7 +21,7 @@ AHOFItem::AHOFItem(const AHOFItem & ref)
 
 AHOFItem& AHOFItem::operator=(const AHOFItem & ref)
 {
-	NameId = ref.NameId;
+	Id = ref.Id;
 	Name = ref.Name;
 	BuyCost = ref.BuyCost;
 	SellCost = ref.SellCost;

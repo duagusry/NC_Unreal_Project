@@ -15,16 +15,26 @@ class HOF_API AHOFWeaponItem : public AHOFGearItem
 	GENERATED_BODY()
 	
 public : 
+	AHOFWeaponItem() {}
 	virtual bool IsWeaponItem() override { return true; }
 
 	inline float GetAttackDamage() { return Damage; }
 
-protected : 
-	float Damage = 30;
-	float Range;
-	float AtttackSpeed;
-	EnumInGame::EHOFElement Element;
-	float CriticalProb;
-	int32 SpellId;
+	UPROPERTY()
+		float Damage = 30.0f;
 	
+	UPROPERTY()
+	float Range;
+	
+	UPROPERTY()
+	float AtttackSpeed;
+	
+	UPROPERTY()
+	TEnumAsByte<EHOFElement> Element;
+	
+	UPROPERTY()
+	float CriticalProb;
+	
+	UPROPERTY()
+	int32 SpellId;
 };

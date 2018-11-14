@@ -3,5 +3,9 @@
 #include "HOFGearItem.h"
 
 
+bool AHOFGearItem::IsGearItem()
+{
+	return true;
+}
 
 

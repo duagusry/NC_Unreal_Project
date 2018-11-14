@@ -12,7 +12,7 @@ AHOFEquipStatus::AHOFEquipStatus()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	EquipList.Init(nullptr, EnumInGame::EHOFItemType::ITEM_TYPE_END);
+	//EquipList.Init(nullptr, EHOFItemType::ITEM_TYPE_END);
 }
 
 // Called when the game starts or when spawned
@@ -29,22 +29,28 @@ void AHOFEquipStatus::Tick(float DeltaTime)
 
 }
 
-void AHOFEquipStatus::Equip(EnumInGame::EHOFItemType slotNumber, AHOFItem * item)
+void AHOFEquipStatus::Equip(EHOFItemType slotNumber, AHOFItem * item)
 {
-	EquipList[slotNumber] = MakeShareable<AHOFItem>(item);
+	if (EquipList.Contains(slotNumber))
+		EquipList[slotNumber] = item;
+	else
+		EquipList.Add(slotNumber, item);
 }
 
-void AHOFEquipStatus::Equip(EnumInGame::EHOFItemType slotNumber, int32 itemId)
+void AHOFEquipStatus::Equip(EHOFItemType slotNumber, int32 itemId)
 {
-	EquipList[slotNumber] = (g_ItemResource->GetItemFromId(itemId));
+	if (EquipList.Contains(slotNumber))
+		EquipList[slotNumber] = g_ItemResource->GetItemFromId(itemId);
+	else
+		EquipList.Add(slotNumber, g_ItemResource->GetItemFromId(itemId));
 }
 
-void AHOFEquipStatus::UnEquip(EnumInGame::EHOFItemType slotNumber)
+void AHOFEquipStatus::UnEquip(EHOFItemType slotNumber)
 {
-	EquipList[slotNumber] = nullptr;
+	EquipList.Remove(slotNumber);
 }
 
-TSharedPtr<AHOFItem> AHOFEquipStatus::GetEquippedItemWithSlot(EnumInGame::EHOFItemType slotNumber)
+AHOFItem* AHOFEquipStatus::GetEquippedItemWithSlot(EHOFItemType slotNumber)
 {
 	if (EquipList[slotNumber]->IsGearItem())
 		return EquipList[slotNumber];

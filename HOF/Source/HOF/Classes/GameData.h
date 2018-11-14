@@ -152,9 +152,10 @@ namespace BaseStructs
 
 }
 
-namespace EnumInGame
-{
-	enum EHOFItemType
+//namespace EnumInGame
+//{
+	UENUM()
+	enum class EHOFItemType : uint8 
 	{
 		ITEM_HELMET UMETA(DisplayName = "ITEM_HELMET"),
 		ITEM_TORSO UMETA(DisplayName = "ITEM_TORSO"),
@@ -168,6 +169,7 @@ namespace EnumInGame
 		ITEM_TYPE_END, 
 	};
 
+	UENUM()
 	enum EHOFElement
 	{
 		ELEMENT_NONE UMETA(DisplayName = "ELEMENT_NONE"),
@@ -176,7 +178,7 @@ namespace EnumInGame
 		ELEMENT_LIGHT UMETA(DisplayName = "ELEMENT_LIGHT"),
 		ELEMENT_DARKNESS UMETA(DisplayName = "ELEMENT_DARKNESS"),
 	};
-}
+//}
 
 USTRUCT()
 struct FGameData

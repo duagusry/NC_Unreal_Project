@@ -50,7 +50,8 @@ void AHOFCharacter::BeginPlay()
 
 	//TSharedPtr<AHOFWeaponItem> DummyWeapon = MakeShared<AHOFWeaponItem>(World->SpawnActor<AHOFWeaponItem>(MyLoc, MyRot, SpawnInfo));
 	AHOFWeaponItem* DummyWeapon = World->SpawnActor<AHOFWeaponItem>(GetActorLocation(), GetActorRotation(), FActorSpawnParameters());
-	Equip->Equip(EnumInGame::ITEM_MAIN_WEAPON, DummyWeapon);
+	//Equip->Equip(ITEM_MAIN_WEAPON, DummyWeapon);
+	Equip->Equip(EHOFItemType::ITEM_MAIN_WEAPON, 0);
 	///////////////////////////////////////////////////////////////////////// For Test	///////////////////////////////////////////////////////////////////////////
 }
 
@@ -149,19 +150,19 @@ void AHOFCharacter::GiveDamage(const FHitResult &HitResult)
 	float BaseDamage = 30.0f;
 
 	// Get Attack Info from Current Weapon
-	const auto& SlotItem = Equip->GetEquippedItemWithSlot(EnumInGame::ITEM_MAIN_WEAPON);
+	const auto& SlotItem = Equip->GetEquippedItemWithSlot(EHOFItemType::ITEM_MAIN_WEAPON);
 
 	float WeaponDamage = 0.0f;
 	
 	do
 	{
-		if (!SlotItem.Get())
+		if (!SlotItem)
 			break;
 
 		if (!SlotItem->IsWeaponItem())
 			break;
 
-		AHOFWeaponItem* Weapon = static_cast<AHOFWeaponItem*>(SlotItem.Get());
+		AHOFWeaponItem* Weapon = static_cast<AHOFWeaponItem*>(SlotItem);
 
 		WeaponDamage += Weapon->GetAttackDamage();
 	} while (0);

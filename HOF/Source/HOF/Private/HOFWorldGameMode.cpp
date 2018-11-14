@@ -10,6 +10,7 @@
 #include "WorldBoardActor.h"
 #include "HOFGameState.h"
 #include "HOFPlayerState.h"
+#include "HOFItemResource.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 #include "HOFCardEvent.h"
@@ -31,6 +32,8 @@ AHOFWorldGameMode::AHOFWorldGameMode()
 	{
 		BP_WorldPawn = CastChecked<UClass>(WorldPawnBluePrint.Object->GeneratedClass);
 	}
+
+	g_ItemResource->GetInstance();
 }
 
 void AHOFWorldGameMode::BeginPlay()
