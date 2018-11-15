@@ -4,14 +4,7 @@
 #include "XmlConverter.h"
 #include "HOFWeaponItem.h"
 
-ItemResource* ItemResource::ItemResourceInstance = nullptr;
-
-ItemResource::ItemResource()
-{
-	Parse("D:\\HandOfFate2\\HOF\\Resource\\Xml\\WeaponItem.xml");
-}
-
-void ItemResource::Parse(const FString dir)
+void UItemResource::Parse(const FString dir)
 {
 	const FXmlFile File(dir);
 	const FXmlNode *WeaponListNodes = File.GetRootNode();
@@ -21,7 +14,7 @@ void ItemResource::Parse(const FString dir)
 		ItemMap.Add(WeaponItem->Id, WeaponItem);
 }
 
-AHOFItem* ItemResource::GetItemFromId(int32 id)
+AHOFItem* UItemResource::GetItemFromId(int32 id)
 {
 	auto item = ItemMap.Find(id);
 	return *item;

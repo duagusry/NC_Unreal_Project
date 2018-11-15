@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "GameData.h"
-#include"HOFEquipStatus.h"
+#include "HOFEquipStatus.h"
 #include "HOFGameInstance.generated.h"
 
 /**
@@ -14,6 +14,7 @@
 
 class EnemyResources;
 class AHOFPlayerState;
+class UItemResource;
 
 UCLASS()
 class HOF_API UHOFGameInstance : public UGameInstance
@@ -36,4 +37,6 @@ public :
 	BaseStructs::PlayerData PlayerData;
 	BaseStructs::BattleData BattleData;
 	TSharedPtr<AHOFEquipStatus> EquipData;
+	UPROPERTY()
+	UItemResource *ItemResource;
 };

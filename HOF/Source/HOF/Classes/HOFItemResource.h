@@ -1,33 +1,23 @@
 #pragma once
 
+#include "CoreMinimal.h"
 #include "XmlParser.h"
+#include "HOFItemResource.generated.h"
 
 class AHOFItem;
 
-class ItemResource
+UCLASS()
+class HOF_API UItemResource : public UObject
 {
+	GENERATED_BODY()
+
 public:
+	AHOFItem* GetItemFromId(int32 id);
 	void Parse(const FString dir);
 
-	static ItemResource* GetInstance()
-	{
-		// TODO : Need to change it to double-checking locking in multi-thread environment.  
-		if (!ItemResourceInstance)
-			ItemResourceInstance = new ItemResource();
-
-		return ItemResourceInstance;
-	}
-
-	AHOFItem* GetItemFromId(int32 id);
-	
 private:
-	ItemResource();
-
+	UPROPERTY()
 	TMap<int32, AHOFItem*> ItemMap;
-
-	static ItemResource* ItemResourceInstance;
 };
 
-
-#define g_ItemResource ItemResource::GetInstance()
 

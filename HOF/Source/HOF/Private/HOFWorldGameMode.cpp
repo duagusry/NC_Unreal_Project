@@ -32,8 +32,6 @@ AHOFWorldGameMode::AHOFWorldGameMode()
 	{
 		BP_WorldPawn = CastChecked<UClass>(WorldPawnBluePrint.Object->GeneratedClass);
 	}
-
-	g_ItemResource->GetInstance();
 }
 
 void AHOFWorldGameMode::BeginPlay()

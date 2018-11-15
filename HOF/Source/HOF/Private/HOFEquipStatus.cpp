@@ -3,6 +3,7 @@
 #include "HOFEquipStatus.h"
 #include "HOFItem.h"
 #include "HOFGearItem.h"
+#include "HOFGameInstance.h"
 #include "HOFItemResource.h"
 
 
@@ -11,22 +12,18 @@ AHOFEquipStatus::AHOFEquipStatus()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	//EquipList.Init(nullptr, EHOFItemType::ITEM_TYPE_END);
 }
 
 // Called when the game starts or when spawned
 void AHOFEquipStatus::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void AHOFEquipStatus::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AHOFEquipStatus::Equip(EHOFItemType slotNumber, AHOFItem * item)
@@ -39,10 +36,12 @@ void AHOFEquipStatus::Equip(EHOFItemType slotNumber, AHOFItem * item)
 
 void AHOFEquipStatus::Equip(EHOFItemType slotNumber, int32 itemId)
 {
+	auto GameInstance = Cast<UHOFGameInstance>(GetGameInstance());
+
 	if (EquipList.Contains(slotNumber))
-		EquipList[slotNumber] = g_ItemResource->GetItemFromId(itemId);
+		EquipList[slotNumber] = GameInstance->ItemResource->GetItemFromId(itemId);
 	else
-		EquipList.Add(slotNumber, g_ItemResource->GetItemFromId(itemId));
+		EquipList.Add(slotNumber, GameInstance->ItemResource->GetItemFromId(itemId));
 }
 
 void AHOFEquipStatus::UnEquip(EHOFItemType slotNumber)
