@@ -49,7 +49,7 @@ void AHOFEquipStatus::UnEquip(EHOFItemType slotNumber)
 	EquipList.Remove(slotNumber);
 }
 
-AHOFItem* AHOFEquipStatus::GetEquippedItemWithSlot(EHOFItemType slotNumber)
+AHOFItem* AHOFEquipStatus::GetEquippedItemBySlot(EHOFItemType slotNumber)
 {
 	if (EquipList[slotNumber]->IsGearItem())
 		return EquipList[slotNumber];

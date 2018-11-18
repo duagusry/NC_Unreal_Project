@@ -31,7 +31,7 @@ public:
 	void Equip(EHOFItemType slotNumber, int32 itemId);
 	void UnEquip(EHOFItemType slotNumber);
 
-	AHOFItem* GetEquippedItemWithSlot(EHOFItemType slotNumber);
+	AHOFItem* GetEquippedItemBySlot(EHOFItemType slotNumber);
 
 private : 
 	TMap<EHOFItemType, AHOFItem*> EquipList;

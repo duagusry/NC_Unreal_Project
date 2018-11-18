@@ -1,16 +1,31 @@
 <NewDataSet>
   <WeaponItem>
     <Id>0</Id>
-    <Name>BastardSword</Name>
+    <Name>Blunt_CrudeHammer</Name>
     <BuyCost>1000</BuyCost>
     <SellCost>500</SellCost>
     <CanSell>true</CanSell>
     <Type>1</Type>
-    <Damage>1</Damage>
+    <Damage>10</Damage>
     <Range>3</Range>
-    <AttackSpeed>1.2</AttackSpeed>
+    <AttackSpeed>2</AttackSpeed>
     <Element>0</Element>
     <CriticalProb>0</CriticalProb>
     <SpellId>0</SpellId>
+    <AssetPath>SkeletalMesh'/Game/Resource/Items/Weapons/Blunt_Hellhammer_Cine/SK_Blunt_HellHammer_Cine.SK_Blunt_HellHammer_Cine'</AssetPath>
+  </WeaponItem>
+  <WeaponItem>
+    <Id>1</Id>
+    <Name>Blunt_Hellhammer_Cine</Name>
+    <BuyCost>1000</BuyCost>
+    <SellCost>500</SellCost>
+    <Type>1</Type>
+    <Damage>30</Damage>
+    <Range>1</Range>
+    <AttackSpeed>1</AttackSpeed>
+    <Element>0</Element>
+    <CriticalProb>0</CriticalProb>
+    <SpellId>0</SpellId>
+    <AssetPath>SkeletalMesh'/Game/Resource/Items/Weapons/Blunt_CrudeHammer/SK_Blunt_CrudeHammer.SK_Blunt_CrudeHammer'</AssetPath>
   </WeaponItem>
 </NewDataSet>

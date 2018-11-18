@@ -6,6 +6,8 @@
 #include "HOFPlayerState.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "HOFItem.h"
+#include "DynamicObjectLoader.h"
 #include "Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h"
 
 
@@ -48,12 +50,16 @@ void AHOFPlayerController::SetupInputComponent()
 	InputComponent->BindAxis("Turn", this, &AHOFPlayerController::Turn);
 	InputComponent->BindAxis("LookUp", this, &AHOFPlayerController::LookUp);
 
+	// TEST 
+	InputComponent->BindAction("Slot1", IE_Pressed, this, &AHOFPlayerController::Slot1);
+	InputComponent->BindAction("Slot2", IE_Pressed, this, &AHOFPlayerController::Slot2);
+	//
 	InputComponent->BindAction("Jump", IE_Pressed, this, &AHOFPlayerController::JumpInput);
 	InputComponent->BindAction("Jump", IE_Released, this, &AHOFPlayerController::JumpIfNotInput);
 	InputComponent->BindAction("Attack", IE_Pressed, this, &AHOFPlayerController::Attack);
 	InputComponent->BindAction("Attack", IE_Released, this, &AHOFPlayerController::NotAttack);
 
-	
+
 }
 
 void AHOFPlayerController::MoveForward(float NewInputVal)
@@ -136,5 +142,31 @@ void AHOFPlayerController::NotAttack()
 	PlayerCharacter->isAttacking = false;
 }
 
+void AHOFPlayerController::Slot1()
+{
+	PlayerCharacter->Equip->Equip(EHOFItemType::ITEM_MAIN_WEAPON, 0);
+	// ToDo : Below mesh component code need to move to in AHOFWeaponItem class.  
+	auto Item = PlayerCharacter->Equip->GetEquippedItemBySlot(EHOFItemType::ITEM_MAIN_WEAPON);
+	FString ItemAssetPath = Item->AssetPath;
+	USkeletalMesh* ItemSkeletalMesh = DynamicObjectLoader::Load<USkeletalMesh>(ItemAssetPath);
+
+	if (ItemSkeletalMesh)
+	{
+		PlayerCharacter->Weapon->SetSkeletalMesh(ItemSkeletalMesh);
+	}
+}
+
+void AHOFPlayerController::Slot2()
+{
+	PlayerCharacter->Equip->Equip(EHOFItemType::ITEM_MAIN_WEAPON, 1);
+	auto Item = PlayerCharacter->Equip->GetEquippedItemBySlot(EHOFItemType::ITEM_MAIN_WEAPON);
+	FString ItemAssetPath = Item->AssetPath;
+	USkeletalMesh* ItemSkeletalMesh = DynamicObjectLoader::Load<USkeletalMesh>(ItemAssetPath);
+
+	if (ItemSkeletalMesh)
+	{
+		PlayerCharacter->Weapon->SetSkeletalMesh(ItemSkeletalMesh);
+	}
+}
 
 

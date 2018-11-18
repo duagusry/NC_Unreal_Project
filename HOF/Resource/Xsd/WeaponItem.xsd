@@ -18,6 +18,7 @@
               <xs:element name="Element" type="xs:int" minOccurs="0" />
               <xs:element name="CriticalProb" type="xs:double" minOccurs="0" />
               <xs:element name="SpellId" type="xs:int" minOccurs="0" />
+              <xs:element name="AssetPath" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

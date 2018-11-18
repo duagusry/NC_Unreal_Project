@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Engine/World.h"
 #include "HOFPlayerState.h"
 #include "HOFGameInstance.h"
@@ -32,7 +33,14 @@ AHOFCharacter::AHOFCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->AttachTo(SpringArm);
 
-	//Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
+	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
+	//Weapon->AttachTo(GetMesh());
+	Weapon->SetSimulatePhysics(false);
+	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	FAttachmentTransformRules rules(EAttachmentRule::SnapToTarget, true);
+	Weapon->AttachToComponent(GetMesh(), rules, TEXT("weapon_r"));
+
+
 	Equip = CreateDefaultSubobject<AHOFEquipStatus>(TEXT("EquipStatus"));
 }
 
@@ -150,7 +158,7 @@ void AHOFCharacter::GiveDamage(const FHitResult &HitResult)
 	float BaseDamage = 30.0f;
 
 	// Get Attack Info from Current Weapon
-	const auto& SlotItem = Equip->GetEquippedItemWithSlot(EHOFItemType::ITEM_MAIN_WEAPON);
+	const auto& SlotItem = Equip->GetEquippedItemBySlot(EHOFItemType::ITEM_MAIN_WEAPON);
 
 	float WeaponDamage = 0.0f;
 	

@@ -59,5 +59,11 @@ private:
 		void NotAttack();
 
 	UFUNCTION()
+		void Slot1();
+
+	UFUNCTION()
+		void Slot2();
+
+	UFUNCTION()
 		void SetStateToBattle();
 };
