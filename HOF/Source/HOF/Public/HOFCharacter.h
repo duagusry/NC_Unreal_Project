@@ -38,6 +38,9 @@ public:
 		class USkeletalMeshComponent* Body;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Visible")
+		class USkeletalMeshComponent* Weapon;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Visible")
 		class UArrowComponent* Arrow;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Movement")
@@ -67,6 +70,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Damage")
 		void AttackHit();
 
+	AHOFEquipStatus* Equip;
+
 private:
 	TSharedPtr<FCollisionObjectQueryParams> GetTraceObject(const TArray<ECollisionChannel>& channels);
 	TSharedPtr<FCollisionQueryParams> GetTraceParams();
@@ -74,5 +79,4 @@ private:
 
 private : 
 	TSharedPtr<AHOFInventory> Inventory;
-	AHOFEquipStatus* Equip;
 };

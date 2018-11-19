@@ -40,4 +40,7 @@ public:
 	
 	UPROPERTY()
 	bool CanSell;
+
+	UPROPERTY()
+    FString AssetPath;
 };
