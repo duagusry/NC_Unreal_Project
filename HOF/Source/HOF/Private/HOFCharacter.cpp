@@ -34,11 +34,10 @@ AHOFCharacter::AHOFCharacter()
 	Camera->AttachTo(SpringArm);
 
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
-	//Weapon->AttachTo(GetMesh());
 	Weapon->SetSimulatePhysics(false);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	FAttachmentTransformRules rules(EAttachmentRule::SnapToTarget, true);
-	Weapon->AttachToComponent(GetMesh(), rules, TEXT("weapon_r"));
+	Weapon->AttachTo(GetMesh(), TEXT("weapon_r"));
 
 
 	Equip = CreateDefaultSubobject<AHOFEquipStatus>(TEXT("EquipStatus"));
