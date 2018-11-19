@@ -16,8 +16,8 @@ UHOFGameInstance::UHOFGameInstance()
 
 void UHOFGameInstance::Init()
 {
-	Super::Init();
-	ItemResource->Parse("D:\\HandOfFate2\\HOF\\Resource\\Xml\\WeaponItem.xml");
+	Super::Init(); 
+	ItemResource->Parse(FPaths::ProjectDir() + L"Resource\\Xml\\WeaponItem.xml");
 }
 
 void UHOFGameInstance::SwitchLevel(FString levelPath)
