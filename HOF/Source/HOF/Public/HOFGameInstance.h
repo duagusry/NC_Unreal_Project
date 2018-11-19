@@ -36,7 +36,7 @@ public :
 	BaseStructs::WorldStatusData WorldStatusData;
 	BaseStructs::PlayerData PlayerData;
 	BaseStructs::BattleData BattleData;
-	TSharedPtr<AHOFEquipStatus> EquipData;
+	AHOFEquipStatus* EquipData;
 	UPROPERTY()
 	UItemResource *ItemResource;
 };
