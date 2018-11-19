@@ -4,17 +4,20 @@
 #include "EnemyResources.h"
 #include "HOFEnemyPawn.h"
 #include "Engine/World.h"
+#include "HOFItemResource.h"
 #include "Kismet/GameplayStatics.h"
 
 UHOFGameInstance::UHOFGameInstance()
 {
 	PlayerData = BaseStructs::PlayerData{ BaseStructs::Stat<float>(100, 100, 0), BaseStructs::Stat<int32>(30, 100, 0), BaseStructs::Stat<int32>(10, 1000, 0), true };
 	EquipData = TSharedPtr<AHOFEquipStatus>(CreateDefaultSubobject<AHOFEquipStatus>(TEXT("EquipData")));
+	ItemResource = NewObject<UItemResource>();
 }
 
 void UHOFGameInstance::Init()
 {
 	Super::Init();
+	ItemResource->Parse("D:\\HandOfFate2\\HOF\\Resource\\Xml\\WeaponItem.xml");
 }
 
 void UHOFGameInstance::SwitchLevel(FString levelPath)

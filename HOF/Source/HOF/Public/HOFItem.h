@@ -26,11 +26,18 @@ public:
 	virtual bool IsGearItem() { return false; }
 	virtual bool IsWeaponItem() { return false; }
 	
-protected : 
-	int32 NameId;
+	UPROPERTY()
+	int32 Id;
+
+	UPROPERTY()
 	FName Name;
-	int32 BuyCost;
-	int32 SellCost;
-	bool CanSell;
 	
+	UPROPERTY()
+	int32 BuyCost;
+	
+	UPROPERTY()
+	int32 SellCost;
+	
+	UPROPERTY()
+	bool CanSell;
 };

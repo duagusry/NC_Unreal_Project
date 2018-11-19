@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HOFItem.h"
 #include "GameData.h"
+#include "HOFItem.h"
 #include "HOFGearItem.generated.h"
 
 /**
@@ -16,10 +16,8 @@ class HOF_API AHOFGearItem : public AHOFItem
 	GENERATED_BODY()
 	
 public : 
-	virtual bool IsGearItem() override { return true; }
+	virtual bool IsGearItem() override;
 
-protected:
-	EnumInGame::EHOFItemType Type;
-	
-	
+	UPROPERTY()
+		EHOFItemType Type;
 };

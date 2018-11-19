@@ -18,7 +18,6 @@ class HOF_API AHOFEquipStatus : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AHOFEquipStatus();
-	~AHOFEquipStatus();
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,14 +27,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void Equip(EnumInGame::EHOFItemType slotNumber, TSharedPtr<AHOFItem> item);
-	void Equip(EnumInGame::EHOFItemType slotNumber, AHOFItem* item);
-	void Equip(EnumInGame::EHOFItemType slotNumber, int32 itemId);
-	void UnEquip(EnumInGame::EHOFItemType slotNumber);
+	void Equip(EHOFItemType slotNumber, AHOFItem* item);
+	void Equip(EHOFItemType slotNumber, int32 itemId);
+	void UnEquip(EHOFItemType slotNumber);
 
-	TSharedPtr<AHOFItem> GetEquippedItemWithSlot(EnumInGame::EHOFItemType slotNumber);
+	AHOFItem* GetEquippedItemWithSlot(EHOFItemType slotNumber);
 
 private : 
-	TArray<TSharedPtr<AHOFItem>> EquipList;
+	TMap<EHOFItemType, AHOFItem*> EquipList;
 	
 };

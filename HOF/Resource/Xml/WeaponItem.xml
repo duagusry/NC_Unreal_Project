@@ -1,0 +1,16 @@
+<NewDataSet>
+  <WeaponItem>
+    <Id>0</Id>
+    <Name>BastardSword</Name>
+    <BuyCost>1000</BuyCost>
+    <SellCost>500</SellCost>
+    <CanSell>true</CanSell>
+    <Type>1</Type>
+    <Damage>1</Damage>
+    <Range>3</Range>
+    <AttackSpeed>1.2</AttackSpeed>
+    <Element>0</Element>
+    <CriticalProb>0</CriticalProb>
+    <SpellId>0</SpellId>
+  </WeaponItem>
+</NewDataSet>
