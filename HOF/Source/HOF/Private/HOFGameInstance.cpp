@@ -10,7 +10,7 @@
 UHOFGameInstance::UHOFGameInstance()
 {
 	PlayerData = BaseStructs::PlayerData{ BaseStructs::Stat<float>(100, 100, 0), BaseStructs::Stat<int32>(30, 100, 0), BaseStructs::Stat<int32>(10, 1000, 0), true };
-	EquipData = TSharedPtr<AHOFEquipStatus>(CreateDefaultSubobject<AHOFEquipStatus>(TEXT("EquipData")));
+	EquipData = CreateDefaultSubobject<AHOFEquipStatus>(TEXT("EquipData"));
 	ItemResource = NewObject<UItemResource>();
 }
 
