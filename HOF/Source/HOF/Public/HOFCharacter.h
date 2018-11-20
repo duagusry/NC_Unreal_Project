@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameData.h"
 #include "HOFCharacter.generated.h"
 
 class AHOFInventory;
@@ -30,6 +31,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void PossessedBy(class AController *NewController) override;
 	virtual float TakeDamage(float Damage, const struct FDamageEvent &DamageEvent, class AController* EventInstigator, class AActor*DamageCauser) override;
+	void Equip(EHOFItemType ItemType, int32 ItemId);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Collision")
 		class UCapsuleComponent* Capsule;
@@ -70,12 +72,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Damage")
 		void AttackHit();
 
-	AHOFEquipStatus* Equip;
+	AHOFEquipStatus* EquipStatus;
 
 private:
 	TSharedPtr<FCollisionObjectQueryParams> GetTraceObject(const TArray<ECollisionChannel>& channels);
 	TSharedPtr<FCollisionQueryParams> GetTraceParams();
 	void GiveDamage(const FHitResult & HitResult);
+	void UpdateEquipStatus(EHOFItemType ItemType, int32 ItemId);
+	void UpdateEquipedItem(EHOFItemType ItemType);
 
 private : 
 	TSharedPtr<AHOFInventory> Inventory;

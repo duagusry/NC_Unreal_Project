@@ -144,29 +144,12 @@ void AHOFPlayerController::NotAttack()
 
 void AHOFPlayerController::Slot1()
 {
-	PlayerCharacter->Equip->Equip(EHOFItemType::ITEM_MAIN_WEAPON, 0);
-	// ToDo : Below mesh component code need to move to in AHOFWeaponItem class.  
-	auto Item = PlayerCharacter->Equip->GetEquippedItemBySlot(EHOFItemType::ITEM_MAIN_WEAPON);
-	FString ItemAssetPath = Item->AssetPath;
-	USkeletalMesh* ItemSkeletalMesh = DynamicObjectLoader::Load<USkeletalMesh>(ItemAssetPath);
-
-	if (ItemSkeletalMesh)
-	{
-		PlayerCharacter->Weapon->SetSkeletalMesh(ItemSkeletalMesh);
-	}
+	PlayerCharacter->Equip(EHOFItemType::ITEM_MAIN_WEAPON, 0);
 }
 
 void AHOFPlayerController::Slot2()
 {
-	PlayerCharacter->Equip->Equip(EHOFItemType::ITEM_MAIN_WEAPON, 1);
-	auto Item = PlayerCharacter->Equip->GetEquippedItemBySlot(EHOFItemType::ITEM_MAIN_WEAPON);
-	FString ItemAssetPath = Item->AssetPath;
-	USkeletalMesh* ItemSkeletalMesh = DynamicObjectLoader::Load<USkeletalMesh>(ItemAssetPath);
-
-	if (ItemSkeletalMesh)
-	{
-		PlayerCharacter->Weapon->SetSkeletalMesh(ItemSkeletalMesh);
-	}
+	PlayerCharacter->Equip(EHOFItemType::ITEM_MAIN_WEAPON, 1);
 }
 
 

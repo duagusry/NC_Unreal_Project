@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "HOFItem.generated.h"
 
+class USkeletalMesh;
+
 UCLASS()
 class HOF_API AHOFItem : public AActor
 {
@@ -25,7 +27,8 @@ public:
 
 	virtual bool IsGearItem() { return false; }
 	virtual bool IsWeaponItem() { return false; }
-	
+	USkeletalMesh* GetMesh();
+
 	UPROPERTY()
 	int32 Id;
 
@@ -43,4 +46,7 @@ public:
 
 	UPROPERTY()
     FString AssetPath;
+
+	UPROPERTY()
+	USkeletalMesh *Mesh;
 };

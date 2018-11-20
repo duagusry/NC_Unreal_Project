@@ -1,13 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "HOFItem.h"
-
+#include "Components/SkeletalMeshComponent.h"
+#include "DynamicObjectLoader.h"
 
 // Sets default values
 AHOFItem::AHOFItem()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	Mesh = nullptr;
 }
 
 AHOFItem::AHOFItem(const AHOFItem & ref)
@@ -44,3 +46,7 @@ void AHOFItem::Tick(float DeltaTime)
 
 }
 
+USkeletalMesh* AHOFItem::GetMesh()
+{
+	return Mesh != nullptr ? Mesh : DynamicObjectLoader::Load<USkeletalMesh>(AssetPath);
+}

@@ -40,7 +40,7 @@ AHOFCharacter::AHOFCharacter()
 	Weapon->AttachTo(GetMesh(), TEXT("weapon_r"));
 
 
-	Equip = CreateDefaultSubobject<AHOFEquipStatus>(TEXT("EquipStatus"));
+	EquipStatus = CreateDefaultSubobject<AHOFEquipStatus>(TEXT("EquipStatus"));
 }
 
 // Called when the game starts or when spawned
@@ -58,7 +58,7 @@ void AHOFCharacter::BeginPlay()
 	//TSharedPtr<AHOFWeaponItem> DummyWeapon = MakeShared<AHOFWeaponItem>(World->SpawnActor<AHOFWeaponItem>(MyLoc, MyRot, SpawnInfo));
 	AHOFWeaponItem* DummyWeapon = World->SpawnActor<AHOFWeaponItem>(GetActorLocation(), GetActorRotation(), FActorSpawnParameters());
 	//Equip->Equip(ITEM_MAIN_WEAPON, DummyWeapon);
-	Equip->Equip(EHOFItemType::ITEM_MAIN_WEAPON, 0);
+	EquipStatus->Equip(EHOFItemType::ITEM_MAIN_WEAPON, 0);
 	///////////////////////////////////////////////////////////////////////// For Test	///////////////////////////////////////////////////////////////////////////
 }
 
@@ -157,7 +157,7 @@ void AHOFCharacter::GiveDamage(const FHitResult &HitResult)
 	float BaseDamage = 30.0f;
 
 	// Get Attack Info from Current Weapon
-	const auto& SlotItem = Equip->GetEquippedItemBySlot(EHOFItemType::ITEM_MAIN_WEAPON);
+	const auto& SlotItem = EquipStatus->GetEquippedItemBySlot(EHOFItemType::ITEM_MAIN_WEAPON);
 
 	float WeaponDamage = 0.0f;
 	
@@ -178,4 +178,26 @@ void AHOFCharacter::GiveDamage(const FHitResult &HitResult)
 
 	FPointDamageEvent PointDamageEvent(FinalDamage, HitResult, GetActorForwardVector(), UDamageType::StaticClass());
 	HitResult.GetActor()->TakeDamage(FinalDamage, PointDamageEvent, GetController(), this);
+}
+
+void AHOFCharacter::Equip(EHOFItemType ItemType, int32 ItemId)
+{
+	UpdateEquipStatus(ItemType, ItemId);
+	UpdateEquipedItem(ItemType);
+}
+
+void AHOFCharacter::UpdateEquipStatus(EHOFItemType ItemType, int32 ItemId)
+{
+	EquipStatus->Equip(ItemType, ItemId);
+}
+
+void AHOFCharacter::UpdateEquipedItem(EHOFItemType ItemType)
+{
+	auto Item = EquipStatus->GetEquippedItemBySlot(ItemType);
+
+	if (Item)
+	{
+		if (ItemType == EHOFItemType::ITEM_MAIN_WEAPON)
+			Weapon->SetSkeletalMesh(Item->GetMesh());
+	}
 }
