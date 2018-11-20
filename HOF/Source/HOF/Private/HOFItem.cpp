@@ -2,7 +2,6 @@
 
 #include "HOFItem.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "DynamicObjectLoader.h"
 
 // Sets default values
 AHOFItem::AHOFItem()
@@ -48,5 +47,5 @@ void AHOFItem::Tick(float DeltaTime)
 
 USkeletalMesh* AHOFItem::GetMesh()
 {
-	return Mesh != nullptr ? Mesh : DynamicObjectLoader::Load<USkeletalMesh>(AssetPath);
+	return Mesh;
 }

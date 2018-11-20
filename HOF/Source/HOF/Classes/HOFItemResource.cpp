@@ -2,6 +2,7 @@
 #include "HOFItem.h"
 #include "XmlParser.h"
 #include "XmlConverter.h"
+#include "DynamicObjectLoader.h"
 #include "HOFWeaponItem.h"
 
 void UItemResource::Parse(const FString dir)
@@ -12,10 +13,18 @@ void UItemResource::Parse(const FString dir)
 
 	for (const auto &WeaponItem : WeaponItemList)
 		ItemMap.Add(WeaponItem->Id, WeaponItem);
+
+	GetMeshResource();
 }
 
 AHOFItem* UItemResource::GetItemFromId(int32 id)
 {
 	auto item = ItemMap.Find(id);
 	return *item;
+}
+
+void UItemResource::GetMeshResource()
+{
+	for (const auto &Each : ItemMap)
+		Each.Value->Mesh = DynamicObjectLoader::Load<USkeletalMesh>(Each.Value->AssetPath);
 }

@@ -16,6 +16,8 @@ public:
 	void Parse(const FString dir);
 
 private:
+	void GetMeshResource();
+
 	UPROPERTY()
 	TMap<int32, AHOFItem*> ItemMap;
 };
