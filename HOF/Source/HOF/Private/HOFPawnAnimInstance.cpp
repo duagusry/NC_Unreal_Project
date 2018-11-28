@@ -17,7 +17,7 @@ void UHOFPawnAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		VelocityAnim = Pawn->GetVelocity().Size();
 
-		AHOFPlayerState* ABPlayerState = Cast<AHOFPlayerState>(Pawn->PlayerState);
+		AHOFPlayerState* ABPlayerState = Cast<AHOFPlayerState>(Pawn->GetPlayerState());
 
 		if (ABPlayerState)
 			CurrentStateAnim = ABPlayerState->CurrentStatePawn;
@@ -40,7 +40,7 @@ void UHOFPawnAnimInstance::AnimNotify_AttackEnd(UAnimNotify * Notify)
 
 	if (HOFCharacter && HOFCharacter->IsValidLowLevel())
 	{
-		AHOFPlayerState* HOFPlayerState = Cast<AHOFPlayerState>(HOFCharacter->PlayerState);
+		AHOFPlayerState* HOFPlayerState = Cast<AHOFPlayerState>(HOFCharacter->GetPlayerState());
 		if (HOFPlayerState)
 			HOFPlayerState->SetState(EHOFCharacterState::PLAYER_PEACE);
 	}

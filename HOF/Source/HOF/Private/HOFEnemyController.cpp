@@ -5,7 +5,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BlackboardData.h"
-#include "AI/Navigation/NavigationSystem.h"
+#include "NavigationSystem.h"
 #include "HOFEnemyState.h"
 #include "HOFEnemyPawn.h"
 
@@ -36,13 +36,11 @@ void AHOFEnemyController::Possess(APawn* InPawn)
 	{
 		AB_LOG(Warning, TEXT("Set behaviorTree %s"), *(pawn->GetName()));
 		BlackboardComp->InitializeBlackboard(*(pawn->behaviorTreeAsset->BlackboardAsset));
-
 		BlackboardComp->SetValueAsVector(HomeLocKey, pawn->GetActorLocation());
 		BlackboardComp->SetValueAsFloat(IdleTimeKey, 2);
 		FNavLocation targetLoc;
-		UNavigationSystem::GetCurrent(GetWorld())->GetRandomPointInNavigableRadius(pawn->GetActorLocation(), 1000, targetLoc);
+		UNavigationSystemV1::GetCurrent((GetWorld()))->GetRandomPointInNavigableRadius(pawn->GetActorLocation(), 1000, targetLoc);
 		BlackboardComp->SetValueAsVector(TargetLocKey, targetLoc.Location);
-
 		BehaviorComp->StartTree(*(pawn->behaviorTreeAsset));
 	}
 }

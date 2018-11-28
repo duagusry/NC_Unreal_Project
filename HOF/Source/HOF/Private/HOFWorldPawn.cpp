@@ -27,8 +27,8 @@ void AHOFWorldPawn::BeginPlay()
 	Super::BeginPlay();
 	
 	PlayerController = Cast<AHOFWorldPlayerController>(GetWorld()->GetPlayerControllerIterator()->Get());
-	PlayerState = Cast<AHOFPlayerState>(PlayerController->PlayerState);
-	Cast<AHOFPlayerState>(PlayerState)->SetPlayerData(Cast<UHOFGameInstance>(GetGameInstance())->PlayerData);
+	SetPlayerState(PlayerController->PlayerState);
+	Cast<AHOFPlayerState>(GetPlayerState())->SetPlayerData(Cast<UHOFGameInstance>(GetGameInstance())->PlayerData);
 }
 
 // Called every frame
@@ -50,7 +50,7 @@ void AHOFWorldPawn::SetPosition(int x, int y)
 	m_Position.x = x;
 	m_Position.y = y;
 
-	auto playerState = Cast<AHOFPlayerState>(PlayerState);
+	auto playerState = Cast<AHOFPlayerState>(GetPlayerState());
 
 	if (playerState)
 	{

@@ -48,9 +48,9 @@ void AHOFCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	PlayerState = Cast<AHOFPlayerState>(GetController()->PlayerState);
+	SetPlayerState(GetController()->PlayerState);
 
-	Cast<AHOFPlayerState>(PlayerState)->SetPlayerData(Cast<UHOFGameInstance>(GetGameInstance())->PlayerData);
+	Cast<AHOFPlayerState>(GetPlayerState())->SetPlayerData(Cast<UHOFGameInstance>(GetGameInstance())->PlayerData);
 
 	///////////////////////////////////////////////////////////////////////// For Test	///////////////////////////////////////////////////////////////////////////
 	UWorld* World = GetWorld();
@@ -89,7 +89,7 @@ void AHOFCharacter::PossessedBy(AController * NewController)
 float AHOFCharacter::TakeDamage(float Damage, const FDamageEvent &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
 {
 	const float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-	AHOFPlayerState* HOFPlayerState = Cast<AHOFPlayerState>(PlayerState);
+	AHOFPlayerState* HOFPlayerState = Cast<AHOFPlayerState>(GetPlayerState());
 
 	AB_LOG(Warning, TEXT("HP:%f"), HOFPlayerState->PlayerData.HP.GetCurrentValue());
 

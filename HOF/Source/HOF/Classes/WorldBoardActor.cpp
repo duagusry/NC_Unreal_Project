@@ -21,7 +21,7 @@ AHOFWorldBoardActor::AHOFWorldBoardActor()
 AHOFWorldBoardActor::~AHOFWorldBoardActor()
 {
 	//게임이 플레이됐다가 종료될 때 한번, 에디터 꺼질 때 한번..
-	ResetWorldSlot();
+	//ResetWorldSlot();
 }
 
 void AHOFWorldBoardActor::InitWorldStatus()

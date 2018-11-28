@@ -16,13 +16,13 @@ class HOF_API UHOFAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 
 public:
-	
-	virtual void NativeUpdateAnimation(float DeltaSeconds) { Super::NativeUpdateAnimation(DeltaSeconds); }
-	
-	UFUNCTION()
-		virtual void AnimNotify_AttackHit(UAnimNotify *Notify) { }
 
-	UFUNCTION()
-		virtual void AnimNotify_AttackEnd(UAnimNotify *Notify) { }
-	
+	virtual void NativeUpdateAnimation(float DeltaSeconds) { Super::NativeUpdateAnimation(DeltaSeconds); }
+
+	//UFUNCTION()
+	virtual void AnimNotify_AttackHit(UAnimNotify *Notify) { check(0 && "You must override this"); }
+
+	//UFUNCTION()
+	virtual void AnimNotify_AttackEnd(UAnimNotify *Notify) { check(0 && "You must override this"); }
+
 };
